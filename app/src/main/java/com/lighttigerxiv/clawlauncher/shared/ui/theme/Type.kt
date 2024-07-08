@@ -1,4 +1,4 @@
-package com.lighttigerxiv.clawlauncher.ui.theme
+package com.lighttigerxiv.clawlauncher.shared.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,0 +1,15 @@
+package com.lighttigerxiv.clawlauncher.shared.model
+
+object Routes {
+    object Setup {
+        const val ROUTE = "setup"
+        const val WELCOME = "welcome"
+        const val LAYOUT = "minimal"
+    }
+
+    object Main {
+        const val ROUTE = "main"
+        const val HOME = "home"
+        const val SETTINGS = "settings"
+    }
+}

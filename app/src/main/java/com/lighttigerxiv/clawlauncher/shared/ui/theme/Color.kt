@@ -1,4 +1,4 @@
-package com.lighttigerxiv.clawlauncher.ui.theme
+package com.lighttigerxiv.clawlauncher.shared.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

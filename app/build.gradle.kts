@@ -1,4 +1,6 @@
 plugins {
+    id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
@@ -30,11 +32,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -66,4 +68,33 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Data Store
+    implementation(libs.androidx.datastore.preferences)
+
+    // Whiskers Palette
+    implementation(libs.whiskers.palette.kt)
+
+    // Compose Hilt
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Dagger Hilt
+    implementation(libs.hilt.android.v248)
+    kapt(libs.hilt.android.compiler.v248)
+    kapt(libs.androidx.hilt.compiler)
+
+    // Layout Scaffold
+    implementation(libs.layout.scaffold)
+
+    // Mongo Realm
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.library.base)
+
+    // Routes
+    implementation(libs.androidx.navigation.compose)
+}
+
+kapt {
+    correctErrorTypes = true
 }

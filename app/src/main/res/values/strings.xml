@@ -1,3 +1,12 @@
 <resources>
+
     <string name="app_name">Claw Launcher</string>
+
+    <!-- Setup Screens -->
+    <string name="SetupScreen_next">Next</string>
+    <string name="SetupScreen_finish">Finish</string>
+    <string name="LayoutScreen_minimal">Minimal</string>
+    <string name="SetupScreen_previous">Previous</string>
+    <string name="LayoutScreen_bubbly">Bubbly</string>
+    <string name="LayoutScreen_style">Style</string>
 </resources>
