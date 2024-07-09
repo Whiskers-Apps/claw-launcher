@@ -1,4 +1,4 @@
-package com.lighttigerxiv.clawlauncher.features.setup.screens.layout.viewmodel
+package com.lighttigerxiv.clawlauncher.features.setup.layout.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

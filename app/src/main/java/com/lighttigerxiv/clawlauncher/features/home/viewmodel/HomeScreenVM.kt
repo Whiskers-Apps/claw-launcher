@@ -1,5 +1,9 @@
 package com.lighttigerxiv.clawlauncher.features.home.viewmodel
 
+import android.app.Application
+import android.app.WallpaperManager
+import android.graphics.Bitmap
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModel
 import com.lighttigerxiv.clawlauncher.shared.data.AppsRepository
 import com.lighttigerxiv.clawlauncher.shared.model.AppShortcut
@@ -10,24 +14,29 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 data class HomeScreenUIState(
+    val wallpaper: Bitmap?,
     val appShortcuts: List<AppShortcut>
 )
 
 @HiltViewModel
 class HomeScreenVM @Inject constructor(
+    private val app: Application,
     private val appsRepository: AppsRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeScreenUIState?>(null)
     val uiState = _uiState.asStateFlow()
 
     init {
-        _uiState.update { HomeScreenUIState(
-            appShortcuts = appsRepository.apps.value
-        ) }
+        _uiState.update {
+            HomeScreenUIState(
+                wallpaper = WallpaperManager.getInstance(app).drawable?.toBitmap(),
+                appShortcuts = appsRepository.apps.value
+            )
+        }
     }
 
-    fun openApp(packageName: String){
+    fun openApp(packageName: String) {
         appsRepository.openApp(packageName)
     }
 }

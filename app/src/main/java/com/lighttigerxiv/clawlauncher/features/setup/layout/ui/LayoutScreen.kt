@@ -1,4 +1,4 @@
-package com.lighttigerxiv.clawlauncher.features.setup.screens.layout.ui
+package com.lighttigerxiv.clawlauncher.features.setup.layout.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,7 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lighttigerxiv.clawlauncher.R
-import com.lighttigerxiv.clawlauncher.features.setup.screens.layout.viewmodel.LayoutScreenVM
+import com.lighttigerxiv.clawlauncher.features.setup.layout.viewmodel.LayoutScreenVM
+import com.lighttigerxiv.clawlauncher.shared.ui.theme.Typography
 
 @Composable
 fun LayoutScreen(
@@ -63,8 +64,7 @@ fun LayoutScreen(
                 Text(
                     text = stringResource(id = R.string.LayoutScreen_style),
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.SemiBold
+                    style = Typography.titleLarge
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

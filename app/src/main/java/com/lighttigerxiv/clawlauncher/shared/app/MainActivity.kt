@@ -12,14 +12,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.lighttigerxiv.clawlauncher.features.home.ui.HomeScreen
-import com.lighttigerxiv.clawlauncher.features.setup.screens.layout.ui.LayoutScreen
-import com.lighttigerxiv.clawlauncher.features.setup.screens.welcome.ui.WelcomeScreen
+import com.lighttigerxiv.clawlauncher.features.setup.layout.ui.LayoutScreen
+import com.lighttigerxiv.clawlauncher.features.setup.permissions.ui.PermissionsScreen
+import com.lighttigerxiv.clawlauncher.features.setup.permissions.ui.isAtLeastAndroid13
+import com.lighttigerxiv.clawlauncher.features.setup.welcome.ui.WelcomeScreen
 import com.lighttigerxiv.clawlauncher.shared.model.Routes
 import com.lighttigerxiv.clawlauncher.shared.ui.theme.ClawLauncherTheme
 import com.lighttigerxiv.clawlauncher.shared.viewmodel.SettingsVM
@@ -37,14 +40,15 @@ class MainActivity : ComponentActivity() {
             settings?.let {
                 ClawLauncherTheme(settings = settings) {
 
-                    Surface(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+                    Surface {
 
                         val navController = rememberNavController()
 
                         NavHost(
                             modifier = Modifier
                                 .statusBarsPadding()
-                                .fillMaxSize(),
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.background),
                             navController = navController,
                             startDestination = if (settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
                         ) {
@@ -54,8 +58,16 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 composable(Routes.Setup.WELCOME) {
                                     WelcomeScreen {
-                                        navController.navigate(Routes.Setup.LAYOUT)
+                                        navController.navigate(Routes.Setup.PERMISSIONS)
                                     }
+                                }
+
+                                composable(Routes.Setup.PERMISSIONS) {
+                                    PermissionsScreen(
+                                        navigateBack = { navController.navigateUp() },
+                                        navigateToLayout = { navController.navigate(Routes.Setup.LAYOUT) },
+                                        isAtLeastAndroid13 = isAtLeastAndroid13()
+                                    )
                                 }
 
                                 composable(Routes.Setup.LAYOUT) {

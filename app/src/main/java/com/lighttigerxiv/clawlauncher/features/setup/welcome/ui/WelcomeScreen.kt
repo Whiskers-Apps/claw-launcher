@@ -1,4 +1,4 @@
-package com.lighttigerxiv.clawlauncher.features.setup.screens.welcome.ui
+package com.lighttigerxiv.clawlauncher.features.setup.welcome.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -9,4 +9,9 @@
     <string name="SetupScreen_previous">Previous</string>
     <string name="LayoutScreen_bubbly">Bubbly</string>
     <string name="LayoutScreen_style">Style</string>
+    <string name="PermissionsScreen_permissions">Permissions</string>
+    <string name="PermissionsScreen_read_media_explain">Due to Android limitations the app needs access to all images to get the wallpaper. You can always verify the source code if you don\'t feel safe</string>
+    <string name="PermissionsScreen_read_all_media">Read All Media</string>
+    <string name="PermissionsScreen_manage_external_storage_explain">Due to the same reason as above it also needs manage files permission 🙄</string>
+    <string name="PermissionsScreen_manage_external_storage">Manage External Storage</string>
 </resources>
