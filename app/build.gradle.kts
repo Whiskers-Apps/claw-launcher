@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.lighttigerxiv.clawlauncher"
+    namespace = "com.whiskersapps.clawlauncher"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.lighttigerxiv.clawlauncher"
+        applicationId = "com.whiskersapps.clawlauncher"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
