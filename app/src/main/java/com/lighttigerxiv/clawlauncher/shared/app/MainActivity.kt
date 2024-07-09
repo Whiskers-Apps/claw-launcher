@@ -6,25 +6,22 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.lighttigerxiv.clawlauncher.features.home.ui.HomeScreen
-import com.lighttigerxiv.clawlauncher.features.setup.layout.ui.LayoutScreen
-import com.lighttigerxiv.clawlauncher.features.setup.permissions.ui.PermissionsScreen
-import com.lighttigerxiv.clawlauncher.features.setup.permissions.ui.isAtLeastAndroid13
-import com.lighttigerxiv.clawlauncher.features.setup.welcome.ui.WelcomeScreen
+import com.lighttigerxiv.clawlauncher.views.home.view.HomeScreen
+import com.lighttigerxiv.clawlauncher.views.setup.layout.ui.LayoutScreen
+import com.lighttigerxiv.clawlauncher.views.setup.permissions.ui.PermissionsScreen
+import com.lighttigerxiv.clawlauncher.views.setup.permissions.ui.isAtLeastAndroid13
+import com.lighttigerxiv.clawlauncher.views.setup.welcome.ui.WelcomeScreen
 import com.lighttigerxiv.clawlauncher.shared.model.Routes
-import com.lighttigerxiv.clawlauncher.shared.ui.theme.ClawLauncherTheme
+import com.lighttigerxiv.clawlauncher.shared.view.theme.ClawLauncherTheme
 import com.lighttigerxiv.clawlauncher.shared.viewmodel.SettingsVM
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,7 +43,6 @@ class MainActivity : ComponentActivity() {
 
                         NavHost(
                             modifier = Modifier
-                                .statusBarsPadding()
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.background),
                             navController = navController,

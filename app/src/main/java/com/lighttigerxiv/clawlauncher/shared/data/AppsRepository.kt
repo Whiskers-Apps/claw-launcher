@@ -37,6 +37,8 @@ class AppsRepository(
             )
         }
 
+        newAppShortcuts.sortBy { it.name.lowercase() }
+
         _apps.update { newAppShortcuts }
     }
 
@@ -45,5 +47,9 @@ class AppsRepository(
         intent?.let {
             app.startActivity(it)
         }
+    }
+
+    fun getSearchedApps(text: String): List<AppShortcut> {
+        return apps.value.filter { it.name.lowercase().contains(text.lowercase()) }
     }
 }
