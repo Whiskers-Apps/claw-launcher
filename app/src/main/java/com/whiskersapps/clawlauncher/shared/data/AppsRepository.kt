@@ -6,9 +6,14 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import androidx.core.graphics.drawable.toBitmap
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AppsRepository(
     private val app: Application
@@ -19,6 +24,27 @@ class AppsRepository(
     private val packageManager = app.packageManager
 
     init {
+        updateShortcuts()
+
+        // Listens to package changes and updates the apps list
+        CoroutineScope(Dispatchers.IO).launch {
+            var sequenceNumber = 0
+
+            while (true) {
+
+                val changedPackages = packageManager.getChangedPackages(sequenceNumber)
+
+                if(changedPackages != null){
+                    sequenceNumber = changedPackages.sequenceNumber
+                    updateShortcuts()
+                }
+
+                delay(5000)
+            }
+        }
+    }
+
+    private fun updateShortcuts() {
         val newAppShortcuts = ArrayList<AppShortcut>()
 
         val intent = Intent(Intent.ACTION_MAIN, null).apply {

@@ -1,6 +1,5 @@
-package com.whiskersapps.clawlauncher.views.home.views.apps.viewmodel
+package com.whiskersapps.clawlauncher.views.main.views.search.viewmodel
 
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.AppsRepository
@@ -14,34 +13,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AppsScreenVM @Inject constructor(
+class SearchScreenVM @Inject constructor(
     settingsRepository: SettingsRepository,
     private val appsRepository: AppsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<AppsScreenUiState?>(null)
+    private val _uiState = MutableStateFlow<SearchScreenUiState?>(null)
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.Main) {
             settingsRepository.settingsFlow.collect { settings ->
                 _uiState.update {
-                    AppsScreenUiState(
-                        appShortcuts = appsRepository.apps.value,
-                        layout = settings.layout,
-                        viewType = "list",
-                        phoneCols = 4,
-                        phoneRows = 5,
-                        phoneLandscapeCols = 6,
-                        phoneLandscapeRows = 3,
-                        tabletCols = 6,
-                        tabletRows = 4,
-                        tabletLandscapeCols = 6,
-                        tabletLandscapeRows = 3,
-                        showSearchBar = true,
-                        searchBarPosition = "bottom",
-                        blurRadius = 14.dp,
-                        searchText = ""
+                    SearchScreenUiState(
+                        searchText = "",
+                        appShortcuts = ArrayList()
                     )
                 }
             }
@@ -49,10 +35,13 @@ class AppsScreenVM @Inject constructor(
     }
 
     fun updateSearchText(text: String) {
+
+        val newApps = if (text.isEmpty()) ArrayList() else appsRepository.getSearchedApps(text)
+
         _uiState.update {
             it?.copy(
                 searchText = text,
-                appShortcuts = appsRepository.getSearchedApps(text)
+                appShortcuts = if (newApps.size >= 8) newApps.subList(0, 8) else newApps
             )
         }
     }
@@ -63,14 +52,8 @@ class AppsScreenVM @Inject constructor(
         _uiState.update {
             it?.copy(
                 searchText = "",
-                appShortcuts = appsRepository.apps.value
+                appShortcuts = ArrayList()
             )
-        }
-    }
-
-    fun openFirstApp() {
-        uiState.value!!.appShortcuts.isNotEmpty().let {
-            openApp(uiState.value!!.appShortcuts[0].packageName)
         }
     }
 }

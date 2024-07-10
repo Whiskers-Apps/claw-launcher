@@ -14,5 +14,6 @@
     <string name="PermissionsScreen_read_all_media">Read All Media</string>
     <string name="PermissionsScreen_manage_external_storage_explain">Due to the same reason as above it also needs manage files permission 🙄</string>
     <string name="PermissionsScreen_manage_external_storage">Manage External Storage</string>
-    <string name="Apps_search_for_apps">Search apps</string>
+    <string name="Apps_search_apps">Search apps</string>
+    <string name="Search_apps_and_much_more">Search apps and much more</string>
 </resources>

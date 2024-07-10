@@ -1,4 +1,4 @@
-package com.whiskersapps.clawlauncher.views.home.views.apps.viewmodel
+package com.whiskersapps.clawlauncher.views.main.views.apps.viewmodel
 
 import androidx.compose.ui.unit.Dp
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut

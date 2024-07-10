@@ -1,4 +1,4 @@
-package com.whiskersapps.clawlauncher.views.home.views.search.view
+package com.whiskersapps.clawlauncher.views.main.views.search.view
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -12,7 +12,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -21,8 +20,10 @@ import com.whiskersapps.clawlauncher.R
 @Composable
 fun SearchBar(
     text: String,
-    onChange: (text: String) -> Unit,
-    onDone: () -> Unit
+    onChange: (text: String) -> Unit = {},
+    onDone: () -> Unit = {},
+    enabled: Boolean = true,
+    placeholder: String = stringResource(id = R.string.Apps_search_apps)
 ) {
 
     TextField(
@@ -34,8 +35,10 @@ fun SearchBar(
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
             focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
         leadingIcon = {
             Icon(
@@ -47,7 +50,7 @@ fun SearchBar(
         },
         placeholder = {
             Text(
-                text = stringResource(id = R.string.Apps_search_for_apps),
+                text = placeholder,
                 color = MaterialTheme.colorScheme.onBackground
             )
         },
@@ -57,6 +60,7 @@ fun SearchBar(
             }
         ),
         maxLines = 1,
-        singleLine = true
+        singleLine = true,
+        enabled = enabled
     )
 }
