@@ -198,7 +198,7 @@ fun PermissionsScreen(
 
                 Button(
                     onClick = { navigateToLayout() },
-                    enabled = uiState.allFilesPermission && uiState.readMediaPermissions
+                    //enabled = uiState.allFilesPermission && uiState.readMediaPermissions
                 ) {
                     Text(
                         text = stringResource(id = R.string.SetupScreen_next),

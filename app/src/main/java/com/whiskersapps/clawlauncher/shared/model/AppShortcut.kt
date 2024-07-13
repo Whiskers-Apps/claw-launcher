@@ -5,5 +5,5 @@ import android.graphics.Bitmap
 data class AppShortcut(
     val name: String,
     val packageName: String,
-    val icon: Bitmap
+    var icon: Bitmap
 )

@@ -17,6 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -36,8 +39,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.whiskersapps.clawlauncher.views.main.view.Wallpaper
-import com.whiskersapps.clawlauncher.views.main.viewmodel.MainScreenUiState
+import com.lighttigerxiv.layout_scaffold.inLandscape
+import com.lighttigerxiv.layout_scaffold.isTablet
+import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.views.main.views.apps.viewmodel.AppsScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchBar
 import kotlinx.coroutines.delay
@@ -45,7 +49,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AppsScreen(
-    mainScreenUiState: MainScreenUiState,
     vm: AppsScreenVM = hiltViewModel(),
     navigateHome: () -> Unit
 ) {
@@ -54,17 +57,17 @@ fun AppsScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
+    val isTablet = isTablet()
+    val inLandscape = inLandscape()
 
     uiState?.let {
 
-        Box {
-
-            Wallpaper(uiState = mainScreenUiState, blurRadius = 14.dp)
+        Box(contentAlignment = Alignment.Center) {
 
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(0.9f)
+                    .alpha(uiState.opacity)
                     .background(MaterialTheme.colorScheme.background)
             )
 
@@ -72,6 +75,7 @@ fun AppsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .systemBarsPadding()
+                    .imePadding()
                     .padding(8.dp)
             ) {
 
@@ -85,14 +89,13 @@ fun AppsScreen(
                             },
                             onDone = {
                                 scope.launch {
-                                    if (uiState.searchText.isNotEmpty()) {
-                                        vm.openFirstApp()
-                                        delay(1000)
-                                        navigateHome()
-                                    }
+                                    vm.openFirstApp()
+                                    delay(1000)
 
                                     focusManager.clearFocus()
                                     keyboardController?.hide()
+
+                                    navigateHome()
                                 }
                             }
                         )
@@ -101,57 +104,101 @@ fun AppsScreen(
                     }
                 }
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f, fill = true)
-                        .imePadding()
-                ) {
-                    itemsIndexed(
-                        items = uiState.appShortcuts,
-                        key = { index, app -> "${index}-${app.packageName}" }) { _, app ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(CircleShape)
-                                .clickable {
-                                    scope.launch {
-                                        vm.openApp(app.packageName)
-                                        delay(1000)
-
-                                        focusManager.clearFocus()
-                                        keyboardController?.hide()
-
-                                        navigateHome()
-                                    }
-                                }
-                                .padding(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            val image by remember {
-                                derivedStateOf { app.icon.asImageBitmap() }
-                            }
-
-                            Box(
+                if (uiState.viewType == "list") {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f, fill = true)
+                    ) {
+                        itemsIndexed(
+                            items = uiState.appShortcuts,
+                            key = { index, app -> "${index}-${app.packageName}" }) { _, app ->
+                            Row(
                                 modifier = Modifier
-                                    .size(56.dp)
+                                    .fillMaxWidth()
                                     .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.background)
+                                    .clickable {
+                                        scope.launch {
+                                            vm.openApp(app.packageName)
+                                            delay(1000)
+
+                                            focusManager.clearFocus()
+                                            keyboardController?.hide()
+
+                                            navigateHome()
+                                        }
+                                    }
+                                    .padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Image(
-                                    modifier = Modifier.fillMaxSize(),
-                                    bitmap = image,
-                                    contentDescription = "${app.packageName} icon"
-                                )
+
+                                val image by remember {
+                                    derivedStateOf { app.icon.asImageBitmap() }
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .size(56.dp)
+                                        .clip(CircleShape)
+                                        .background(MaterialTheme.colorScheme.background)
+                                ) {
+                                    Image(
+                                        modifier = Modifier.fillMaxSize(),
+                                        bitmap = image,
+                                        contentDescription = "${app.packageName} icon"
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(16.dp))
+
+                                Text(text = app.name)
                             }
-
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Text(text = app.name)
                         }
                     }
                 }
+
+                if (uiState.viewType == "grid") {
+
+                    val phoneColumns =
+                        if (inLandscape) uiState.phoneLandscapeCols else uiState.phoneCols
+                    val tabletColumns =
+                        if (inLandscape) uiState.tabletLandscapeCols else uiState.tabletCols
+                    val columns = if (isTablet) tabletColumns else phoneColumns
+
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f, fill = true)
+                    ) {
+                        LazyVerticalGrid(columns = GridCells.Fixed(columns)) {
+                            itemsIndexed(
+                                items = uiState.appShortcuts,
+                                key = { index, app -> "$index - ${app.packageName}" }
+                            ) { _, app ->
+                                GridAppShortcut(
+                                    app = app,
+                                    padding = uiState.iconPadding,
+                                    openApp = {
+                                        scope.launch {
+                                            vm.openApp(app.packageName)
+                                            delay(200)
+
+                                            focusManager.clearFocus()
+                                            keyboardController?.hide()
+
+                                            navigateHome()
+                                        }
+                                    },
+                                    openInfo = {vm.openAppInfo(app.packageName)},
+                                    requestUninstall = {vm.requestUninstall(app.packageName)}
+                                )
+                            }
+                        }
+                    }
+
+                }
+
 
                 if (uiState.showSearchBar && uiState.searchBarPosition == "bottom") {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -159,9 +206,10 @@ fun AppsScreen(
                     Box(modifier = Modifier.padding(8.dp)) {
                         SearchBar(
                             text = uiState.searchText,
-                            onChange = {
-                                vm.updateSearchText(it)
-                            },
+                            onChange = { vm.updateSearchText(it) },
+                            showMenu = true,
+                            onMenuClick = { vm.updateShowSettingsDialog(true) },
+                            opacity = uiState.searchBarOpacity,
                             onDone = {
                                 scope.launch {
                                     if (uiState.searchText.isNotEmpty()) {
@@ -178,6 +226,8 @@ fun AppsScreen(
                     }
                 }
             }
+
+            AppsSettingsDialog(vm, uiState)
         }
     }
 }

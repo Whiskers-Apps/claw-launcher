@@ -14,7 +14,7 @@ android {
         minSdk = 29
         targetSdk = 34
         versionCode = 1
-        versionName = "0.0.1-alpha"
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -29,6 +29,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -93,6 +94,11 @@ dependencies {
 
     // Routes
     implementation(libs.androidx.navigation.compose)
+
+    // Coil for async image loading
+    implementation(libs.coil.compose)
+
+    implementation(libs.rebugger)
 }
 
 kapt {

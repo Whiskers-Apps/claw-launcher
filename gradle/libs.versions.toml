@@ -1,6 +1,10 @@
 [versions]
-agp = "8.5.0"
+agp = "8.5.1"
+androidsvgAar = "1.4"
+cloudy = "0.1.2"
+coilCompose = "2.6.0"
 datastorePreferences = "1.1.1"
+glassmorphicComposables = "0.0.4"
 hiltAndroidCompiler = "2.48"
 hiltAndroidVersion = "2.48"
 hiltNavigationCompose = "1.2.0"
@@ -18,15 +22,20 @@ composeBom = "2024.04.01"
 lifecycleViewmodelKtx = "2.8.3"
 navigationCompose = "2.7.7"
 navigationComposeVersion = "2.7.7"
+rebugger = "1.0.0-rc03"
 whiskersPaletteKt = "1.0.0"
 
 [libraries]
+androidsvg-aar = { module = "com.caverock:androidsvg-aar", version.ref = "androidsvgAar" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationCompose" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
+cloudy = { module = "com.github.skydoves:cloudy", version.ref = "cloudy" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+glassmorphic-composables = { module = "com.github.jakhongirmadaminov:glassmorphic-composables", version.ref = "glassmorphicComposables" }
 hilt-android-compiler-v248 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidCompiler" }
 hilt-android-v248 = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidVersion" }
@@ -46,6 +55,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 layout-scaffold = { module = "com.github.lighttigerXIV:layout-scaffold", version.ref = "layoutScaffold" }
 library-base = { module = "io.realm.kotlin:library-base", version.ref = "libraryBase" }
+rebugger = { module = "io.github.theapache64:rebugger", version.ref = "rebugger" }
 whiskers-palette-kt = { module = "com.github.Whiskers-Color-Scheme:whiskers-palette-kt", version.ref = "whiskersPaletteKt" }
 
 [plugins]

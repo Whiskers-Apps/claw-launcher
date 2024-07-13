@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.whiskersapps.clawlauncher.R
-import com.whiskersapps.clawlauncher.views.main.viewmodel.MainScreenUiState
 import com.whiskersapps.clawlauncher.views.main.viewmodel.MainScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreen
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreen
@@ -56,9 +55,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    vm: MainScreenVM = hiltViewModel()
+    vm: MainScreenVM = hiltViewModel(),
+    navigateToSettings : () -> Unit
 ) {
-    val uiState = vm.uiState.collectAsState().value
     val pagerState = rememberPagerState(pageCount = { 2 })
     val sheetState = rememberModalBottomSheetState()
     val scaffoldState = rememberBottomSheetScaffoldState(sheetState)
@@ -74,69 +73,51 @@ fun MainScreen(
         }
     }
 
-    uiState?.let {
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetContent = {
+            SearchScreen(
+                sheetState = sheetState,
+                closeSheet = { scope.launch { sheetState.hide() } }
+            )
+        },
+        sheetPeekHeight = 0.dp,
+        sheetDragHandle = {},
+        sheetShape = AbsoluteCutCornerShape(0.dp),
+        sheetMaxWidth = Dp.Unspecified,
+        contentColor = Color.Transparent,
+        containerColor = Color.Transparent,
+        sheetContentColor = Color.Transparent,
+        sheetContainerColor = Color.Transparent,
+        sheetShadowElevation = 0.dp,
+        sheetTonalElevation = 0.dp
+    ) {
 
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            sheetContent = {
-                SearchScreen(
-                    mainScreenUiState = uiState,
-                    closeSheet = { scope.launch { sheetState.hide() } })
-            },
-            sheetPeekHeight = 0.dp,
-            sheetDragHandle = {},
-            sheetShape = AbsoluteCutCornerShape(0.dp)
-        ) {
-            Box {
-                Wallpaper(uiState = uiState, blurRadius = 0.dp)
+        Box {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
+                HorizontalPager(modifier = Modifier.fillMaxSize(), state = pagerState) { page ->
+                    if (page == 0) {
+                        HomeScreen(
+                            openSearchSheet = { scope.launch { sheetState.expand() } },
+                            navigateToSettings = { navigateToSettings() }
+                        )
+                    }
 
-                    HorizontalPager(modifier = Modifier.fillMaxSize(), state = pagerState) { page ->
-                        if (page == 0) {
-                            HomeScreen(openSearchSheet = { scope.launch { sheetState.expand() } })
-                        }
-
-                        if (page == 1) {
-                            AppsScreen(
-                                mainScreenUiState = uiState,
-                                navigateHome = {
-                                    scope.launch {
-                                        delay(500)
-                                        pagerState.scrollToPage(0)
-                                    }
+                    if (page == 1) {
+                        AppsScreen(
+                            navigateHome = {
+                                scope.launch {
+                                    pagerState.scrollToPage(0)
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Wallpaper(uiState: MainScreenUiState, blurRadius: Dp) {
-    if (uiState.wallpaper != null) {
-        val wallpaper by remember { derivedStateOf { uiState.wallpaper.asImageBitmap() } }
-
-        Image(
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(blurRadius),
-            bitmap = wallpaper,
-            contentDescription = "wallpaper",
-            contentScale = ContentScale.Crop
-        )
-
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black)
-        )
     }
 }

@@ -1,25 +1,27 @@
 package com.whiskersapps.clawlauncher.shared.app
 
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.DrawableContainer
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.theapache64.rebugger.Rebugger
 import com.whiskersapps.clawlauncher.views.main.view.MainScreen
 import com.whiskersapps.clawlauncher.views.setup.layout.ui.LayoutScreen
 import com.whiskersapps.clawlauncher.views.setup.permissions.ui.PermissionsScreen
@@ -27,7 +29,9 @@ import com.whiskersapps.clawlauncher.views.setup.permissions.ui.isAtLeastAndroid
 import com.whiskersapps.clawlauncher.views.setup.welcome.ui.WelcomeScreen
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
-import com.whiskersapps.clawlauncher.shared.viewmodel.SettingsVM
+import com.whiskersapps.clawlauncher.shared.viewmodel.SettingsScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreen
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view.AboutScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,22 +41,34 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val settingsVM = hiltViewModel<SettingsVM>()
-            val settings = settingsVM.settings.collectAsState().value
+            val settingsScreenVM = hiltViewModel<SettingsScreenVM>()
+            val settings = settingsScreenVM.settings.collectAsState().value
 
             settings?.let {
                 ClawLauncherTheme(settings = settings) {
+                    val navController = rememberNavController()
+                    val bgColor = MaterialTheme.colorScheme.background
+                    var backgroundColor by remember { mutableStateOf(bgColor) }
 
-                    Surface{
+                    navController.addOnDestinationChangedListener { _, destination, _ ->
+                        backgroundColor = if (destination.route == Routes.Main.HOME) {
+                            Color.Transparent
+                        } else {
+                            bgColor
+                        }
+                    }
 
-                        val navController = rememberNavController()
-
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(backgroundColor)
+                    ) {
                         NavHost(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.background),
+                                .background(backgroundColor),
                             navController = navController,
-                            startDestination = if (settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
+                            startDestination = if (settings.setupCompleted) Routes.Main.Settings.ROUTE else Routes.Setup.ROUTE
                         ) {
                             navigation(
                                 startDestination = Routes.Setup.WELCOME,
@@ -91,7 +107,34 @@ class MainActivity : ComponentActivity() {
                                 route = Routes.Main.ROUTE
                             ) {
                                 composable(Routes.Main.HOME) {
-                                    MainScreen()
+                                    MainScreen(
+                                        navigateToSettings = { navController.navigate(Routes.Main.Settings.ROUTE) }
+                                    )
+                                }
+                            }
+
+                            navigation(
+                                startDestination = Routes.Main.Settings.MAIN,
+                                route = Routes.Main.Settings.ROUTE
+                            ) {
+                                composable(Routes.Main.Settings.MAIN) {
+                                    SettingsScreen(
+                                        navigateBack = { navController.navigateUp() },
+                                        navigateToStyleSettings = {},
+                                        navigateToHomeSettings = {},
+                                        navigateToAppsSettings = {},
+                                        navigateToSearchSettings = {},
+                                        navigateToBookmarksSettings = {},
+                                        navigateToSearchEnginesSettings = {},
+                                        navigateToAboutSettings = { navController.navigate(Routes.Main.Settings.ABOUT) }
+                                    )
+                                }
+
+                                composable(Routes.Main.Settings.ABOUT) {
+                                    AboutScreen(
+                                        vm = settingsScreenVM,
+                                        navigateBack = { navController.navigateUp() }
+                                    )
                                 }
                             }
                         }

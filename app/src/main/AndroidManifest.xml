@@ -6,26 +6,23 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
-    <!-- To get the wallpaper 🖕 -->
-    <uses-permission-sdk-23
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <uses-permission-sdk-23
-        android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission-sdk-23 android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-
+    <!--To expand the status bar on a swipe-->
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+
+    <!--To uninstall apps-->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
     <application
         android:name=".shared.app.App"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:enableOnBackInvokedCallback="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClawLauncher"
-        tools:targetApi="31">
+        tools:targetApi="tiramisu">
         <activity
             android:name=".shared.app.MainActivity"
             android:windowSoftInputMode="adjustResize"

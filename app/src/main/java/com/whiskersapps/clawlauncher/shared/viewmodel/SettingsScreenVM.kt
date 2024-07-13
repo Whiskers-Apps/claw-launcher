@@ -1,5 +1,8 @@
 package com.whiskersapps.clawlauncher.shared.viewmodel
 
+import android.app.Application
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
@@ -13,8 +16,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsVM @Inject constructor(
-    private val settingsRepository: SettingsRepository
+class SettingsScreenVM @Inject constructor(
+    private val settingsRepository: SettingsRepository,
+    private val app: Application
 ) : ViewModel() {
     private val _settings = MutableStateFlow<Settings?>(null)
     val settings = _settings.asStateFlow()
@@ -24,6 +28,20 @@ class SettingsVM @Inject constructor(
             settingsRepository.settingsFlow.collect { newSettings ->
                 _settings.update { newSettings }
             }
+        }
+    }
+
+    fun openRepoInBrowser() {
+        try {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://github.com/Whiskers-Apps/claw-launcher")
+            )
+
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            app.startActivity(intent)
+        } catch (e: Exception) {
+            println("Error opening repo. $e")
         }
     }
 }

@@ -27,7 +27,8 @@ class SearchScreenVM @Inject constructor(
                 _uiState.update {
                     SearchScreenUiState(
                         searchText = "",
-                        appShortcuts = ArrayList()
+                        appShortcuts = ArrayList(),
+                        focusSearchBar = false
                     )
                 }
             }
@@ -55,5 +56,29 @@ class SearchScreenVM @Inject constructor(
                 appShortcuts = ArrayList()
             )
         }
+    }
+
+    fun openFirstApp() {
+
+        if(uiState.value!!.appShortcuts.isNotEmpty()){
+            openApp(uiState.value!!.appShortcuts[0].packageName)
+        }
+
+        // if bookmarks
+
+        // if search engines
+    }
+
+    fun updateFocusSearchBar(focus: Boolean) {
+        _uiState.update { it?.copy(focusSearchBar = focus) }
+    }
+
+
+    fun openAppInfo(packageName: String) {
+        appsRepository.openAppInfo(packageName)
+    }
+
+    fun requestUninstall(packageName: String) {
+        appsRepository.requestUninstall(packageName)
     }
 }

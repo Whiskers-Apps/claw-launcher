@@ -11,6 +11,10 @@ val Typography = Typography(
         fontSize = 32.sp,
         fontWeight = FontWeight.SemiBold
     ),
+    titleMedium = TextStyle(
+        fontSize = 24.sp,
+        fontWeight = FontWeight.SemiBold
+    ),
     titleSmall = TextStyle(
         fontSize = 18.sp,
         fontWeight = FontWeight.SemiBold
@@ -21,6 +25,10 @@ val Typography = Typography(
     ),
     labelMedium = TextStyle(
         fontSize = 14.sp,
+        fontWeight = FontWeight.Normal
+    ),
+    labelSmall = TextStyle(
+        fontSize = 12.sp,
         fontWeight = FontWeight.Normal
     )
 )

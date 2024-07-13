@@ -16,4 +16,5 @@
     <string name="PermissionsScreen_manage_external_storage">Manage External Storage</string>
     <string name="Apps_search_apps">Search apps</string>
     <string name="Search_apps_and_much_more">Search apps and much more</string>
+    <string name="Search_touch_or_swipe_up_to_search">Touch or swipe up to search</string>
 </resources>
