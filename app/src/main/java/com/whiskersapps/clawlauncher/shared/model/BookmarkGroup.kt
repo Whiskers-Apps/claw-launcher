@@ -10,5 +10,5 @@ class BookmarkGroup : RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
     var name: String = ""
-    var bookmarks_ids: RealmList<Long> = ArrayList<Long>().toRealmList()
+    var bookmarks: RealmList<ObjectId> = ArrayList<ObjectId>().toRealmList()
 }

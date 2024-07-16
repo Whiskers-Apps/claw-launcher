@@ -96,13 +96,13 @@ fun EditSearchEngineDialog(
 
             Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
 
-            RoundTextField(text = name, onTextChange = { vm.updateEditSearchEngineName(it) })
+            RoundTextField(text = name, placeholder = "DuckDuckGo", onTextChange = { vm.updateEditSearchEngineName(it) })
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = "Query", color = MaterialTheme.colorScheme.onBackground)
 
-            RoundTextField(text = query, onTextChange = { vm.updateEditSearchEngineQuery(it) })
+            RoundTextField(text = query, placeholder = "https://duckduckgo.com/?q=%s", onTextChange = { vm.updateEditSearchEngineQuery(it) })
 
             Spacer(modifier = Modifier.height(16.dp))
 

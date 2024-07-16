@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -41,8 +43,7 @@ import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.search.viewmodel.SearchScreenVM
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEngineCard
-import kotlinx.coroutines.delay
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenAction
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +54,7 @@ fun SearchScreen(
     closeSheet: () -> Unit
 ) {
 
-    val uiState = vm.uiState.collectAsState().value
+    val uiState = vm.state.collectAsState().value
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -141,23 +142,59 @@ fun SearchScreen(
                             )
                         }
                     }
+                }
+
+                if (uiState.searchText.isNotEmpty()) {
 
                     Text(
                         text = "Bookmarks",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = Typography.titleSmall
                     )
-                }
 
-                if (uiState.searchText.isNotEmpty()) {
+                    LazyColumn {
+                        items(items = uiState.bookmarks, key = { it._id.toHexString() }) { bookmark ->
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    vm.openUrl(bookmark.url)
+                                }
+                                .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(42.dp)
+                                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                                    model = getFaviconUrl(bookmark.url),
+                                    contentDescription = "${bookmark.name} icon"
+                                )
+
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Column {
+                                    Text(
+                                        text = bookmark.name,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+
+                                    Text(
+                                        text = bookmark.url,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        style = Typography.labelSmall
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                     uiState.searchEngine?.let {
                         Text(
                             text = "Web",
                             color = MaterialTheme.colorScheme.onBackground,
                             style = Typography.titleSmall
                         )
-
-                        Spacer(modifier = Modifier.height(16.dp))
 
                         Row(
                             modifier = Modifier

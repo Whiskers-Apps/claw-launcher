@@ -19,8 +19,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideBookmarksRepository(): BookmarksRepository {
-        return BookmarksRepository()
+    fun provideBookmarksRepository(realm: Realm): BookmarksRepository {
+        return BookmarksRepository(realm)
     }
 
     @Singleton

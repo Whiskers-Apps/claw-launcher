@@ -1,9 +1,8 @@
-package com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view
+package com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,17 +26,17 @@ import androidx.compose.ui.window.DialogProperties
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
 import com.whiskersapps.clawlauncher.shared.view.composables.RoundTextField
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.viewmodel.SearchEnginesScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenState
 
 @Composable
-fun AddSearchEngineDialog(
-    vm: SearchEnginesScreenVM,
-    name: String,
-    query: String
+fun AddBookmarkDialog(
+    state: BookmarksScreenState,
+    onAction: (BookmarksScreenAction) -> Unit
 ) {
 
     Dialog(
-        onDismissRequest = { vm.updateShowAddSearchEngineDialog(false) },
+        onDismissRequest = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) },
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Column(
@@ -65,7 +64,7 @@ fun AddSearchEngineDialog(
                     )
 
                     Text(
-                        text = "Add Search Engine",
+                        text = "Add Bookmark",
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold
@@ -76,22 +75,44 @@ fun AddSearchEngineDialog(
 
                 Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
 
-                RoundTextField(text = name, placeholder = "DuckDuckGo",onTextChange = { vm.updateAddSearchEngineName(it) })
+                RoundTextField(
+                    text = state.addBookmarkDialog.name,
+                    placeholder = "Notion",
+                    onTextChange = { text ->
+                        onAction(
+                            BookmarksScreenAction.UpdateAddBookmarkDialogFields(
+                                name = text,
+                                url = state.addBookmarkDialog.url
+                            )
+                        )
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(text = "Query", color = MaterialTheme.colorScheme.onBackground)
+                Text(text = "Url", color = MaterialTheme.colorScheme.onBackground)
 
-                RoundTextField(text = query, placeholder = "https://duckduckgo.com/?q=%s", onTextChange = { vm.updateAddSearchEngineQuery(it) })
+                RoundTextField(
+                    text = state.addBookmarkDialog.url,
+                    placeholder = "https://notion.so",
+                    onTextChange = { text ->
+                        onAction(
+                            BookmarksScreenAction.UpdateAddBookmarkDialogFields(
+                                name = state.addBookmarkDialog.name,
+                                url = text
+                            )
+                        )
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
             DialogFooter(
-                onDismiss = { vm.updateShowAddSearchEngineDialog(false) },
+                onDismiss = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) },
                 primaryButtonText = "Add",
-                enabled = name.trim().isNotEmpty() && query.trim().isNotEmpty(),
-                onPrimaryClick = { vm.addSearchEngine() }
+                enabled = true,
+                onPrimaryClick = { onAction(BookmarksScreenAction.AddBookmark) }
             )
         }
     }

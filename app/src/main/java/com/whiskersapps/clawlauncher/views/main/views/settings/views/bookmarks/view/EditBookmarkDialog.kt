@@ -1,9 +1,8 @@
-package com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view
+package com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,17 +26,18 @@ import androidx.compose.ui.window.DialogProperties
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
 import com.whiskersapps.clawlauncher.shared.view.composables.RoundTextField
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.viewmodel.SearchEnginesScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenState
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SwipeToDelete
 
 @Composable
-fun AddSearchEngineDialog(
-    vm: SearchEnginesScreenVM,
-    name: String,
-    query: String
+fun EditBookmarkDialog(
+    state: BookmarksScreenState,
+    onAction: (BookmarksScreenAction) -> Unit
 ) {
 
     Dialog(
-        onDismissRequest = { vm.updateShowAddSearchEngineDialog(false) },
+        onDismissRequest = { onAction(BookmarksScreenAction.CloseEditBookmarkDialog) },
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Column(
@@ -59,13 +59,13 @@ fun AddSearchEngineDialog(
                 ) {
                     Icon(
                         modifier = Modifier.size(32.dp),
-                        painter = painterResource(id = R.drawable.plus),
+                        painter = painterResource(id = R.drawable.pencil),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary
                     )
 
                     Text(
-                        text = "Add Search Engine",
+                        text = "Edit Bookmark",
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold
@@ -76,22 +76,46 @@ fun AddSearchEngineDialog(
 
                 Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
 
-                RoundTextField(text = name, placeholder = "DuckDuckGo",onTextChange = { vm.updateAddSearchEngineName(it) })
+                RoundTextField(
+                    text = state.editBookmarkDialog.name,
+                    placeholder = "Notion",
+                    onTextChange = { text ->
+                        onAction(
+                            BookmarksScreenAction.UpdateEditBookmarkDialogFields(
+                                state.editBookmarkDialog.copy(name = text)
+                            )
+                        )
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(text = "Query", color = MaterialTheme.colorScheme.onBackground)
+                Text(text = "Url", color = MaterialTheme.colorScheme.onBackground)
 
-                RoundTextField(text = query, placeholder = "https://duckduckgo.com/?q=%s", onTextChange = { vm.updateAddSearchEngineQuery(it) })
+                RoundTextField(
+                    text = state.editBookmarkDialog.url,
+                    placeholder = "https://notion.so",
+                    onTextChange = { text ->
+                        onAction(
+                            BookmarksScreenAction.UpdateEditBookmarkDialogFields(
+                                state.editBookmarkDialog.copy(url = text)
+                            )
+                        )
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SwipeToDelete { onAction(BookmarksScreenAction.DeleteBookmark) }
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
             DialogFooter(
-                onDismiss = { vm.updateShowAddSearchEngineDialog(false) },
-                primaryButtonText = "Add",
-                enabled = name.trim().isNotEmpty() && query.trim().isNotEmpty(),
-                onPrimaryClick = { vm.addSearchEngine() }
+                onDismiss = { onAction(BookmarksScreenAction.CloseEditBookmarkDialog) },
+                primaryButtonText = "Save",
+                enabled = true,
+                onPrimaryClick = { onAction(BookmarksScreenAction.EditBookmark) }
             )
         }
     }

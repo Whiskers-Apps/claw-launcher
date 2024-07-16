@@ -35,7 +35,7 @@ class SearchEnginesRepository(
         realm.write { copyToRealm(searchEngine) }
     }
 
-    suspend fun updateSearchEngine(id: ObjectId, name: String, query: String) {
+    fun updateSearchEngine(id: ObjectId, name: String, query: String) {
         realm.query<SearchEngine>("_id == $0", id).first().find()?.also { searchEngine ->
             realm.writeBlocking {
                 findLatest(searchEngine)?.also {
@@ -66,7 +66,7 @@ class SearchEnginesRepository(
         CoroutineScope(Dispatchers.IO).launch {
             realm.query<SearchEngine>().asFlow()
                 .map { it.list }
-                .collect { newSearchEngines ->
+                .collect { searchEngines ->
 
                     val settings = settingsRepository.settingsFlow.first()
 
@@ -74,12 +74,12 @@ class SearchEnginesRepository(
                         null
                     } else {
                         val id = ObjectId(settings.defaultSearchEngine)
-                        newSearchEngines.find { it._id == id }
+                        searchEngines.find { it._id == id }
                     }
 
                     _data.update {
                         Data(
-                            searchEngines = newSearchEngines,
+                            searchEngines = searchEngines,
                             defaultSearchEngine = defaultEngine
                         )
                     }
