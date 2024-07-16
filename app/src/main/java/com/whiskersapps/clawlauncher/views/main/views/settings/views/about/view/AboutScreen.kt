@@ -1,6 +1,5 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
-import com.whiskersapps.clawlauncher.shared.viewmodel.SettingsScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.viewmodel.SettingsScreenVM
 
 @Composable
 fun AboutScreen(
@@ -47,7 +46,7 @@ fun AboutScreen(
             .fillMaxSize()
             .systemBarsPadding()
     ) {
-        NavBar { navigateBack() }
+        NavBar(navigateBack = { navigateBack() })
 
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())

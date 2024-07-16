@@ -57,7 +57,8 @@ class SettingsRepository(app: Application) {
             homeSearchBarOpacity = preferences[Settings.HOME_SEARCH_BAR_OPACITY]
                 ?: Settings.DEFAULT_HOME_SEARCH_BAR_OPACITY,
 
-            homeSearchBarRadius = preferences[Settings.HOME_SEARCH_BAR_RADIUS] ?: Settings.DEFAULT_HOME_SEARCH_BAR_RADIUS,
+            homeSearchBarRadius = preferences[Settings.HOME_SEARCH_BAR_RADIUS]
+                ?: Settings.DEFAULT_HOME_SEARCH_BAR_RADIUS,
 
             showAppsSearchBar = preferences[Settings.SHOW_APPS_SEARCH_BAR]
                 ?: Settings.DEFAULT_SHOW_APPS_SEARCH_BAR,
@@ -68,7 +69,8 @@ class SettingsRepository(app: Application) {
             appsSearchBarOpacity = preferences[Settings.APPS_SEARCH_BAR_OPACITY]
                 ?: Settings.DEFAULT_APPS_SEARCH_BAR_OPACITY,
 
-            )
+            defaultSearchEngine = preferences[Settings.DEFAULT_SEARCH_ENGINE] ?: ""
+        )
     }
 
     suspend fun updateSetupCompleted(setupCompleted: Boolean) {
@@ -112,7 +114,9 @@ class SettingsRepository(app: Application) {
     }
 
     suspend fun updateShowHomeSearchBarPlaceholder(showHomeSearchBarPlaceholder: Boolean) {
-        dataStore.edit { it[Settings.SHOW_HOME_SEARCH_BAR_PLACEHOLDER] = showHomeSearchBarPlaceholder }
+        dataStore.edit {
+            it[Settings.SHOW_HOME_SEARCH_BAR_PLACEHOLDER] = showHomeSearchBarPlaceholder
+        }
     }
 
     suspend fun updateShowHomeSearchBarSettings(showHomeSearchBarSettings: Boolean) {
@@ -123,7 +127,7 @@ class SettingsRepository(app: Application) {
         dataStore.edit { it[Settings.HOME_SEARCH_BAR_OPACITY] = homeSearchBarOpacity }
     }
 
-    suspend fun updateHomeSearchBarRadius(radius: Int){
+    suspend fun updateHomeSearchBarRadius(radius: Int) {
         dataStore.edit { it[Settings.HOME_SEARCH_BAR_RADIUS] = radius }
     }
 
@@ -137,5 +141,9 @@ class SettingsRepository(app: Application) {
 
     suspend fun updateAppsSearchBarOpacity(appsSearchBarOpacity: Float) {
         dataStore.edit { it[Settings.APPS_SEARCH_BAR_OPACITY] = appsSearchBarOpacity }
+    }
+
+    suspend fun updateDefaultSearchEngine(id: String) {
+        dataStore.edit { it[Settings.DEFAULT_SEARCH_ENGINE] = id }
     }
 }

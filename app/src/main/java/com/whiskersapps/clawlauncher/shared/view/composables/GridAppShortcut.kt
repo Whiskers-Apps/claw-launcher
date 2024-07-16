@@ -66,22 +66,7 @@ fun GridAppShortcut(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val image by remember { derivedStateOf { app.icon.asImageBitmap() } }
-
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-        ) {
-
-            Image(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .aspectRatio(1f),
-                bitmap = image,
-                contentDescription = "${app.packageName} icon",
-                contentScale = ContentScale.Crop
-            )
-        }
+        AppIcon(app = app)
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -94,57 +79,17 @@ fun GridAppShortcut(
         )
 
         if (showMenu) {
-            Popup(onDismissRequest = { showMenu = false }) {
-                Column(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(MaterialTheme.colorScheme.background)
-                ) {
-                    Row(
-                        Modifier
-                            .clickable {
-                                openInfo()
-                                showMenu = false
-                            }
-                            .padding(16.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.info),
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text(
-                            text = "App Info",
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-
-                    Row(
-                        Modifier
-                            .clickable {
-                                requestUninstall()
-                                showMenu = false
-                            }
-                            .padding(16.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.trash),
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text(
-                            text = "Uninstall",
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
+            AppPopup(
+                onDismiss = { showMenu = false },
+                onInfoClick = {
+                    openInfo()
+                    showMenu = false
+                },
+                onUninstallClick = {
+                    requestUninstall()
+                    showMenu = false
                 }
-            }
+            )
         }
     }
 }

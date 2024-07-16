@@ -32,7 +32,7 @@ fun SettingsScreen(
     ) {
         Column {
 
-            NavBar { navigateBack() }
+            NavBar(navigateBack = { navigateBack() })
 
             MainSetting(
                 title = "Style",

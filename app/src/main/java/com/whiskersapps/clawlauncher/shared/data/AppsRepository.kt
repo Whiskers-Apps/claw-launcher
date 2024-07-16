@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.graphics.drawable.toBitmap
@@ -62,23 +63,27 @@ class AppsRepository(
                 val stream = ByteArrayOutputStream()
                 iconDrawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 10, stream)
 
-                val shortcut = AppShortcut(
+                var shortcut = AppShortcut(
                     name = info.loadLabel(packageManager).toString(),
                     packageName = info.packageName,
-                    icon = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.toByteArray().size)
+                    icon = BitmapFactory.decodeByteArray(
+                        stream.toByteArray(),
+                        0,
+                        stream.toByteArray().size
+                    )
                 )
 
-                // Use if you decide to make adaptive icons
 
-                /*
-                if(iconDrawable is AdaptiveIconDrawable){
+                if (iconDrawable is AdaptiveIconDrawable) {
                     try {
-                        shortcut.icon = iconDrawable.foreground.toBitmap()
-                    }catch (e: Exception){
+                        shortcut = shortcut.copy(
+                            foreground = iconDrawable.foreground.toBitmap(),
+                            background = iconDrawable.background.toBitmap()
+                        )
+                    } catch (e: Exception) {
                         println(e)
                     }
                 }
-                 */
 
                 newAppShortcuts.add(shortcut)
             }
@@ -100,7 +105,7 @@ class AppsRepository(
         return apps.value.filter { it.name.lowercase().contains(text.lowercase()) }
     }
 
-    fun openAppInfo(packageName: String){
+    fun openAppInfo(packageName: String) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
@@ -109,7 +114,7 @@ class AppsRepository(
         app.startActivity(intent)
     }
 
-    fun requestUninstall(packageName: String){
+    fun requestUninstall(packageName: String) {
         val packageUri = Uri.parse("package:${packageName}")
         val intent = Intent(Intent.ACTION_DELETE, packageUri)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

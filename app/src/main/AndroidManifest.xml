@@ -12,6 +12,9 @@
     <!--To uninstall apps-->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
+    <!--To fetch search engines icons-->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".shared.app.App"
         android:allowBackup="false"

@@ -22,6 +22,7 @@ composeBom = "2024.04.01"
 lifecycleViewmodelKtx = "2.8.3"
 navigationCompose = "2.7.7"
 navigationComposeVersion = "2.7.7"
+realmGradlePlugin = "10.4.0"
 rebugger = "1.0.0-rc03"
 whiskersPaletteKt = "1.0.0"
 
@@ -55,6 +56,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 layout-scaffold = { module = "com.github.lighttigerXIV:layout-scaffold", version.ref = "layoutScaffold" }
 library-base = { module = "io.realm.kotlin:library-base", version.ref = "libraryBase" }
+realm-gradle-plugin = { module = "io.realm:realm-gradle-plugin", version.ref = "realmGradlePlugin" }
 rebugger = { module = "io.github.theapache64:rebugger", version.ref = "rebugger" }
 whiskers-palette-kt = { module = "com.github.Whiskers-Color-Scheme:whiskers-palette-kt", version.ref = "whiskersPaletteKt" }
 

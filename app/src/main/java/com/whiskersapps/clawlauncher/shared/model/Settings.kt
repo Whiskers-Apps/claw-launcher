@@ -23,6 +23,7 @@ data class Settings(
     val showAppsSearchBar: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR,
     val appsSearchBarPosition: String = DEFAULT_APPS_SEARCH_BAR_POSITION,
     val appsSearchBarOpacity: Float = DEFAULT_APPS_SEARCH_BAR_OPACITY,
+    val defaultSearchEngine: String = DEFAULT_DEFAULT_SEARCH_ENGINE
 ){
     companion object{
         val KEY_SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
@@ -75,5 +76,8 @@ data class Settings(
 
         val APPS_SEARCH_BAR_OPACITY = floatPreferencesKey("apps-search-bar-opacity")
         const val DEFAULT_APPS_SEARCH_BAR_OPACITY = 1f
+
+        val DEFAULT_SEARCH_ENGINE = stringPreferencesKey("default-search-engine")
+        const val DEFAULT_DEFAULT_SEARCH_ENGINE = ""
     }
 }

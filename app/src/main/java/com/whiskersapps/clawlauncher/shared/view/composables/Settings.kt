@@ -1,6 +1,7 @@
 package com.whiskersapps.clawlauncher.shared.view.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -65,7 +66,11 @@ fun SliderSetting(
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = if (textIsInt) value.toInt().toString() else DecimalFormat("#.#").format(value))
+                Text(
+                    text = if (textIsInt) value.toInt().toString() else DecimalFormat("#.#").format(
+                        value
+                    )
+                )
             }
         }
     }
@@ -78,7 +83,12 @@ fun SwitchSetting(
     value: Boolean,
     onValueChange: (value: Boolean) -> Unit
 ) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable { onValueChange(!value) },
+        verticalAlignment = Alignment.Top
+    ) {
         Column(
             Modifier
                 .fillMaxWidth()
