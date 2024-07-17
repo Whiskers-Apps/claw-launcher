@@ -25,15 +25,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.viewmodel.SettingsScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.intent.AboutScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.model.AboutScreenVM
+
+@Composable
+fun AboutScreenRoot(
+    navController: NavController,
+    vm: AboutScreenVM = hiltViewModel()
+) {
+
+    AboutScreen(
+        onAction = { action ->
+            when (action) {
+                AboutScreenAction.NavigateBack -> navController.navigateUp()
+                AboutScreenAction.OpenRepoUrl -> vm.onAction(action)
+            }
+        },
+        vm = vm
+    )
+}
 
 @Composable
 fun AboutScreen(
-    navigateBack: () -> Unit,
-    vm: SettingsScreenVM
+    onAction: (AboutScreenAction) -> Unit,
+    vm: AboutScreenVM
 ) {
 
     val context = LocalContext.current
@@ -46,7 +67,7 @@ fun AboutScreen(
             .fillMaxSize()
             .systemBarsPadding()
     ) {
-        NavBar(navigateBack = { navigateBack() })
+        NavBar(navigateBack = { onAction(AboutScreenAction.NavigateBack) })
 
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())
@@ -118,7 +139,7 @@ fun AboutScreen(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .clickable { vm.openRepoInBrowser() }
+                    .clickable { onAction(AboutScreenAction.OpenRepoUrl) }
                     .padding(16.dp)
             ) {
                 Text(

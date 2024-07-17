@@ -1,17 +1,16 @@
-package com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.viewmodel
+package com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.SearchEnginesRepository
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.intent.SearchEnginesScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mongodb.kbson.ObjectId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,39 +18,14 @@ class SearchEnginesScreenVM @Inject constructor(
     private val searchEnginesRepository: SearchEnginesRepository
 ) : ViewModel() {
 
-    companion object {
-        data class UiState(
-            val loading: Boolean = true,
-            val searchEngines: List<SearchEngine> = emptyList(),
-            val defaultSearchEngineId: ObjectId? = ObjectId(),
-            val defaultSearchEngine: SearchEngine? = null,
-            val addEngineDialog: AddEngineDialog = AddEngineDialog(),
-            val editEngineDialog: EditEngineDialog = EditEngineDialog()
-        ) {
-            data class AddEngineDialog(
-                val show: Boolean = false,
-                val name: String = "",
-                val query: String = ""
-            )
-
-            data class EditEngineDialog(
-                val id: ObjectId = ObjectId(),
-                val show: Boolean = false,
-                val name: String = "",
-                val query: String = "",
-                val defaultEngine: Boolean = false
-            )
-        }
-    }
-
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(SearchEnginesScreenState())
+    val uiState = _state.asStateFlow()
 
     init {
 
         viewModelScope.launch(Dispatchers.Main) {
             searchEnginesRepository.data.collect { data ->
-                _uiState.update {
+                _state.update {
                     it.copy(
                         loading = false,
                         searchEngines = data.searchEngines,
@@ -63,25 +37,45 @@ class SearchEnginesScreenVM @Inject constructor(
         }
     }
 
-    fun updateShowAddSearchEngineDialog(show: Boolean) {
-        val dialog = UiState.AddEngineDialog(
-            show = show,
-            name = "",
-            query = ""
-        )
+    fun onAction(action: SearchEnginesScreenAction) {
+        when (action) {
+            SearchEnginesScreenAction.NavigateBack -> {}
+            SearchEnginesScreenAction.CloseAddEngineDialog -> closeAddEngineDialog()
+            SearchEnginesScreenAction.ShowAddEngineDialog -> showAddEngineDialog()
+            is SearchEnginesScreenAction.UpdateAddEngineDialogFields -> updateAddEngineDialogFields(
+                action.name, action.query
+            )
 
-        _uiState.update { it.copy(addEngineDialog = dialog) }
+            SearchEnginesScreenAction.AddEngine -> addEngine()
+            is SearchEnginesScreenAction.ShowEditEngineDialog -> showEditEngineDialog(action.engine)
+            SearchEnginesScreenAction.CloseEditEngineDialog -> closeEditDialog()
+            SearchEnginesScreenAction.DeleteEngine -> deleteEngine()
+            SearchEnginesScreenAction.SaveEditEngine -> saveEditEngine()
+            is SearchEnginesScreenAction.UpdateEditEngineDialogFields -> updateEditEngineDialogFields(
+                action.name,
+                action.query,
+                action.default
+            )
+        }
     }
 
-    fun updateAddSearchEngineName(text: String) {
-        _uiState.update { it.copy(addEngineDialog = it.addEngineDialog.copy(name = text)) }
+    private fun closeAddEngineDialog() {
+        _state.update { it.copy(addEngineDialog = SearchEnginesScreenState.AddEngineDialog()) }
     }
 
-    fun updateAddSearchEngineQuery(text: String) {
-        _uiState.update { it.copy(addEngineDialog = it.addEngineDialog.copy(query = text)) }
+    private fun showAddEngineDialog() {
+        _state.update { it.copy(addEngineDialog = it.addEngineDialog.copy(show = true)) }
     }
 
-    fun addSearchEngine() {
+    private fun updateAddEngineDialogFields(name: String, query: String) {
+        _state.update {
+            it.copy(
+                addEngineDialog = it.addEngineDialog.copy(name = name, query = query)
+            )
+        }
+    }
+
+    private fun addEngine() {
         viewModelScope.launch(Dispatchers.IO) {
             val searchEngine = SearchEngine().apply {
                 name = uiState.value.addEngineDialog.name
@@ -96,14 +90,14 @@ class SearchEnginesScreenVM @Inject constructor(
                 searchEnginesRepository.clearDefaultEngine()
             }
 
-            _uiState.update { it.copy(addEngineDialog = it.addEngineDialog.copy(show = false)) }
+            _state.update { it.copy(addEngineDialog = it.addEngineDialog.copy(show = false)) }
         }
     }
 
-    fun showEditDialog(searchEngine: SearchEngine) {
-        _uiState.update {
+    private fun showEditEngineDialog(searchEngine: SearchEngine) {
+        _state.update {
             it.copy(
-                editEngineDialog = UiState.EditEngineDialog(
+                editEngineDialog = SearchEnginesScreenState.EditEngineDialog(
                     id = searchEngine._id,
                     show = true,
                     name = searchEngine.name,
@@ -114,27 +108,27 @@ class SearchEnginesScreenVM @Inject constructor(
         }
     }
 
-    fun closeEditDialog() {
-        _uiState.update {
+    private fun closeEditDialog() {
+        _state.update {
             it.copy(
-                editEngineDialog = UiState.EditEngineDialog()
+                editEngineDialog = SearchEnginesScreenState.EditEngineDialog()
             )
         }
     }
 
-    fun updateEditSearchEngineName(name: String) {
-        _uiState.update { it.copy(editEngineDialog = it.editEngineDialog.copy(name = name)) }
+    private fun updateEditEngineDialogFields(name: String, query: String, default: Boolean) {
+        _state.update {
+            it.copy(
+                editEngineDialog = it.editEngineDialog.copy(
+                    name = name,
+                    query = query,
+                    defaultEngine = default
+                )
+            )
+        }
     }
 
-    fun updateEditSearchEngineQuery(name: String) {
-        _uiState.update { it.copy(editEngineDialog = it.editEngineDialog.copy(query = name)) }
-    }
-
-    fun updateEditSearchEngineDefault(default: Boolean) {
-        _uiState.update { it.copy(editEngineDialog = it.editEngineDialog.copy(defaultEngine = default)) }
-    }
-
-    fun saveEditSearchEngine() {
+    private fun saveEditEngine() {
         viewModelScope.launch(Dispatchers.IO) {
 
             val defaultEngineId = uiState.value.defaultSearchEngineId
@@ -159,8 +153,8 @@ class SearchEnginesScreenVM @Inject constructor(
         }
     }
 
-    fun deleteSearchEngine() {
-        viewModelScope.launch(Dispatchers.IO){
+    private fun deleteEngine() {
+        viewModelScope.launch(Dispatchers.IO) {
             searchEnginesRepository.deleteSearchEngine(uiState.value.editEngineDialog.id)
 
             closeEditDialog()

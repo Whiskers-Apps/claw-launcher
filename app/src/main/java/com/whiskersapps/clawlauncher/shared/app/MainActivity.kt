@@ -30,9 +30,11 @@ import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
 import com.whiskersapps.clawlauncher.views.main.views.settings.viewmodel.SettingsScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreen
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view.AboutScreen
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view.AboutScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view.BookmarksScreen
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view.BookmarksScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreen
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -169,20 +171,11 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 composable(Routes.Main.Settings.SEARCH_ENGINES) {
-                                    SearchEnginesScreen(
-                                        navigateBack = {
-                                            navController.navigateUp()
-                                        }
-                                    )
+                                    SearchEnginesScreenRoot(navController = navController)
                                 }
 
                                 composable(Routes.Main.Settings.ABOUT) {
-                                    AboutScreen(
-                                        vm = settingsScreenVM,
-                                        navigateBack = {
-                                            navController.navigateUp()
-                                        }
-                                    )
+                                    AboutScreenRoot(navController = navController)
                                 }
                             }
                         }

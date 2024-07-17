@@ -21,7 +21,6 @@ import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.viewmodel.SearchEnginesScreenVM
 
 @Composable
 fun SearchEngineCard(

@@ -3,7 +3,6 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.search_eng
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,17 +26,18 @@ import androidx.compose.ui.window.DialogProperties
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
 import com.whiskersapps.clawlauncher.shared.view.composables.RoundTextField
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.viewmodel.SearchEnginesScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.intent.SearchEnginesScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.model.SearchEnginesScreenVM
 
 @Composable
 fun AddSearchEngineDialog(
-    vm: SearchEnginesScreenVM,
+    onAction: (SearchEnginesScreenAction) -> Unit,
     name: String,
     query: String
 ) {
 
     Dialog(
-        onDismissRequest = { vm.updateShowAddSearchEngineDialog(false) },
+        onDismissRequest = { onAction(SearchEnginesScreenAction.CloseAddEngineDialog) },
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Column(
@@ -76,22 +76,43 @@ fun AddSearchEngineDialog(
 
                 Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
 
-                RoundTextField(text = name, placeholder = "DuckDuckGo",onTextChange = { vm.updateAddSearchEngineName(it) })
+                RoundTextField(
+                    text = name,
+                    placeholder = "DuckDuckGo",
+                    onTextChange = { text ->
+                        onAction(
+                            SearchEnginesScreenAction.UpdateAddEngineDialogFields(
+                                name = text,
+                                query = query
+                            )
+                        )
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(text = "Query", color = MaterialTheme.colorScheme.onBackground)
 
-                RoundTextField(text = query, placeholder = "https://duckduckgo.com/?q=%s", onTextChange = { vm.updateAddSearchEngineQuery(it) })
+                RoundTextField(
+                    text = query,
+                    placeholder = "https://duckduckgo.com/?q=%s",
+                    onTextChange = { text ->
+                        onAction(
+                            SearchEnginesScreenAction.UpdateAddEngineDialogFields(
+                                name = name,
+                                query = text
+                            )
+                        )
+                    })
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
             DialogFooter(
-                onDismiss = { vm.updateShowAddSearchEngineDialog(false) },
+                onDismiss = { onAction(SearchEnginesScreenAction.CloseAddEngineDialog) },
                 primaryButtonText = "Add",
                 enabled = name.trim().isNotEmpty() && query.trim().isNotEmpty(),
-                onPrimaryClick = { vm.addSearchEngine() }
+                onPrimaryClick = { onAction(SearchEnginesScreenAction.AddEngine) }
             )
         }
     }

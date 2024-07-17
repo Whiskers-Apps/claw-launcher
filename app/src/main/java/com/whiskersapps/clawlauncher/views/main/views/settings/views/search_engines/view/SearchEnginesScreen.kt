@@ -17,14 +17,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.viewmodel.SearchEnginesScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.intent.SearchEnginesScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.model.SearchEnginesScreenVM
+
+
+@Composable
+fun SearchEnginesScreenRoot(
+    navController: NavController,
+    vm: SearchEnginesScreenVM = hiltViewModel()
+) {
+
+    SearchEnginesScreen(
+        onAction = { action ->
+            when (action) {
+                SearchEnginesScreenAction.NavigateBack -> navController.navigateUp()
+                else -> vm.onAction(action)
+            }
+        },
+        vm = vm
+    )
+}
 
 @Composable
 fun SearchEnginesScreen(
-    vm: SearchEnginesScreenVM = hiltViewModel(),
-    navigateBack: () -> Unit
+    onAction: (SearchEnginesScreenAction) -> Unit,
+    vm: SearchEnginesScreenVM
 ) {
 
     val uiState = vm.uiState.collectAsState().value
@@ -34,11 +54,11 @@ fun SearchEnginesScreen(
             .fillMaxSize()
             .systemBarsPadding()
     ) {
-        NavBar(navigateBack = { navigateBack() }) {
+        NavBar(navigateBack = { onAction(SearchEnginesScreenAction.NavigateBack) }) {
             if (!uiState.loading) {
                 Text(
                     modifier = Modifier.clickable {
-                        vm.updateShowAddSearchEngineDialog(true)
+                        onAction(SearchEnginesScreenAction.ShowAddEngineDialog)
                     },
                     text = "Add",
                     color = MaterialTheme.colorScheme.primary,
@@ -69,7 +89,13 @@ fun SearchEnginesScreen(
                         } else {
                             uiState.defaultSearchEngine?.let {
                                 SearchEngineCard(
-                                    onClick = { vm.showEditDialog(uiState.defaultSearchEngine) },
+                                    onClick = {
+                                        onAction(
+                                            SearchEnginesScreenAction.ShowEditEngineDialog(
+                                                uiState.defaultSearchEngine
+                                            )
+                                        )
+                                    },
                                     searchEngine = uiState.defaultSearchEngine,
                                     padding = 0.dp
                                 )
@@ -88,14 +114,22 @@ fun SearchEnginesScreen(
 
                 items(uiState.searchEngines) { searchEngine ->
                     if (uiState.defaultSearchEngineId != searchEngine._id) {
-                        SearchEngineCard(searchEngine = searchEngine, onClick = {vm.showEditDialog(searchEngine)})
+                        SearchEngineCard(
+                            searchEngine = searchEngine,
+                            onClick = {
+                                onAction(
+                                    SearchEnginesScreenAction.ShowEditEngineDialog(
+                                        searchEngine
+                                    )
+                                )
+                            })
                     }
                 }
             }
 
             if (uiState.addEngineDialog.show) {
                 AddSearchEngineDialog(
-                    vm = vm,
+                    onAction = { onAction(it) },
                     name = uiState.addEngineDialog.name,
                     query = uiState.addEngineDialog.query
                 )
@@ -103,7 +137,7 @@ fun SearchEnginesScreen(
 
             if (uiState.editEngineDialog.show) {
                 EditSearchEngineDialog(
-                    vm = vm,
+                    onAction = { onAction(it) },
                     name = uiState.editEngineDialog.name,
                     query = uiState.editEngineDialog.query,
                     default = uiState.editEngineDialog.defaultEngine
