@@ -11,9 +11,11 @@ import com.whiskersapps.clawlauncher.shared.data.SearchEnginesRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
+import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -38,6 +40,7 @@ class SearchScreenVM @Inject constructor(
             val searchText: String = "",
             val appShortcuts: List<AppShortcut> = emptyList(),
             val bookmarks: List<Bookmark> = emptyList(),
+            val groups: List<BookmarkGroup> = emptyList(),
             val focusSearchBar: Boolean = false,
             val searchEngine: SearchEngine? = null
         )
@@ -70,7 +73,8 @@ class SearchScreenVM @Inject constructor(
                     it.copy(
                         loading = it.loadingSearchEngines,
                         loadingBookmarks = false,
-                        bookmarks = data.bookmarks
+                        bookmarks = data.bookmarks,
+                        groups = data.groups
                     )
                 }
             }
@@ -80,26 +84,35 @@ class SearchScreenVM @Inject constructor(
     fun updateSearchText(text: String) {
 
         val newApps = if (text.isEmpty()) ArrayList() else appsRepository.getSearchedApps(text)
-        val newBookmarks = if(text.isEmpty()) emptyList() else bookmarksRepository.getSearchedBookmarks(text)
+
+        val newBookmarks =
+            if (text.isEmpty()) emptyList() else bookmarksRepository.getSearchedBookmarks(text)
+
+        val newGroups =
+            if (text.isEmpty()) emptyList() else bookmarksRepository.getSearchedGroups(text)
 
         _state.update {
             it.copy(
                 searchText = text,
-                appShortcuts = if (newApps.size >= 8) newApps.subList(0, 8) else newApps,
-                bookmarks = if(newBookmarks.size >= 8) newBookmarks.subList(0, 8) else newBookmarks
+
+                appShortcuts = if (newApps.size >= 8)
+                    newApps.subList(0, 8)
+                else newApps,
+
+                bookmarks = if (newBookmarks.size >= 8)
+                    newBookmarks.subList(0, 8)
+                else newBookmarks,
+
+                groups = if (newGroups.size >= 8)
+                    newGroups.subList(0, 8)
+                else newGroups
             )
         }
     }
 
     fun openApp(packageName: String) {
         appsRepository.openApp(packageName)
-
-        _state.update {
-            it.copy(
-                searchText = "",
-                appShortcuts = ArrayList()
-            )
-        }
+        clearSearch()
     }
 
     fun openUrl(url: String) {
@@ -145,5 +158,26 @@ class SearchScreenVM @Inject constructor(
 
     fun requestUninstall(packageName: String) {
         appsRepository.requestUninstall(packageName)
+    }
+
+    fun openGroup(group: BookmarkGroup) {
+        viewModelScope.launch {
+            val urls = bookmarksRepository.data.value.bookmarks
+                .filter { group.bookmarks.contains(it._id) }
+                .map { it.url }
+
+            for (url in urls) {
+                openUrl(url)
+                delay(200)
+            }
+
+            clearSearch()
+        }
+    }
+
+    private fun clearSearch() {
+        _state.update {
+            it.copy(searchText = "", bookmarks = emptyList(), groups = emptyList())
+        }
     }
 }

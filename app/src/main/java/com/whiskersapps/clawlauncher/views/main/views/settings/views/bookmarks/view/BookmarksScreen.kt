@@ -39,9 +39,9 @@ import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenAction
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenState
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.intent.BookmarksScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.model.BookmarksScreenState
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.model.BookmarksScreenVM
 import kotlinx.coroutines.launch
 
 
@@ -84,7 +84,9 @@ fun BookmarksScreen(
         NavBar(navigateBack = { onAction(BookmarksScreenAction.NavigateBack) }) {
             if (!state.loading) {
                 Text(
-                    modifier = Modifier.clickable { onAction(BookmarksScreenAction.OpenAddBookmarkDialog) },
+                    modifier = Modifier.clickable {
+                        onAction(BookmarksScreenAction.OpenAddDialog(pagerState.currentPage))
+                    },
                     text = "Add",
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -97,7 +99,6 @@ fun BookmarksScreen(
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 indicator = {},
-                divider = {},
                 containerColor = Color.Transparent,
             ) {
                 Tab(
@@ -185,7 +186,38 @@ fun BookmarksScreen(
                     }
 
                     1 -> {
+                        LazyColumn(Modifier.fillMaxSize()) {
+                            items(state.groups, key = { it._id.toHexString() }) { group ->
+                                Row(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onAction(
+                                            BookmarksScreenAction.OpenEditGroupDialog(
+                                                group
+                                            )
+                                        )
+                                    }
+                                    .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .size(42.dp),
+                                        painter = painterResource(id = R.drawable.folder),
+                                        contentDescription = "${group.name} icon",
+                                        tint = MaterialTheme.colorScheme.onBackground
+                                    )
 
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Text(
+                                        text = group.name,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -193,8 +225,17 @@ fun BookmarksScreen(
             if (state.showAddBookmarkDialog) {
                 AddBookmarkDialog(state = state, onAction = { onAction(it) })
             }
+
             if (state.showEditBookmarkDialog) {
                 EditBookmarkDialog(state = state, onAction = { onAction(it) })
+            }
+
+            if (state.showAddGroupDialog) {
+                AddGroupDialog(state = state, onAction = { onAction(it) })
+            }
+
+            if (state.showEditGroupDialog) {
+                EditGroupDialog(state = state, onAction = { onAction(it) })
             }
         }
     }

@@ -26,8 +26,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
 import com.whiskersapps.clawlauncher.shared.view.composables.RoundTextField
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenAction
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.viewmodel.BookmarksScreenState
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.intent.BookmarksScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.model.BookmarksScreenState
 
 @Composable
 fun AddBookmarkDialog(
