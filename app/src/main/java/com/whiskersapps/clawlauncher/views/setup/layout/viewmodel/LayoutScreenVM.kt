@@ -34,7 +34,7 @@ class LayoutScreenVM @Inject constructor(
     }
 
     fun onAction(action: LayoutScreenAction) {
-        when(action){
+        when (action) {
             LayoutScreenAction.NavigateBack -> {}
             is LayoutScreenAction.Finish -> {}
             LayoutScreenAction.SetMinimalLayout -> updateLayout("minimal")
@@ -48,15 +48,13 @@ class LayoutScreenVM @Inject constructor(
         }
     }
 
-    fun finishSetup(navController: NavController) {
-        viewModelScope.launch(Dispatchers.IO){
+    fun finishSetup(onFinish: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
             searchEnginesRepository.initEngines()
             settingsRepository.updateSetupCompleted(true)
 
-            navController.navigate(Routes.Main.ROUTE) {
-                popUpTo(Routes.Main.ROUTE) {
-                    inclusive = true
-                }
+            viewModelScope.launch(Dispatchers.Main) { //If not on main thread it crashes
+                onFinish()
             }
         }
     }

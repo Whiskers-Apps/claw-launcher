@@ -48,6 +48,7 @@ class SearchEnginesRepository(
 
     suspend fun makeDefaultEngine(engineId: ObjectId) {
         settingsRepository.updateDefaultSearchEngine(engineId.toHexString())
+        _data.update { it.copy(defaultSearchEngine = it.searchEngines.find { engine -> engine._id == engineId }) }
     }
 
     suspend fun clearDefaultEngine() {
@@ -90,7 +91,7 @@ class SearchEnginesRepository(
                 query = "https://www.qwant.com/?q=%s"
             }
 
-            realm.writeBlocking{
+            realm.writeBlocking {
                 copyToRealm(google)
                 copyToRealm(duckDuckGo)
                 copyToRealm(brave)

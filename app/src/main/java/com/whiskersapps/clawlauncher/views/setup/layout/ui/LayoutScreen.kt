@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.views.setup.layout.viewmodel.LayoutScreenVM
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.setup.layout.intent.LayoutScreenAction
@@ -50,7 +51,13 @@ fun LayoutScreenRoot(
     LayoutScreen(onAction = { action ->
         when (action) {
             LayoutScreenAction.NavigateBack -> navController.navigateUp()
-            LayoutScreenAction.Finish -> vm.finishSetup(navController)
+            LayoutScreenAction.Finish -> vm.finishSetup{
+                navController.navigate(Routes.Main.ROUTE) {
+                    popUpTo(Routes.Main.ROUTE) {
+                        inclusive = true
+                    }
+                }
+            }
             else -> vm.onAction(action)
         }
     })
