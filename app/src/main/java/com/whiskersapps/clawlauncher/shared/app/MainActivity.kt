@@ -27,14 +27,12 @@ import com.whiskersapps.clawlauncher.views.setup.permissions.ui.isAtLeastAndroid
 import com.whiskersapps.clawlauncher.views.setup.welcome.ui.WelcomeScreen
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
-import com.whiskersapps.clawlauncher.views.main.views.settings.viewmodel.SettingsScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.settings.model.SettingsScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreen
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view.AboutScreen
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view.AboutScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view.BookmarksScreen
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view.BookmarksScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreen
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.about.view.AboutScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.bookmarks.view.BookmarksScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.view.SearchEnginesScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -124,30 +122,7 @@ class MainActivity : ComponentActivity() {
                                 route = Routes.Main.Settings.ROUTE
                             ) {
                                 composable(Routes.Main.Settings.MAIN) {
-                                    SettingsScreen(
-                                        navigateBack = { navController.navigateUp() },
-                                        navigateToStyleSettings = {
-                                            navController.navigate(Routes.Main.Settings.STYLE)
-                                        },
-                                        navigateToHomeSettings = {
-                                            navController.navigate(Routes.Main.Settings.HOME)
-                                        },
-                                        navigateToAppsSettings = {
-                                            navController.navigate(Routes.Main.Settings.APPS)
-                                        },
-                                        navigateToSearchSettings = {
-                                            navController.navigate(Routes.Main.Settings.SEARCH)
-                                        },
-                                        navigateToBookmarksSettings = {
-                                            navController.navigate(Routes.Main.Settings.BOOKMARKS)
-                                        },
-                                        navigateToSearchEnginesSettings = {
-                                            navController.navigate(Routes.Main.Settings.SEARCH_ENGINES)
-                                        },
-                                        navigateToAboutSettings = {
-                                            navController.navigate(Routes.Main.Settings.ABOUT)
-                                        }
-                                    )
+                                    SettingsScreenRoot(navController = navController)
                                 }
 
                                 composable(Routes.Main.Settings.STYLE) {
