@@ -36,14 +36,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.views.setup.layout.viewmodel.LayoutScreenVM
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
+import com.whiskersapps.clawlauncher.views.setup.layout.intent.LayoutScreenAction
+
+@Composable
+fun LayoutScreenRoot(
+    navController: NavController,
+    vm: LayoutScreenVM = hiltViewModel()
+) {
+    LayoutScreen(onAction = { action ->
+        when (action) {
+            LayoutScreenAction.NavigateBack -> navController.navigateUp()
+            LayoutScreenAction.Finish -> vm.finishSetup(navController)
+            else -> vm.onAction(action)
+        }
+    })
+}
 
 @Composable
 fun LayoutScreen(
-    navigateBack: () -> Unit,
-    navigateToHome: () -> Unit,
+    onAction: (LayoutScreenAction) -> Unit,
     vm: LayoutScreenVM = hiltViewModel()
 ) {
 
@@ -53,6 +68,7 @@ fun LayoutScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
                 .systemBarsPadding()
                 .padding(16.dp)
         ) {
@@ -75,7 +91,7 @@ fun LayoutScreen(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
                         .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .clickable { vm.updateLayout("minimal") }
+                        .clickable { onAction(LayoutScreenAction.SetMinimalLayout) }
                 ) {
                     Box(
                         modifier = Modifier
@@ -111,7 +127,10 @@ fun LayoutScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         RadioButton(selected = uiState.layout == "minimal", onClick = { })
-                        Text(text = stringResource(id = R.string.LayoutScreen_minimal))
+                        Text(
+                            text = stringResource(id = R.string.LayoutScreen_minimal),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
 
@@ -121,7 +140,7 @@ fun LayoutScreen(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
                         .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .clickable { vm.updateLayout("bubbly") }
+                        .clickable { onAction(LayoutScreenAction.SetBubblyLayout) }
                 ) {
                     Box(
                         modifier = Modifier
@@ -166,7 +185,10 @@ fun LayoutScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         RadioButton(selected = uiState.layout == "bubbly", onClick = { })
-                        Text(text = stringResource(id = R.string.LayoutScreen_bubbly))
+                        Text(
+                            text = stringResource(id = R.string.LayoutScreen_bubbly),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
 
@@ -174,7 +196,7 @@ fun LayoutScreen(
             }
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                Button(onClick = { navigateBack() }) {
+                Button(onClick = { onAction(LayoutScreenAction.NavigateBack) }) {
                     Text(
                         text = stringResource(id = R.string.SetupScreen_previous),
                         color = MaterialTheme.colorScheme.onPrimary
@@ -183,7 +205,7 @@ fun LayoutScreen(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Button(onClick = { vm.finishSetup { navigateToHome() } }) {
+                Button(onClick = { onAction(LayoutScreenAction.Finish) }) {
                     Text(
                         text = stringResource(id = R.string.SetupScreen_finish),
                         color = MaterialTheme.colorScheme.onPrimary

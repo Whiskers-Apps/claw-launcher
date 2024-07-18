@@ -62,6 +62,46 @@ class SearchEnginesRepository(
         }
     }
 
+    /// Creates the default search engines
+    suspend fun initEngines() {
+        if (data.value.searchEngines.isEmpty()) {
+            val google = SearchEngine().apply {
+                name = "Google"
+                query = "https://www.google.com/search?q=%s"
+            }
+
+            val duckDuckGo = SearchEngine().apply {
+                name = "DuckDuckGo"
+                query = "https://duckduckgo.com/?q=%s"
+            }
+
+            val brave = SearchEngine().apply {
+                name = "Brave"
+                query = "https://search.brave.com/search?q=%s"
+            }
+
+            val startPage = SearchEngine().apply {
+                name = "Start Page"
+                query = "https://startpage.com/do/dsearch?query=%s"
+            }
+
+            val qwant = SearchEngine().apply {
+                name = "https://www.qwant.com/?q=%s"
+                query = "https://www.qwant.com/?q=%s"
+            }
+
+            realm.writeBlocking{
+                copyToRealm(google)
+                copyToRealm(duckDuckGo)
+                copyToRealm(brave)
+                copyToRealm(startPage)
+                copyToRealm(qwant)
+            }
+
+            makeDefaultEngine(duckDuckGo._id)
+        }
+    }
+
     init {
         CoroutineScope(Dispatchers.IO).launch {
             realm.query<SearchEngine>().asFlow()

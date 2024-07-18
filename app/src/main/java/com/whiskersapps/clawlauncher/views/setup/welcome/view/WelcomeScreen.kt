@@ -1,5 +1,6 @@
-package com.whiskersapps.clawlauncher.views.setup.welcome.ui
+package com.whiskersapps.clawlauncher.views.setup.welcome.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,18 +21,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.model.Routes
+import com.whiskersapps.clawlauncher.views.setup.welcome.intent.WelcomeScreenAction
+
+@Composable
+fun WelcomeScreenRoot(
+    navController: NavController
+) {
+    WelcomeScreen(
+        onAction = { action ->
+            when (action) {
+                WelcomeScreenAction.NavigateNext -> navController.navigate(Routes.Setup.LAYOUT)
+            }
+        }
+    )
+}
 
 @Composable
 fun WelcomeScreen(
-    navigateToLayoutScreen: () -> Unit
+    onAction: (WelcomeScreenAction) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .systemBarsPadding()
             .padding(16.dp)
     ) {
@@ -59,7 +76,7 @@ fun WelcomeScreen(
             )
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            Button(onClick = { navigateToLayoutScreen() }) {
+            Button(onClick = { onAction(WelcomeScreenAction.NavigateNext) }) {
                 Text(
                     text = stringResource(id = R.string.SetupScreen_next),
                     color = MaterialTheme.colorScheme.onPrimary
@@ -67,10 +84,4 @@ fun WelcomeScreen(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun Preview() {
-    WelcomeScreen {}
 }

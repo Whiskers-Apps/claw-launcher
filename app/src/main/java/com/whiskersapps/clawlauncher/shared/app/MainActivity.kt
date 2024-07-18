@@ -20,20 +20,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.whiskersapps.clawlauncher.views.main.view.MainScreen
-import com.whiskersapps.clawlauncher.views.setup.layout.ui.LayoutScreen
-import com.whiskersapps.clawlauncher.views.setup.permissions.ui.PermissionsScreen
-import com.whiskersapps.clawlauncher.views.setup.permissions.ui.isAtLeastAndroid13
-import com.whiskersapps.clawlauncher.views.setup.welcome.ui.WelcomeScreen
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
 import com.whiskersapps.clawlauncher.views.main.view.MainScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.model.SettingsScreenVM
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreen
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.about.view.AboutScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.bookmarks.view.BookmarksScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.view.SearchEnginesScreenRoot
+import com.whiskersapps.clawlauncher.views.setup.layout.ui.LayoutScreen
+import com.whiskersapps.clawlauncher.views.setup.layout.ui.LayoutScreenRoot
+import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -80,30 +77,11 @@ class MainActivity : ComponentActivity() {
                                 route = Routes.Setup.ROUTE
                             ) {
                                 composable(Routes.Setup.WELCOME) {
-                                    WelcomeScreen {
-                                        navController.navigate(Routes.Setup.PERMISSIONS)
-                                    }
-                                }
-
-                                composable(Routes.Setup.PERMISSIONS) {
-                                    PermissionsScreen(
-                                        navigateBack = { navController.navigateUp() },
-                                        navigateToLayout = { navController.navigate(Routes.Setup.LAYOUT) },
-                                        isAtLeastAndroid13 = isAtLeastAndroid13()
-                                    )
+                                    WelcomeScreenRoot(navController = navController)
                                 }
 
                                 composable(Routes.Setup.LAYOUT) {
-                                    LayoutScreen(
-                                        navigateBack = { navController.navigateUp() },
-                                        navigateToHome = {
-                                            navController.navigate(Routes.Main.ROUTE) {
-                                                popUpTo(Routes.Main.ROUTE) {
-                                                    inclusive = true
-                                                }
-                                            }
-                                        }
-                                    )
+                                    LayoutScreenRoot(navController = navController)
                                 }
                             }
 

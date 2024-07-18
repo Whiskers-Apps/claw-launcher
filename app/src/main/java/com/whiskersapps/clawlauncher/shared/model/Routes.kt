@@ -4,7 +4,6 @@ object Routes {
     object Setup {
         const val ROUTE = "setup"
         const val WELCOME = "welcome"
-        const val PERMISSIONS = "permissions"
         const val LAYOUT = "minimal"
     }
 

@@ -2,7 +2,12 @@ package com.whiskersapps.clawlauncher.views.setup.layout.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.whiskersapps.clawlauncher.shared.data.BookmarksRepository
+import com.whiskersapps.clawlauncher.shared.data.SearchEnginesRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.shared.model.Routes
+import com.whiskersapps.clawlauncher.views.setup.layout.intent.LayoutScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LayoutScreenVM @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val searchEnginesRepository: SearchEnginesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<LayoutScreenUiState?>(null)
@@ -27,16 +33,31 @@ class LayoutScreenVM @Inject constructor(
         }
     }
 
-    fun updateLayout(layout: String) {
+    fun onAction(action: LayoutScreenAction) {
+        when(action){
+            LayoutScreenAction.NavigateBack -> {}
+            is LayoutScreenAction.Finish -> {}
+            LayoutScreenAction.SetMinimalLayout -> updateLayout("minimal")
+            LayoutScreenAction.SetBubblyLayout -> updateLayout("bubbly")
+        }
+    }
+
+    private fun updateLayout(layout: String) {
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.updateLayout(layout)
         }
     }
 
-    fun finishSetup(onFinish: () -> Unit) {
-        viewModelScope.launch {
+    fun finishSetup(navController: NavController) {
+        viewModelScope.launch(Dispatchers.IO){
+            searchEnginesRepository.initEngines()
             settingsRepository.updateSetupCompleted(true)
-            onFinish()
+
+            navController.navigate(Routes.Main.ROUTE) {
+                popUpTo(Routes.Main.ROUTE) {
+                    inclusive = true
+                }
+            }
         }
     }
 }
