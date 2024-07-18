@@ -27,6 +27,7 @@ import com.whiskersapps.clawlauncher.views.setup.permissions.ui.isAtLeastAndroid
 import com.whiskersapps.clawlauncher.views.setup.welcome.ui.WelcomeScreen
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
+import com.whiskersapps.clawlauncher.views.main.view.MainScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.model.SettingsScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreen
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreenRoot
@@ -111,9 +112,7 @@ class MainActivity : ComponentActivity() {
                                 route = Routes.Main.ROUTE
                             ) {
                                 composable(Routes.Main.HOME) {
-                                    MainScreen(
-                                        navigateToSettings = { navController.navigate(Routes.Main.Settings.ROUTE) }
-                                    )
+                                    MainScreenRoot(navController = navController)
                                 }
                             }
 
