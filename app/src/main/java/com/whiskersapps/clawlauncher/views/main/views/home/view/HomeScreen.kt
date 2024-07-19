@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,7 +31,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,16 +39,38 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
-import com.whiskersapps.clawlauncher.views.main.views.home.viewmodel.HomeScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.home.model.HomeScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchBar
 import kotlinx.coroutines.launch
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenRoot(
+    navigateToSettings: () -> Unit,
+    sheetState: SheetState,
+    vm: HomeScreenVM = hiltViewModel()
+) {
+
+    val scope = rememberCoroutineScope()
+
+    HomeScreen(
+        onAction = { action ->
+            when (action) {
+                HomeScreenAction.NavigateToSettings -> navigateToSettings()
+                HomeScreenAction.OpenSearchSheet -> scope.launch { sheetState.expand() }
+                else -> vm.onAction(action)
+            }
+        }, vm = vm
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    vm: HomeScreenVM = hiltViewModel(),
-    openSearchSheet: () -> Unit,
-    navigateToSettings: () -> Unit
+    onAction: (HomeScreenAction) -> Unit,
+    vm: HomeScreenVM = hiltViewModel()
 ) {
 
     val uiState = vm.uiState.collectAsState().value
@@ -63,9 +86,9 @@ fun HomeScreen(
                 .pointerInput(Unit) {
                     detectVerticalDragGestures { _, dragAmount ->
                         if (dragAmount < 0) {
-                            openSearchSheet()
+                            onAction(HomeScreenAction.OpenSearchSheet)
                         } else {
-                            vm.openNotificationPanel()
+                            onAction(HomeScreenAction.OpenNotificationPanel)
                         }
                     }
                 }
@@ -73,9 +96,7 @@ fun HomeScreen(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
                     onClick = { },
-                    onLongClick = {
-                        vm.updateShowHomeDialog(true)
-                    },
+                    onLongClick = { onAction(HomeScreenAction.OpenMenuDialog) },
                 )
                 .padding(16.dp)
             ) {
@@ -87,22 +108,22 @@ fun HomeScreen(
 
                 Column(
                     modifier = Modifier
-                        .clickable { openSearchSheet() }
+                        .clickable { onAction(HomeScreenAction.OpenSearchSheet) }
                 ) {
                     if (uiState.showSearchBar) {
                         SearchBar(
                             enabled = false,
                             placeholder = if (uiState.showPlaceholder) stringResource(R.string.Search_touch_or_swipe_up_to_search) else "",
                             showMenu = uiState.showSettings,
-                            onMenuClick = { vm.updateShowSettingsDialog(true) },
+                            onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
                             borderRadius = uiState.searchBarRadius,
                             opacity = uiState.searchBarOpacity
                         )
                     }
                 }
 
-                if (uiState.showHomeDialog) {
-                    Dialog(onDismissRequest = { vm.updateShowHomeDialog(false) }) {
+                if (uiState.showMenuDialog) {
+                    Dialog(onDismissRequest = { onAction(HomeScreenAction.CloseMenuDialog) }) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -143,8 +164,8 @@ fun HomeScreen(
                                     .weight(1f, fill = true)
                                     .clickable {
                                         scope.launch {
-                                            navigateToSettings()
-                                            vm.updateShowHomeDialog(false)
+                                            onAction(HomeScreenAction.CloseMenuDialog)
+                                            onAction(HomeScreenAction.NavigateToSettings)
                                         }
                                     }
                                     .padding(16.dp),
@@ -171,7 +192,7 @@ fun HomeScreen(
                     }
                 }
 
-                HomeSettingsDialog(vm = vm, uiState = uiState)
+                HomeSettingsDialog(onAction = { onAction(it) }, uiState = uiState)
             }
         }
     }

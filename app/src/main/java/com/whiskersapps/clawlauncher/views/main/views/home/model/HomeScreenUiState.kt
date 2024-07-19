@@ -1,4 +1,4 @@
-package com.whiskersapps.clawlauncher.views.main.views.home.viewmodel
+package com.whiskersapps.clawlauncher.views.main.views.home.model
 
 import androidx.compose.ui.unit.Dp
 
@@ -11,5 +11,5 @@ data class HomeScreenUiState(
     val dateText: String,
     val hourText: String,
     val showSettingsDialog: Boolean,
-    val showHomeDialog: Boolean
+    val showMenuDialog: Boolean
 )

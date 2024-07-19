@@ -25,6 +25,7 @@ import com.whiskersapps.clawlauncher.views.main.intent.MainScreenAction
 import com.whiskersapps.clawlauncher.views.main.model.MainScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreen
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreen
+import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchScreen
 import kotlinx.coroutines.launch
 
@@ -32,13 +33,13 @@ import kotlinx.coroutines.launch
 fun MainScreenRoot(
     navController: NavController,
     //vm: MainScreenVM = hiltViewModel()
-){
+) {
     MainScreen(
-      onAction = {action ->
-          when(action){
-              MainScreenAction.NavigateToSettings -> navController.navigate(Routes.Main.Settings.ROUTE)
-          }
-      }
+        onAction = { action ->
+            when (action) {
+                MainScreenAction.NavigateToSettings -> navController.navigate(Routes.Main.Settings.ROUTE)
+            }
+        }
     )
 }
 
@@ -91,9 +92,9 @@ fun MainScreen(
 
                 HorizontalPager(modifier = Modifier.fillMaxSize(), state = pagerState) { page ->
                     if (page == 0) {
-                        HomeScreen(
-                            openSearchSheet = { scope.launch { sheetState.expand() } },
-                            navigateToSettings = { onAction(MainScreenAction.NavigateToSettings) }
+                        HomeScreenRoot(
+                            navigateToSettings = { onAction(MainScreenAction.NavigateToSettings) },
+                            sheetState = sheetState
                         )
                     }
 

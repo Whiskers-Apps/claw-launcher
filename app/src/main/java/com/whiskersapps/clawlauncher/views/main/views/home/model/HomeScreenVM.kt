@@ -1,10 +1,11 @@
-package com.whiskersapps.clawlauncher.views.main.views.home.viewmodel
+package com.whiskersapps.clawlauncher.views.main.views.home.model
 
 import android.app.Application
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +37,7 @@ class HomeScreenVM @Inject constructor(
                             dateText = "",
                             hourText = "",
                             showSettingsDialog = false,
-                            showHomeDialog = false
+                            showMenuDialog = false
                         )
                     }
                 } else {
@@ -54,7 +55,27 @@ class HomeScreenVM @Inject constructor(
         }
     }
 
-    fun openNotificationPanel() {
+    fun onAction(action: HomeScreenAction) {
+        when (action) {
+            HomeScreenAction.NavigateToSettings -> {}
+            HomeScreenAction.OpenSearchSheet -> {}
+            HomeScreenAction.OpenNotificationPanel -> openNotificationPanel()
+            HomeScreenAction.OpenMenuDialog -> updateShowMenuDialog(true)
+            HomeScreenAction.CloseMenuDialog -> updateShowMenuDialog(false)
+            HomeScreenAction.OpenSettingsDialog -> updateShowSettingsDialog(true)
+            HomeScreenAction.CloseSettingsDialog -> updateShowSettingsDialog(false)
+            is HomeScreenAction.UpdateSearchBarOpacity -> updateSearchBarOpacity(action.opacity)
+            is HomeScreenAction.UpdateSearchBarRadius -> updateSearchBarRadius(action.radius)
+            is HomeScreenAction.UpdateShowSearchBar -> updateShowSearchBar(action.show)
+            is HomeScreenAction.UpdateShowSearchBarPlaceholder -> updateShowSearchBarPlaceholder(
+                action.show
+            )
+
+            is HomeScreenAction.UpdateShowSettings -> updateShowSettings(action.show)
+        }
+    }
+
+    private fun openNotificationPanel() {
         try {
             Class.forName("android.app.StatusBarManager")
                 .getMethod("expandNotificationsPanel")
@@ -64,41 +85,41 @@ class HomeScreenVM @Inject constructor(
         }
     }
 
-    fun updateShowSettingsDialog(show: Boolean) {
+    private fun updateShowSettingsDialog(show: Boolean) {
         _uiState.update { it?.copy(showSettingsDialog = show) }
     }
 
-    fun updateShowSearchBar(show: Boolean) {
+    private fun updateShowSearchBar(show: Boolean) {
         viewModelScope.launch {
             settingsRepository.updateShowHomeSearchBar(show)
         }
     }
 
-    fun updateShowSearchBarPlaceholder(show: Boolean) {
+    private fun updateShowSearchBarPlaceholder(show: Boolean) {
         viewModelScope.launch {
             settingsRepository.updateShowHomeSearchBarPlaceholder(show)
         }
     }
 
-    fun updateShowSettings(show: Boolean) {
+    private fun updateShowSettings(show: Boolean) {
         viewModelScope.launch {
             settingsRepository.updateShowHomeSearchBarSettings(show)
         }
     }
 
-    fun updateSearchBarOpacity(opacity: Float) {
+    private fun updateSearchBarOpacity(opacity: Float) {
         viewModelScope.launch {
             settingsRepository.updateHomeSearchBarOpacity(opacity)
         }
     }
 
-    fun updateSearchBarRadius(radius: Float) {
+    private fun updateSearchBarRadius(radius: Float) {
         viewModelScope.launch {
             settingsRepository.updateHomeSearchBarRadius(radius.toInt())
         }
     }
 
-    fun updateShowHomeDialog(show: Boolean) {
-        _uiState.update { it?.copy(showHomeDialog = show) }
+    private fun updateShowMenuDialog(show: Boolean) {
+        _uiState.update { it?.copy(showMenuDialog = show) }
     }
 }

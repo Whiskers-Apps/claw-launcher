@@ -27,17 +27,17 @@ import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.SliderSetting
 import com.whiskersapps.clawlauncher.shared.view.composables.SwitchSetting
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
-import com.whiskersapps.clawlauncher.views.main.views.home.viewmodel.HomeScreenUiState
-import com.whiskersapps.clawlauncher.views.main.views.home.viewmodel.HomeScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.home.model.HomeScreenUiState
 
 @Composable
 fun HomeSettingsDialog(
-    vm: HomeScreenVM,
+    onAction: (HomeScreenAction) -> Unit,
     uiState: HomeScreenUiState
 ) {
     if (uiState.showSettingsDialog) {
         Dialog(
-            onDismissRequest = { vm.updateShowSettingsDialog(false) },
+            onDismissRequest = { onAction(HomeScreenAction.CloseSettingsDialog) },
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
 
@@ -80,7 +80,9 @@ fun HomeSettingsDialog(
                             title = "Search Bar",
                             description = "Show the search bar",
                             value = uiState.showSearchBar,
-                            onValueChange = { vm.updateShowSearchBar(it) }
+                            onValueChange = {
+                                onAction(HomeScreenAction.UpdateShowSearchBar(it))
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -89,7 +91,9 @@ fun HomeSettingsDialog(
                             title = "Placeholder",
                             description = "Shows the placeholder on the search bar",
                             value = uiState.showPlaceholder,
-                            onValueChange = { vm.updateShowSearchBarPlaceholder(it) }
+                            onValueChange = {
+                                onAction(HomeScreenAction.UpdateShowSearchBarPlaceholder(it))
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -98,7 +102,9 @@ fun HomeSettingsDialog(
                             title = "Settings",
                             description = "Shows the settings icon on the search bar",
                             value = uiState.showSettings,
-                            onValueChange = { vm.updateShowSettings(it) }
+                            onValueChange = {
+                                onAction(HomeScreenAction.UpdateShowSettings(it))
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -110,7 +116,9 @@ fun HomeSettingsDialog(
                             max = 1f,
                             steps = 10,
                             value = uiState.searchBarOpacity,
-                            onValueChange = {vm.updateSearchBarOpacity(it)}
+                            onValueChange = {
+                                onAction(HomeScreenAction.UpdateSearchBarOpacity(it))
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -122,7 +130,9 @@ fun HomeSettingsDialog(
                             max = 32f,
                             steps = 33,
                             value = uiState.searchBarRadius?.value ?: -1f,
-                            onValueChange = {vm.updateSearchBarRadius(it)}
+                            onValueChange = {
+                                onAction(HomeScreenAction.UpdateSearchBarRadius(it))
+                            }
                         )
                     }
                 }
