@@ -1,10 +1,11 @@
-package com.whiskersapps.clawlauncher.views.main.views.apps.viewmodel
+package com.whiskersapps.clawlauncher.views.main.views.apps.model
 
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.AppsRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ class AppsScreenVM @Inject constructor(
     private val appsRepository: AppsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<AppsScreenUiState?>(null)
+    private val _uiState = MutableStateFlow<AppsScreenState?>(null)
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -28,7 +29,7 @@ class AppsScreenVM @Inject constructor(
 
                 if (uiState.value == null) {
                     _uiState.update {
-                        AppsScreenUiState(
+                        AppsScreenState(
                             appShortcuts = appsRepository.apps.value,
                             layout = settings.layout,
                             iconPadding = (settings.iconPadding).dp,
@@ -40,7 +41,10 @@ class AppsScreenVM @Inject constructor(
                             tabletLandscapeCols = settings.tabletLandscapeCols,
                             showSearchBar = settings.showAppsSearchBar,
                             searchBarPosition = settings.appsSearchBarPosition,
+                            showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
+                            showSearchBarSettings = settings.showAppsSearchBarSettings,
                             searchBarOpacity = settings.appsSearchBarOpacity,
+                            searchBarRadius = if (settings.appsSearchBarRadius != -1) settings.appsSearchBarRadius.dp else null,
                             searchText = "",
                             showSettingsDialog = false
                         )
@@ -58,7 +62,10 @@ class AppsScreenVM @Inject constructor(
                             tabletLandscapeCols = settings.tabletLandscapeCols,
                             showSearchBar = settings.showAppsSearchBar,
                             searchBarPosition = settings.appsSearchBarPosition,
-                            searchBarOpacity = settings.appsSearchBarOpacity
+                            showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
+                            showSearchBarSettings = settings.showAppsSearchBarSettings,
+                            searchBarOpacity = settings.appsSearchBarOpacity,
+                            searchBarRadius = if (settings.appsSearchBarRadius != -1) settings.appsSearchBarRadius.dp else null,
                         )
                     }
                 }
@@ -72,7 +79,39 @@ class AppsScreenVM @Inject constructor(
         }
     }
 
-    fun updateSearchText(text: String) {
+    fun onAction(action: AppsScreenAction) {
+        when (action) {
+            AppsScreenAction.NavigateToHome -> {}
+            is AppsScreenAction.UpdateSearchText -> updateSearchText(action.text)
+            AppsScreenAction.OpenFirstApp -> openFirstApp()
+            is AppsScreenAction.OpenApp -> openApp(action.packageName)
+            is AppsScreenAction.OpenAppInfo -> openAppInfo(action.packageName)
+            is AppsScreenAction.RequestUninstall -> requestUninstall(action.packageName)
+            AppsScreenAction.OpenSettingsDialog -> updateShowSettingsDialog(true)
+            AppsScreenAction.CloseSettingsDialog -> updateShowSettingsDialog(false)
+            AppsScreenAction.CloseKeyboard -> {}
+            is AppsScreenAction.UpdateViewType -> updateViewType(action.type)
+            is AppsScreenAction.UpdatePhoneCols -> updatePhoneCols(action.cols.toInt())
+            is AppsScreenAction.UpdatePhoneLandscapeCols -> updatePhoneLandscapeCols(action.cols.toInt())
+            is AppsScreenAction.UpdateBackgroundOpacity -> updateBackgroundOpacity(action.opacity)
+            is AppsScreenAction.UpdateTabletCols -> updateTabletCols(action.cols.toInt())
+            is AppsScreenAction.UpdateTabletLandscapeCols -> updateTabletLandscapeCols(action.cols.toInt())
+            is AppsScreenAction.UpdateSearchBarPosition -> updateSearchBarPosition(action.position)
+            is AppsScreenAction.UpdateShowSearchBar -> updateShowSearchBar(action.show)
+            is AppsScreenAction.UpdateShowSearchBarPlaceholder -> updateShowSearchBarPlaceholder(action.show)
+            is AppsScreenAction.UpdateShowSearchBarSettings -> updateShowSearchBarSettings(action.show)
+            is AppsScreenAction.UpdateSearchBarOpacity -> updateSearchBarOpacity(action.opacity)
+            is AppsScreenAction.UpdateSearchBarRadius -> updateSearchBarRadius(action.radius.toInt())
+        }
+    }
+
+    private fun updateShowSearchBarSettings(show: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.updateShowAppsSearchBarSettings(show)
+        }
+    }
+
+    private fun updateSearchText(text: String) {
         _uiState.update {
             it?.copy(
                 searchText = text,
@@ -81,7 +120,7 @@ class AppsScreenVM @Inject constructor(
         }
     }
 
-    fun openApp(packageName: String) {
+    private fun openApp(packageName: String) {
         appsRepository.openApp(packageName)
 
         _uiState.update {
@@ -92,75 +131,87 @@ class AppsScreenVM @Inject constructor(
         }
     }
 
-    fun openFirstApp() {
-        if(uiState.value!!.appShortcuts.isNotEmpty()){
+    private fun openFirstApp() {
+        if (uiState.value!!.appShortcuts.isNotEmpty()) {
             openApp(uiState.value!!.appShortcuts[0].packageName)
         }
     }
 
-    fun updateShowSettingsDialog(show: Boolean) {
+    private fun updateShowSettingsDialog(show: Boolean) {
         _uiState.update { it?.copy(showSettingsDialog = show) }
     }
 
-    fun updateOpacity(opacity: Float) {
+    private fun updateBackgroundOpacity(opacity: Float) {
         viewModelScope.launch(Dispatchers.Main) {
             settingsRepository.updateAppsOpacity(opacity)
         }
     }
 
-    fun updatePhoneCols(cols: Int) {
+    private fun updatePhoneCols(cols: Int) {
         viewModelScope.launch {
             settingsRepository.updatePhoneCols(cols)
         }
     }
 
-    fun updatePhoneLandscapeCols(cols: Int) {
+    private fun updatePhoneLandscapeCols(cols: Int) {
         viewModelScope.launch {
             settingsRepository.updatePhoneLandscapeCols(cols)
         }
     }
 
-    fun updateTabletCols(cols: Int) {
+    private fun updateTabletCols(cols: Int) {
         viewModelScope.launch {
             settingsRepository.updateTabletCols(cols)
         }
     }
 
-    fun updateTabletLandscapeCols(cols: Int) {
+    private fun updateTabletLandscapeCols(cols: Int) {
         viewModelScope.launch {
             settingsRepository.updateTabletLandscapeCols(cols)
         }
     }
 
-    fun updateViewType(viewType: String) {
+    private fun updateSearchBarPosition(position: String){
+        viewModelScope.launch {
+            settingsRepository.updateAppsSearchBarPosition(position)
+        }
+    }
+
+    private fun updateShowSearchBarPlaceholder(show: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.updateShowAppsSearchBarPlaceholder(show)
+        }
+    }
+
+    private fun updateViewType(viewType: String) {
         viewModelScope.launch {
             settingsRepository.updateAppsViewType(viewType)
         }
     }
 
-    fun updateIconPadding(padding: Int) {
-        viewModelScope.launch {
-            settingsRepository.updateIconPadding(padding)
-        }
-    }
-
-    fun updateSearchBarOpacity(it: Float) {
+    private fun updateSearchBarOpacity(it: Float) {
         viewModelScope.launch {
             settingsRepository.updateAppsSearchBarOpacity(it)
         }
     }
 
-    fun updateShowSearchBar(show: Boolean) {
+    private fun updateSearchBarRadius(radius: Int){
+        viewModelScope.launch {
+            settingsRepository.updateAppsSearchBarRadius(radius)
+        }
+    }
+
+    private fun updateShowSearchBar(show: Boolean) {
         viewModelScope.launch {
             settingsRepository.updateShowAppsSearchBar(show)
         }
     }
 
-    fun openAppInfo(packageName: String) {
+    private fun openAppInfo(packageName: String) {
         appsRepository.openAppInfo(packageName)
     }
 
-    fun requestUninstall(packageName: String) {
+    private fun requestUninstall(packageName: String) {
         appsRepository.requestUninstall(packageName)
     }
 }

@@ -24,6 +24,7 @@ import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.views.main.intent.MainScreenAction
 import com.whiskersapps.clawlauncher.views.main.model.MainScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreen
+import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreen
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchScreen
@@ -99,13 +100,7 @@ fun MainScreen(
                     }
 
                     if (page == 1) {
-                        AppsScreen(
-                            navigateHome = {
-                                scope.launch {
-                                    pagerState.scrollToPage(0)
-                                }
-                            }
-                        )
+                        AppsScreenRoot(pagerState = pagerState)
                     }
                 }
             }

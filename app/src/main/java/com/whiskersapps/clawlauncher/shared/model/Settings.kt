@@ -21,8 +21,11 @@ data class Settings(
     val homeSearchBarRadius: Int = DEFAULT_HOME_SEARCH_BAR_RADIUS,
     val homeSearchBarOpacity: Float = DEFAULT_HOME_SEARCH_BAR_OPACITY,
     val showAppsSearchBar: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR,
+    val showAppsSearchBarPlaceholder: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER,
+    val showAppsSearchBarSettings: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
     val appsSearchBarPosition: String = DEFAULT_APPS_SEARCH_BAR_POSITION,
     val appsSearchBarOpacity: Float = DEFAULT_APPS_SEARCH_BAR_OPACITY,
+    val appsSearchBarRadius: Int = DEFAULT_APPS_SEARCH_BAR_RADIUS,
     val defaultSearchEngine: String = DEFAULT_DEFAULT_SEARCH_ENGINE
 ){
     companion object{
@@ -71,11 +74,20 @@ data class Settings(
         val SHOW_APPS_SEARCH_BAR = booleanPreferencesKey("show-apps-search-bar")
         const val DEFAULT_SHOW_APPS_SEARCH_BAR = true
 
+        val SHOW_APPS_SEARCH_BAR_PLACEHOLDER = booleanPreferencesKey("show-apps-search-bar-placeholder")
+        const val DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER = true
+
+        val SHOW_APPS_SEARCH_BAR_SETTINGS = booleanPreferencesKey("show-apps-search-bar-settings")
+        const val DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS = true
+
         val APPS_SEARCH_BAR_POSITION = stringPreferencesKey("apps-search-bar-position")
         const val DEFAULT_APPS_SEARCH_BAR_POSITION = "bottom"
 
         val APPS_SEARCH_BAR_OPACITY = floatPreferencesKey("apps-search-bar-opacity")
         const val DEFAULT_APPS_SEARCH_BAR_OPACITY = 1f
+
+        val APPS_SEARCH_BAR_RADIUS = intPreferencesKey("apps-search-bar-radius")
+        const val DEFAULT_APPS_SEARCH_BAR_RADIUS = -1
 
         val DEFAULT_SEARCH_ENGINE = stringPreferencesKey("default-search-engine")
         const val DEFAULT_DEFAULT_SEARCH_ENGINE = ""

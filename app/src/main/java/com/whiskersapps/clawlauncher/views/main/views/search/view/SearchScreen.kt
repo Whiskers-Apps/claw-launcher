@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -40,12 +41,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.lighttigerxiv.layout_scaffold.inLandscape
+import com.lighttigerxiv.layout_scaffold.isTablet
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.search.viewmodel.SearchScreenVM
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.bookmarks.intent.BookmarksScreenAction
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,10 +58,12 @@ fun SearchScreen(
     closeSheet: () -> Unit
 ) {
 
-    val uiState = vm.state.collectAsState().value
+    val state = vm.state.collectAsState().value
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val inLandscape = inLandscape()
+    val isTablet = isTablet()
 
     LaunchedEffect(sheetState.currentValue) {
         if (sheetState.currentValue == SheetValue.Expanded) {
@@ -71,7 +75,13 @@ fun SearchScreen(
         }
     }
 
-    if (!uiState.loading) {
+    if (!state.loading) {
+
+        val phoneColumns =
+            if (inLandscape) state.phoneLandscapeCols else state.phoneCols
+        val tabletColumns =
+            if (inLandscape) state.tabletLandscapeCols else state.tabletCols
+        val columns = if (isTablet) tabletColumns else phoneColumns
 
         Box(contentAlignment = Alignment.Center) {
 
@@ -87,171 +97,178 @@ fun SearchScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .systemBarsPadding()
-                    .padding(16.dp)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                SearchBar(
-                    text = uiState.searchText,
-                    onChange = { vm.updateSearchText(it) },
-                    placeholder = stringResource(R.string.Search_apps_and_much_more),
-                    focus = uiState.focusSearchBar,
-                    onFocused = { vm.updateFocusSearchBar(false) },
-                    opacity = 0f,
-                    onDone = {
-                        scope.launch {
-                            vm.runAction()
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 800.dp)
+                        .fillMaxSize()
+                ) {
+                    SearchBar(
+                        text = state.searchText,
+                        onChange = { vm.updateSearchText(it) },
+                        placeholder = stringResource(R.string.Search_apps_and_much_more),
+                        focus = state.focusSearchBar,
+                        onFocused = { vm.updateFocusSearchBar(false) },
+                        opacity = 0f,
+                        onDone = {
+                            scope.launch {
+                                vm.runAction()
 
-                            focusManager.clearFocus()
-                            keyboardController?.hide()
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
 
-                            closeSheet()
+                                closeSheet()
+                            }
                         }
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (uiState.appShortcuts.isNotEmpty()) {
-
-                    Text(
-                        text = "Apps",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = Typography.titleSmall
                     )
 
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(4),
-                    ) {
-                        itemsIndexed(
-                            uiState.appShortcuts,
-                            key = { index, app -> "${index}-${app.packageName}" }
-                        ) { _, app ->
-                            GridAppShortcut(
-                                app = app,
-                                padding = 16.dp,
-                                openApp = {
-                                    scope.launch {
-                                        vm.openApp(app.packageName)
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                                        focusManager.clearFocus()
-                                        keyboardController?.hide()
+                    if (state.appShortcuts.isNotEmpty()) {
 
-                                        closeSheet()
-                                    }
-                                },
-                                openInfo = { vm.openAppInfo(app.packageName) },
-                                requestUninstall = { vm.requestUninstall(app.packageName) }
-                            )
-                        }
-                    }
-                }
+                        Text(
+                            text = "Apps",
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = Typography.titleSmall
+                        )
 
-                if (uiState.searchText.isNotEmpty()) {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(columns),
+                        ) {
+                            itemsIndexed(
+                                state.appShortcuts,
+                                key = { index, app -> "${index}-${app.packageName}" }
+                            ) { _, app ->
+                                GridAppShortcut(
+                                    app = app,
+                                    padding = 16.dp,
+                                    openApp = {
+                                        scope.launch {
+                                            vm.openApp(app.packageName)
 
-                    Text(
-                        text = "Bookmarks",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = Typography.titleSmall
-                    )
+                                            focusManager.clearFocus()
+                                            keyboardController?.hide()
 
-                    LazyColumn {
-                        items(
-                            items = uiState.groups,
-                            key = { "group - ${it._id.toHexString()}" }
-                        ) { group ->
-                            Row(modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    vm.openGroup(group)
-                                    closeSheet()
-                                }
-                                .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .clip(CircleShape)
-                                        .size(42.dp),
-                                    painter = painterResource(id = R.drawable.folder),
-                                    contentDescription = "${group.name} icon",
-                                    tint = MaterialTheme.colorScheme.onBackground
-                                )
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    text = group.name,
-                                    color = MaterialTheme.colorScheme.onBackground
+                                            closeSheet()
+                                        }
+                                    },
+                                    openInfo = { vm.openAppInfo(app.packageName) },
+                                    requestUninstall = { vm.requestUninstall(app.packageName) }
                                 )
                             }
                         }
-                        items(
-                            items = uiState.bookmarks,
-                            key = { it._id.toHexString() }) { bookmark ->
-                            Row(modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    vm.openUrl(bookmark.url)
+                    }
+
+                    if (state.searchText.isNotEmpty()) {
+
+                        Text(
+                            text = "Bookmarks",
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = Typography.titleSmall
+                        )
+
+                        LazyColumn {
+                            items(
+                                items = state.groups,
+                                key = { "group - ${it._id.toHexString()}" }
+                            ) { group ->
+                                Row(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        vm.openGroup(group)
+                                        closeSheet()
+                                    }
+                                    .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .size(42.dp),
+                                        painter = painterResource(id = R.drawable.folder),
+                                        contentDescription = "${group.name} icon",
+                                        tint = MaterialTheme.colorScheme.onBackground
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Text(
+                                        text = group.name,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
                                 }
-                                .padding(16.dp),
+                            }
+                            items(
+                                items = state.bookmarks,
+                                key = { it._id.toHexString() }) { bookmark ->
+                                Row(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        vm.openUrl(bookmark.url)
+                                    }
+                                    .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    AsyncImage(
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .size(42.dp)
+                                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                                        model = getFaviconUrl(bookmark.url),
+                                        contentDescription = "${bookmark.name} icon"
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Column {
+                                        Text(
+                                            text = bookmark.name,
+                                            color = MaterialTheme.colorScheme.onBackground
+                                        )
+
+                                        Text(
+                                            text = bookmark.url,
+                                            color = MaterialTheme.colorScheme.onBackground,
+                                            style = Typography.labelSmall
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        state.searchEngine?.let {
+                            Text(
+                                text = "Web",
+                                color = MaterialTheme.colorScheme.onBackground,
+                                style = Typography.titleSmall
+                            )
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { vm.openUrl(vm.getSearchEngineUrl()) }
+                                    .padding(top = 16.dp, bottom = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 AsyncImage(
                                     modifier = Modifier
                                         .clip(CircleShape)
-                                        .size(42.dp)
-                                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                                    model = getFaviconUrl(bookmark.url),
-                                    contentDescription = "${bookmark.name} icon"
+                                        .size(42.dp),
+                                    model = getFaviconUrl(state.searchEngine.query),
+                                    contentDescription = "${state.searchEngine.name} icon"
                                 )
 
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(16.dp))
 
-                                Column {
-                                    Text(
-                                        text = bookmark.name,
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
-
-                                    Text(
-                                        text = bookmark.url,
-                                        color = MaterialTheme.colorScheme.onBackground,
-                                        style = Typography.labelSmall
-                                    )
-                                }
+                                Text(
+                                    text = "Search on ${state.searchEngine.name} for ${state.searchText}",
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    maxLines = 2
+                                )
                             }
-                        }
-                    }
-
-                    uiState.searchEngine?.let {
-                        Text(
-                            text = "Web",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = Typography.titleSmall
-                        )
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { vm.openUrl(vm.getSearchEngineUrl()) }
-                                .padding(top = 16.dp, bottom = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(42.dp),
-                                model = getFaviconUrl(uiState.searchEngine.query),
-                                contentDescription = "${uiState.searchEngine.name} icon"
-                            )
-
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Text(
-                                text = "Search on ${uiState.searchEngine.name} for ${uiState.searchText}",
-                                color = MaterialTheme.colorScheme.onBackground,
-                                maxLines = 2
-                            )
                         }
                     }
                 }

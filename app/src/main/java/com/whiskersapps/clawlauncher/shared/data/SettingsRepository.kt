@@ -66,8 +66,17 @@ class SettingsRepository(app: Application) {
             appsSearchBarPosition = preferences[Settings.APPS_SEARCH_BAR_POSITION]
                 ?: Settings.DEFAULT_APPS_SEARCH_BAR_POSITION,
 
+            showAppsSearchBarPlaceholder = preferences[Settings.SHOW_APPS_SEARCH_BAR_PLACEHOLDER]
+                ?: Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER,
+
+            showAppsSearchBarSettings = preferences[Settings.SHOW_APPS_SEARCH_BAR_SETTINGS]
+                ?: Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
+
             appsSearchBarOpacity = preferences[Settings.APPS_SEARCH_BAR_OPACITY]
                 ?: Settings.DEFAULT_APPS_SEARCH_BAR_OPACITY,
+
+            appsSearchBarRadius = preferences[Settings.APPS_SEARCH_BAR_RADIUS]
+                ?: Settings.DEFAULT_APPS_SEARCH_BAR_RADIUS,
 
             defaultSearchEngine = preferences[Settings.DEFAULT_SEARCH_ENGINE] ?: ""
         )
@@ -145,5 +154,17 @@ class SettingsRepository(app: Application) {
 
     suspend fun updateDefaultSearchEngine(id: String) {
         dataStore.edit { it[Settings.DEFAULT_SEARCH_ENGINE] = id }
+    }
+
+    suspend fun updateShowAppsSearchBarPlaceholder(show: Boolean) {
+        dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR_PLACEHOLDER] = show }
+    }
+
+    suspend fun updateShowAppsSearchBarSettings(show: Boolean) {
+        dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR_SETTINGS] = show }
+    }
+
+    suspend fun updateAppsSearchBarRadius(radius: Int){
+        dataStore.edit { it[Settings.APPS_SEARCH_BAR_RADIUS] = radius }
     }
 }

@@ -1,0 +1,25 @@
+package com.whiskersapps.clawlauncher.views.main.views.apps.intent
+
+sealed class AppsScreenAction {
+    data object NavigateToHome : AppsScreenAction()
+    data class UpdateSearchText(val text: String) : AppsScreenAction()
+    data object OpenFirstApp : AppsScreenAction()
+    data class OpenApp(val packageName: String) : AppsScreenAction()
+    data class OpenAppInfo(val packageName: String) : AppsScreenAction()
+    data class RequestUninstall(val packageName: String) : AppsScreenAction()
+    data object OpenSettingsDialog : AppsScreenAction()
+    data object CloseSettingsDialog : AppsScreenAction()
+    data object CloseKeyboard : AppsScreenAction()
+    data class UpdateViewType(val type: String): AppsScreenAction()
+    data class UpdatePhoneCols(val cols: Float) : AppsScreenAction()
+    data class UpdatePhoneLandscapeCols(val cols: Float) : AppsScreenAction()
+    data class UpdateTabletCols(val cols: Float) : AppsScreenAction()
+    data class UpdateTabletLandscapeCols(val cols: Float) : AppsScreenAction()
+    data class UpdateBackgroundOpacity(val opacity: Float) : AppsScreenAction()
+    data class UpdateSearchBarPosition(val position: String) : AppsScreenAction()
+    data class UpdateShowSearchBar(val show: Boolean) : AppsScreenAction()
+    data class UpdateShowSearchBarPlaceholder(val show: Boolean) : AppsScreenAction()
+    data class UpdateShowSearchBarSettings(val show: Boolean) : AppsScreenAction()
+    data class UpdateSearchBarOpacity(val opacity: Float) : AppsScreenAction()
+    data class UpdateSearchBarRadius(val radius: Float): AppsScreenAction()
+}

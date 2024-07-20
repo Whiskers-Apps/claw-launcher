@@ -35,6 +35,7 @@ class SearchScreenVM @Inject constructor(
     companion object {
         data class SearchScreenState(
             val loading: Boolean = true,
+            val loadingSettings: Boolean = true,
             val loadingBookmarks: Boolean = true,
             val loadingSearchEngines: Boolean = true,
             val searchText: String = "",
@@ -42,7 +43,11 @@ class SearchScreenVM @Inject constructor(
             val bookmarks: List<Bookmark> = emptyList(),
             val groups: List<BookmarkGroup> = emptyList(),
             val focusSearchBar: Boolean = false,
-            val searchEngine: SearchEngine? = null
+            val searchEngine: SearchEngine? = null,
+            val phoneCols: Int = 0,
+            val phoneLandscapeCols: Int = 0,
+            val tabletCols: Int = 0,
+            val tabletLandscapeCols: Int = 0
         )
     }
 
@@ -52,14 +57,24 @@ class SearchScreenVM @Inject constructor(
     init {
 
         viewModelScope.launch(Dispatchers.Main) {
-            settingsRepository.settingsFlow.collect {}
+            settingsRepository.settingsFlow.collect { settings->
+                _state.update {
+                    it.copy(
+                        loading = it.loadingSearchEngines || it.loadingBookmarks,
+                        phoneCols = settings.phoneCols,
+                        phoneLandscapeCols = settings.phoneLandscapeCols,
+                        tabletCols = settings.tabletCols,
+                        tabletLandscapeCols = settings.tabletLandscapeCols
+                    )
+                }
+            }
         }
 
         viewModelScope.launch(Dispatchers.Main) {
             searchEnginesRepository.data.collect { data ->
                 _state.update {
                     it.copy(
-                        loading = it.loadingBookmarks,
+                        loading = it.loadingSettings || it.loadingBookmarks,
                         loadingSearchEngines = false,
                         searchEngine = data.defaultSearchEngine
                     )
@@ -71,7 +86,7 @@ class SearchScreenVM @Inject constructor(
             bookmarksRepository.data.collect { data ->
                 _state.update {
                     it.copy(
-                        loading = it.loadingSearchEngines,
+                        loading = it.loadingSettings || it.loadingSearchEngines,
                         loadingBookmarks = false,
                         bookmarks = data.bookmarks,
                         groups = data.groups

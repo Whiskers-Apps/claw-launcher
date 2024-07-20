@@ -1,8 +1,10 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.view
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,11 +18,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,8 +32,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -41,130 +47,145 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lighttigerxiv.layout_scaffold.inLandscape
 import com.lighttigerxiv.layout_scaffold.isTablet
+import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
+import com.whiskersapps.clawlauncher.shared.view.composables.AppPopup
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
-import com.whiskersapps.clawlauncher.views.main.views.apps.viewmodel.AppsScreenVM
+import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.apps.model.AppsScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchBar
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AppsScreen(
-    vm: AppsScreenVM = hiltViewModel(),
-    navigateHome: () -> Unit
+fun AppsScreenRoot(
+    pagerState: PagerState,
+    vm: AppsScreenVM = hiltViewModel()
 ) {
-
-    val uiState = vm.uiState.collectAsState().value
+    val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    val scope = rememberCoroutineScope()
+
+    AppsScreen(
+        onAction = { action ->
+            when (action) {
+                AppsScreenAction.NavigateToHome -> scope.launch { pagerState.scrollToPage(0) }
+                AppsScreenAction.CloseKeyboard -> {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                }
+
+                else -> vm.onAction(action)
+            }
+        },
+        vm = vm
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun AppsScreen(
+    onAction: (AppsScreenAction) -> Unit,
+    vm: AppsScreenVM,
+) {
+
+    val state = vm.uiState.collectAsState().value
     val isTablet = isTablet()
     val inLandscape = inLandscape()
 
-    uiState?.let {
+    state?.let {
 
         Box(contentAlignment = Alignment.Center) {
 
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(uiState.opacity)
+                    .alpha(state.opacity)
                     .background(MaterialTheme.colorScheme.background)
             )
 
             Column(
                 modifier = Modifier
+                    .widthIn(max = 800.dp)
                     .fillMaxSize()
                     .systemBarsPadding()
                     .imePadding()
                     .padding(8.dp)
             ) {
 
-                if (uiState.showSearchBar && uiState.searchBarPosition == "top") {
-
-                    Box(modifier = Modifier.padding(8.dp)) {
-                        SearchBar(
-                            text = uiState.searchText,
-                            onChange = {
-                                vm.updateSearchText(it)
-                            },
-                            onDone = {
-                                scope.launch {
-                                    vm.openFirstApp()
-                                    delay(1000)
-
-                                    focusManager.clearFocus()
-                                    keyboardController?.hide()
-
-                                    navigateHome()
-                                }
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
+                if (state.showSearchBar && state.searchBarPosition == "top") {
+                    AppsScreenSearchBar(
+                        onAction = { onAction(it) },
+                        state = state
+                    )
                 }
 
-                if (uiState.viewType == "list") {
+                if (state.viewType == "list") {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1f, fill = true)
                     ) {
                         itemsIndexed(
-                            items = uiState.appShortcuts,
-                            key = { index, app -> "${index}-${app.packageName}" }) { _, app ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(CircleShape)
-                                    .clickable {
-                                        scope.launch {
-                                            vm.openApp(app.packageName)
-                                            delay(1000)
+                            items = state.appShortcuts,
+                            key = { index, app -> "${index}-${app.packageName}" }
+                        ) { _, app ->
 
-                                            focusManager.clearFocus()
-                                            keyboardController?.hide()
+                            var showMenu by remember { mutableStateOf(false) }
 
-                                            navigateHome()
-                                        }
-                                    }
-                                    .padding(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                            Column {
 
-                                val image by remember {
-                                    derivedStateOf { app.icon.asImageBitmap() }
-                                }
-
-                                Box(
+                                Row(
                                     modifier = Modifier
-                                        .size(56.dp)
+                                        .fillMaxWidth()
                                         .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.background)
+                                        .combinedClickable(
+                                            onClick = {
+                                                onAction(AppsScreenAction.OpenApp(app.packageName))
+                                                onAction(AppsScreenAction.CloseKeyboard)
+                                                onAction(AppsScreenAction.NavigateToHome)
+                                            },
+                                            onLongClick = { showMenu = true }
+                                        )
+                                        .padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Image(
-                                        modifier = Modifier.fillMaxSize(),
-                                        bitmap = image,
-                                        contentDescription = "${app.packageName} icon"
+
+                                    Box(modifier = Modifier.size(48.dp)) {
+                                        AppIcon(app = app)
+                                    }
+
+                                    Spacer(modifier = Modifier.width(16.dp))
+
+                                    Text(
+                                        text = app.name,
+                                        color = MaterialTheme.colorScheme.onBackground
                                     )
                                 }
-
-                                Spacer(modifier = Modifier.width(16.dp))
-
-                                Text(text = app.name)
+                                if (showMenu) {
+                                    AppPopup(
+                                        onDismiss = { showMenu = false },
+                                        onInfoClick = {
+                                            onAction(AppsScreenAction.OpenAppInfo(app.packageName))
+                                            showMenu = false
+                                        },
+                                        onUninstallClick = {
+                                            onAction(AppsScreenAction.RequestUninstall(app.packageName))
+                                            showMenu = false
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
                 }
 
-                if (uiState.viewType == "grid") {
+                if (state.viewType == "grid") {
 
                     val phoneColumns =
-                        if (inLandscape) uiState.phoneLandscapeCols else uiState.phoneCols
+                        if (inLandscape) state.phoneLandscapeCols else state.phoneCols
                     val tabletColumns =
-                        if (inLandscape) uiState.tabletLandscapeCols else uiState.tabletCols
+                        if (inLandscape) state.tabletLandscapeCols else state.tabletCols
                     val columns = if (isTablet) tabletColumns else phoneColumns
-
 
                     Column(
                         modifier = Modifier
@@ -173,61 +194,43 @@ fun AppsScreen(
                     ) {
                         LazyVerticalGrid(columns = GridCells.Fixed(columns)) {
                             itemsIndexed(
-                                items = uiState.appShortcuts,
+                                items = state.appShortcuts,
                                 key = { index, app -> "$index - ${app.packageName}" }
                             ) { _, app ->
                                 GridAppShortcut(
                                     app = app,
-                                    padding = uiState.iconPadding,
+                                    padding = state.iconPadding,
                                     openApp = {
-                                        scope.launch {
-                                            vm.openApp(app.packageName)
-                                            delay(200)
-
-                                            focusManager.clearFocus()
-                                            keyboardController?.hide()
-
-                                            navigateHome()
-                                        }
+                                        onAction(AppsScreenAction.OpenApp(app.packageName))
+                                        onAction(AppsScreenAction.CloseKeyboard)
+                                        onAction(AppsScreenAction.NavigateToHome)
                                     },
-                                    openInfo = {vm.openAppInfo(app.packageName)},
-                                    requestUninstall = {vm.requestUninstall(app.packageName)}
+                                    openInfo = {
+                                        onAction(AppsScreenAction.OpenAppInfo(app.packageName))
+                                    },
+                                    requestUninstall = {
+                                        onAction(AppsScreenAction.RequestUninstall(app.packageName))
+                                    }
                                 )
                             }
                         }
                     }
-
                 }
 
-
-                if (uiState.showSearchBar && uiState.searchBarPosition == "bottom") {
+                if (state.showSearchBar && state.searchBarPosition == "bottom") {
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    Box(modifier = Modifier.padding(8.dp)) {
-                        SearchBar(
-                            text = uiState.searchText,
-                            onChange = { vm.updateSearchText(it) },
-                            showMenu = true,
-                            onMenuClick = { vm.updateShowSettingsDialog(true) },
-                            opacity = uiState.searchBarOpacity,
-                            onDone = {
-                                scope.launch {
-                                    if (uiState.searchText.isNotEmpty()) {
-                                        vm.openFirstApp()
-                                        delay(1000)
-                                        navigateHome()
-                                    }
-
-                                    focusManager.clearFocus()
-                                    keyboardController?.hide()
-                                }
-                            }
-                        )
-                    }
+                    AppsScreenSearchBar(
+                        onAction = { onAction(it) },
+                        state = state
+                    )
                 }
             }
 
-            AppsSettingsDialog(vm, uiState)
+            AppsSettingsDialog(
+                onAction = { onAction(it) },
+                state
+            )
         }
     }
 }

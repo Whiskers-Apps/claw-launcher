@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -98,101 +99,108 @@ fun HomeScreen(
                     onClick = { },
                     onLongClick = { onAction(HomeScreenAction.OpenMenuDialog) },
                 )
-                .padding(16.dp)
+                .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f, fill = true)
-                )
-
                 Column(
                     modifier = Modifier
-                        .clickable { onAction(HomeScreenAction.OpenSearchSheet) }
-                ) {
-                    if (uiState.showSearchBar) {
-                        SearchBar(
-                            enabled = false,
-                            placeholder = if (uiState.showPlaceholder) stringResource(R.string.Search_touch_or_swipe_up_to_search) else "",
-                            showMenu = uiState.showSettings,
-                            onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
-                            borderRadius = uiState.searchBarRadius,
-                            opacity = uiState.searchBarOpacity
-                        )
+                        .widthIn(max = 800.dp)
+                        .fillMaxSize()
+                ){
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f, fill = true)
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .clickable { onAction(HomeScreenAction.OpenSearchSheet) }
+                    ) {
+                        if (uiState.showSearchBar) {
+                            SearchBar(
+                                enabled = false,
+                                placeholder = if (uiState.showPlaceholder) stringResource(R.string.Search_touch_or_swipe_up_to_search) else "",
+                                showMenu = uiState.showSettings,
+                                onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
+                                borderRadius = uiState.searchBarRadius,
+                                opacity = uiState.searchBarOpacity
+                            )
+                        }
                     }
-                }
 
-                if (uiState.showMenuDialog) {
-                    Dialog(onDismissRequest = { onAction(HomeScreenAction.CloseMenuDialog) }) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(MaterialTheme.colorScheme.background),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-
-                            Column(
+                    if (uiState.showMenuDialog) {
+                        Dialog(onDismissRequest = { onAction(HomeScreenAction.CloseMenuDialog) }) {
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .weight(1f, fill = true)
-                                    .clickable { }
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.background),
+                                horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
 
-                                Icon(
-                                    modifier = Modifier.size(42.dp),
-                                    painter = painterResource(id = R.drawable.landscape),
-                                    contentDescription = "landscape icon",
-                                    tint = MaterialTheme.colorScheme.onBackground
-                                )
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f, fill = true)
+                                        .clickable { }
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
 
-                                Spacer(modifier = Modifier.height(8.dp))
+                                    Icon(
+                                        modifier = Modifier.size(42.dp),
+                                        painter = painterResource(id = R.drawable.landscape),
+                                        contentDescription = "landscape icon",
+                                        tint = MaterialTheme.colorScheme.onBackground
+                                    )
 
-                                Text(
-                                    text = "Select Wallpaper",
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    style = Typography.labelSmall
-                                )
-                            }
+                                    Spacer(modifier = Modifier.height(8.dp))
 
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f, fill = true)
-                                    .clickable {
-                                        scope.launch {
-                                            onAction(HomeScreenAction.CloseMenuDialog)
-                                            onAction(HomeScreenAction.NavigateToSettings)
+                                    Text(
+                                        text = "Select Wallpaper",
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        style = Typography.labelSmall
+                                    )
+                                }
+
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f, fill = true)
+                                        .clickable {
+                                            scope.launch {
+                                                onAction(HomeScreenAction.CloseMenuDialog)
+                                                onAction(HomeScreenAction.NavigateToSettings)
+                                            }
                                         }
-                                    }
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
 
-                                Icon(
-                                    modifier = Modifier.size(42.dp),
-                                    painter = painterResource(id = R.drawable.settings),
-                                    contentDescription = "settings icon",
-                                    tint = MaterialTheme.colorScheme.onBackground
-                                )
+                                    Icon(
+                                        modifier = Modifier.size(42.dp),
+                                        painter = painterResource(id = R.drawable.settings),
+                                        contentDescription = "settings icon",
+                                        tint = MaterialTheme.colorScheme.onBackground
+                                    )
 
-                                Spacer(modifier = Modifier.height(8.dp))
+                                    Spacer(modifier = Modifier.height(8.dp))
 
-                                Text(
-                                    text = "Settings",
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    style = Typography.labelSmall
-                                )
+                                    Text(
+                                        text = "Settings",
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        style = Typography.labelSmall
+                                    )
+                                }
                             }
                         }
                     }
+                    HomeSettingsDialog(onAction = { onAction(it) }, uiState = uiState)
                 }
-
-                HomeSettingsDialog(onAction = { onAction(it) }, uiState = uiState)
             }
         }
     }

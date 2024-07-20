@@ -1,9 +1,9 @@
-package com.whiskersapps.clawlauncher.views.main.views.apps.viewmodel
+package com.whiskersapps.clawlauncher.views.main.views.apps.model
 
 import androidx.compose.ui.unit.Dp
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 
-data class AppsScreenUiState(
+data class AppsScreenState(
     val appShortcuts: List<AppShortcut>,
     val layout: String,
     val iconPadding: Dp,
@@ -15,7 +15,10 @@ data class AppsScreenUiState(
     val tabletLandscapeCols: Int,
     val showSearchBar: Boolean,
     val searchBarPosition: String,
+    val showSearchBarPlaceholder: Boolean,
+    val showSearchBarSettings: Boolean,
     val searchBarOpacity: Float,
+    val searchBarRadius: Dp?,
     val searchText: String,
     val showSettingsDialog: Boolean
 )
