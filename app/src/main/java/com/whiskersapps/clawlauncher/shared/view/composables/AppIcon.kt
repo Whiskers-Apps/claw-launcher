@@ -42,7 +42,7 @@ fun AppIcon(
                     .aspectRatio(1f),
                 bitmap = background!!,
                 contentDescription = "${app.packageName} background",
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.FillBounds
             )
 
             Image(
@@ -51,7 +51,7 @@ fun AppIcon(
                     .aspectRatio(1f)
                     .scale(1.4f),
                 bitmap = foreground!!,
-                contentDescription = "${app.packageName} background",
+                contentDescription = "${app.packageName} foreground",
                 contentScale = ContentScale.Crop
             )
         }

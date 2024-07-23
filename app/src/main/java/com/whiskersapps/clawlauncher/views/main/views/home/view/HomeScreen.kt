@@ -74,10 +74,10 @@ fun HomeScreen(
     vm: HomeScreenVM = hiltViewModel()
 ) {
 
-    val uiState = vm.uiState.collectAsState().value
+    val state = vm.uiState.collectAsState().value
     val scope = rememberCoroutineScope()
 
-    uiState?.let {
+    state?.let {
 
         Box(contentAlignment = Alignment.Center) {
 
@@ -104,9 +104,14 @@ fun HomeScreen(
             ) {
                 Column(
                     modifier = Modifier
-                        .widthIn(max = 800.dp)
+                        .widthIn(max = 650.dp)
                         .fillMaxSize()
                 ){
+
+                    Clock(
+                        clock = state.clock,
+                        date = state.date
+                    )
 
                     Spacer(
                         modifier = Modifier
@@ -118,19 +123,19 @@ fun HomeScreen(
                         modifier = Modifier
                             .clickable { onAction(HomeScreenAction.OpenSearchSheet) }
                     ) {
-                        if (uiState.showSearchBar) {
+                        if (state.showSearchBar) {
                             SearchBar(
                                 enabled = false,
-                                placeholder = if (uiState.showPlaceholder) stringResource(R.string.Search_touch_or_swipe_up_to_search) else "",
-                                showMenu = uiState.showSettings,
+                                placeholder = if (state.showPlaceholder) stringResource(R.string.Search_touch_or_swipe_up_to_search) else "",
+                                showMenu = state.showSettings,
                                 onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
-                                borderRadius = uiState.searchBarRadius,
-                                opacity = uiState.searchBarOpacity
+                                borderRadius = state.searchBarRadius,
+                                opacity = state.searchBarOpacity
                             )
                         }
                     }
 
-                    if (uiState.showMenuDialog) {
+                    if (state.showMenuDialog) {
                         Dialog(onDismissRequest = { onAction(HomeScreenAction.CloseMenuDialog) }) {
                             Row(
                                 modifier = Modifier
@@ -199,7 +204,7 @@ fun HomeScreen(
                             }
                         }
                     }
-                    HomeSettingsDialog(onAction = { onAction(it) }, uiState = uiState)
+                    HomeSettingsDialog(onAction = { onAction(it) }, state = state)
                 }
             }
         }

@@ -88,7 +88,7 @@ fun SearchScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(0.9f)
+                    //.alpha(0.9f)
                     .background(MaterialTheme.colorScheme.background)
             )
 
@@ -164,76 +164,79 @@ fun SearchScreen(
 
                     if (state.searchText.isNotEmpty()) {
 
-                        Text(
-                            text = "Bookmarks",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = Typography.titleSmall
-                        )
+                        if (state.groups.isNotEmpty() || state.bookmarks.isNotEmpty()) {
 
-                        LazyColumn {
-                            items(
-                                items = state.groups,
-                                key = { "group - ${it._id.toHexString()}" }
-                            ) { group ->
-                                Row(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        vm.openGroup(group)
-                                        closeSheet()
-                                    }
-                                    .padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        modifier = Modifier
-                                            .clip(CircleShape)
-                                            .size(42.dp),
-                                        painter = painterResource(id = R.drawable.folder),
-                                        contentDescription = "${group.name} icon",
-                                        tint = MaterialTheme.colorScheme.onBackground
-                                    )
+                            Text(
+                                text = "Bookmarks",
+                                color = MaterialTheme.colorScheme.onBackground,
+                                style = Typography.titleSmall
+                            )
 
-                                    Spacer(modifier = Modifier.width(8.dp))
+                            LazyColumn {
+                                items(
+                                    items = state.groups,
+                                    key = { "group - ${it._id.toHexString()}" }
+                                ) { group ->
+                                    Row(modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            vm.openGroup(group)
+                                            closeSheet()
+                                        }
+                                        .padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            modifier = Modifier
+                                                .clip(CircleShape)
+                                                .size(42.dp),
+                                            painter = painterResource(id = R.drawable.folder),
+                                            contentDescription = "${group.name} icon",
+                                            tint = MaterialTheme.colorScheme.onBackground
+                                        )
 
-                                    Text(
-                                        text = group.name,
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
-                                }
-                            }
-                            items(
-                                items = state.bookmarks,
-                                key = { it._id.toHexString() }) { bookmark ->
-                                Row(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        vm.openUrl(bookmark.url)
-                                    }
-                                    .padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    AsyncImage(
-                                        modifier = Modifier
-                                            .clip(CircleShape)
-                                            .size(42.dp)
-                                            .background(MaterialTheme.colorScheme.surfaceVariant),
-                                        model = getFaviconUrl(bookmark.url),
-                                        contentDescription = "${bookmark.name} icon"
-                                    )
+                                        Spacer(modifier = Modifier.width(8.dp))
 
-                                    Spacer(modifier = Modifier.width(8.dp))
-
-                                    Column {
                                         Text(
-                                            text = bookmark.name,
+                                            text = group.name,
                                             color = MaterialTheme.colorScheme.onBackground
                                         )
-
-                                        Text(
-                                            text = bookmark.url,
-                                            color = MaterialTheme.colorScheme.onBackground,
-                                            style = Typography.labelSmall
+                                    }
+                                }
+                                items(
+                                    items = state.bookmarks,
+                                    key = { it._id.toHexString() }) { bookmark ->
+                                    Row(modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            vm.openUrl(bookmark.url)
+                                        }
+                                        .padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        AsyncImage(
+                                            modifier = Modifier
+                                                .clip(CircleShape)
+                                                .size(42.dp)
+                                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                                            model = getFaviconUrl(bookmark.url),
+                                            contentDescription = "${bookmark.name} icon"
                                         )
+
+                                        Spacer(modifier = Modifier.width(8.dp))
+
+                                        Column {
+                                            Text(
+                                                text = bookmark.name,
+                                                color = MaterialTheme.colorScheme.onBackground
+                                            )
+
+                                            Text(
+                                                text = bookmark.url,
+                                                color = MaterialTheme.colorScheme.onBackground,
+                                                style = Typography.labelSmall
+                                            )
+                                        }
                                     }
                                 }
                             }

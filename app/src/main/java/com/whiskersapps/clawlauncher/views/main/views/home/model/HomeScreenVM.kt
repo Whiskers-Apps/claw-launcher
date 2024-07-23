@@ -8,10 +8,14 @@ import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,28 +24,26 @@ class HomeScreenVM @Inject constructor(
     val app: Application
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<HomeScreenUiState?>(null)
-    val uiState = _uiState.asStateFlow()
+    private val _state = MutableStateFlow<HomeScreenUiState?>(null)
+    val uiState = _state.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.Main) {
             settingsRepository.settingsFlow.collect { settings ->
                 if (uiState.value == null) {
-                    _uiState.update {
+                    _state.update {
                         HomeScreenUiState(
                             searchBarRadius = if (settings.homeSearchBarRadius != -1) settings.homeSearchBarRadius.dp else null,
                             searchBarOpacity = settings.homeSearchBarOpacity,
                             showSearchBar = settings.showHomeSearchBar,
                             showPlaceholder = settings.showHomeSearchBarPlaceholder,
                             showSettings = settings.showHomeSearchBarSettings,
-                            dateText = "",
-                            hourText = "",
                             showSettingsDialog = false,
                             showMenuDialog = false
                         )
                     }
                 } else {
-                    _uiState.update {
+                    _state.update {
                         it?.copy(
                             showSearchBar = settings.showHomeSearchBar,
                             showPlaceholder = settings.showHomeSearchBarPlaceholder,
@@ -51,6 +53,26 @@ class HomeScreenVM @Inject constructor(
                         )
                     }
                 }
+            }
+        }
+
+        viewModelScope.launch {
+            while (true) {
+
+                val calendar = Calendar.getInstance()
+                val locale = Locale.getDefault()
+                val formatter = SimpleDateFormat("EEEE - dd/MM/yyyy", locale)
+                val hours = String.format(locale, "%02d", calendar.get(Calendar.HOUR))
+                val minutes = String.format(locale, "%02d", calendar.get(Calendar.MINUTE))
+
+                _state.update {
+                    it?.copy(
+                        clock = "$hours:$minutes",
+                        date = formatter.format(calendar.time)
+                    )
+                }
+
+                delay(1000)
             }
         }
     }
@@ -64,14 +86,14 @@ class HomeScreenVM @Inject constructor(
             HomeScreenAction.CloseMenuDialog -> updateShowMenuDialog(false)
             HomeScreenAction.OpenSettingsDialog -> updateShowSettingsDialog(true)
             HomeScreenAction.CloseSettingsDialog -> updateShowSettingsDialog(false)
-            is HomeScreenAction.UpdateSearchBarOpacity -> updateSearchBarOpacity(action.opacity)
-            is HomeScreenAction.UpdateSearchBarRadius -> updateSearchBarRadius(action.radius)
-            is HomeScreenAction.UpdateShowSearchBar -> updateShowSearchBar(action.show)
-            is HomeScreenAction.UpdateShowSearchBarPlaceholder -> updateShowSearchBarPlaceholder(
+            is HomeScreenAction.SetSearchBarOpacity -> updateSearchBarOpacity(action.opacity)
+            is HomeScreenAction.SetSearchBarRadius -> updateSearchBarRadius(action.radius)
+            is HomeScreenAction.SetShowSearchBar -> updateShowSearchBar(action.show)
+            is HomeScreenAction.SetShowSearchBarPlaceholder -> updateShowSearchBarPlaceholder(
                 action.show
             )
 
-            is HomeScreenAction.UpdateShowSettings -> updateShowSettings(action.show)
+            is HomeScreenAction.SetShowSettings -> updateShowSettings(action.show)
         }
     }
 
@@ -86,7 +108,7 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun updateShowSettingsDialog(show: Boolean) {
-        _uiState.update { it?.copy(showSettingsDialog = show) }
+        _state.update { it?.copy(showSettingsDialog = show) }
     }
 
     private fun updateShowSearchBar(show: Boolean) {
@@ -120,6 +142,6 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun updateShowMenuDialog(show: Boolean) {
-        _uiState.update { it?.copy(showMenuDialog = show) }
+        _state.update { it?.copy(showMenuDialog = show) }
     }
 }

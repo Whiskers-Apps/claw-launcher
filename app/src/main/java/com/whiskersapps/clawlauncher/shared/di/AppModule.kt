@@ -25,8 +25,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideAppsRepository(app: Application): AppsRepository {
-        return AppsRepository(app)
+    fun provideAppsRepository(app: Application, settingsRepository: SettingsRepository): AppsRepository {
+        return AppsRepository(app, settingsRepository)
     }
 
     @Singleton

@@ -105,7 +105,7 @@ fun AppsScreen(
 
             Column(
                 modifier = Modifier
-                    .widthIn(max = 800.dp)
+                    .widthIn(max = 650.dp)
                     .fillMaxSize()
                     .systemBarsPadding()
                     .imePadding()

@@ -28,7 +28,6 @@ import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScre
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.about.view.AboutScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.bookmarks.view.BookmarksScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.view.SearchEnginesScreenRoot
-import com.whiskersapps.clawlauncher.views.setup.layout.ui.LayoutScreen
 import com.whiskersapps.clawlauncher.views.setup.layout.ui.LayoutScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,12 +36,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
 
         setContent {
 
             val settingsScreenVM = hiltViewModel<SettingsScreenVM>()
-            val settingsUiState = settingsScreenVM.uiState.collectAsState().value
+            val settingsUiState = settingsScreenVM.state.collectAsState().value
 
             if (!settingsUiState.loading) {
                 ClawLauncherTheme(settings = settingsUiState.settings) {

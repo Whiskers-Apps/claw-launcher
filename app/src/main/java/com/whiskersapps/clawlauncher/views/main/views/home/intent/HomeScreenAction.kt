@@ -8,10 +8,10 @@ sealed class HomeScreenAction{
     data object CloseMenuDialog: HomeScreenAction()
     data object OpenSettingsDialog: HomeScreenAction()
     data object CloseSettingsDialog: HomeScreenAction()
-    data class UpdateShowSearchBar(val show: Boolean): HomeScreenAction()
-    data class UpdateShowSearchBarPlaceholder(val show: Boolean): HomeScreenAction()
-    data class UpdateShowSettings(val show: Boolean): HomeScreenAction()
-    data class UpdateSearchBarOpacity(val opacity: Float): HomeScreenAction()
-    data class UpdateSearchBarRadius(val radius: Float): HomeScreenAction()
+    data class SetShowSearchBar(val show: Boolean): HomeScreenAction()
+    data class SetShowSearchBarPlaceholder(val show: Boolean): HomeScreenAction()
+    data class SetShowSettings(val show: Boolean): HomeScreenAction()
+    data class SetSearchBarOpacity(val opacity: Float): HomeScreenAction()
+    data class SetSearchBarRadius(val radius: Float): HomeScreenAction()
 
 }

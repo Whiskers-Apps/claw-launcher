@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.whiskersapps.clawlauncher.R
-import com.whiskersapps.clawlauncher.shared.view.composables.SliderSetting
-import com.whiskersapps.clawlauncher.shared.view.composables.SwitchSetting
+import com.whiskersapps.clawlauncher.shared.intent.settings.HomeSettingsAction
+import com.whiskersapps.clawlauncher.shared.view.settings.HomeSettings
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.home.model.HomeScreenUiState
@@ -33,9 +33,9 @@ import com.whiskersapps.clawlauncher.views.main.views.home.model.HomeScreenUiSta
 @Composable
 fun HomeSettingsDialog(
     onAction: (HomeScreenAction) -> Unit,
-    uiState: HomeScreenUiState
+    state: HomeScreenUiState
 ) {
-    if (uiState.showSettingsDialog) {
+    if (state.showSettingsDialog) {
         Dialog(
             onDismissRequest = { onAction(HomeScreenAction.CloseSettingsDialog) },
             properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -76,62 +76,34 @@ fun HomeSettingsDialog(
 
                         Spacer(modifier = Modifier.height(32.dp))
 
-                        SwitchSetting(
-                            title = "Search Bar",
-                            description = "Show the search bar",
-                            value = uiState.showSearchBar,
-                            onValueChange = {
-                                onAction(HomeScreenAction.UpdateShowSearchBar(it))
-                            }
-                        )
+                        HomeSettings(
+                            showSearchBar = state.showSearchBar,
+                            showPlaceholder = state.showPlaceholder,
+                            showSettings = state.showSettings,
+                            searchBarOpacity = state.searchBarOpacity,
+                            searchBarRadius = state.searchBarRadius?.value,
+                            onAction = { action ->
+                                when (action) {
+                                    is HomeSettingsAction.SetSearchBarOpacity -> onAction(
+                                        HomeScreenAction.SetSearchBarOpacity(action.opacity)
+                                    )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                                    is HomeSettingsAction.SetSearchBarRadius -> onAction(
+                                        HomeScreenAction.SetSearchBarRadius(action.radius)
+                                    )
 
-                        SwitchSetting(
-                            title = "Placeholder",
-                            description = "Shows the placeholder on the search bar",
-                            value = uiState.showPlaceholder,
-                            onValueChange = {
-                                onAction(HomeScreenAction.UpdateShowSearchBarPlaceholder(it))
-                            }
-                        )
+                                    is HomeSettingsAction.SetShowSearchBar -> onAction(
+                                        HomeScreenAction.SetShowSearchBar(action.show)
+                                    )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                                    is HomeSettingsAction.SetShowSearchBarPlaceholder -> onAction(
+                                        HomeScreenAction.SetShowSearchBarPlaceholder(action.show)
+                                    )
 
-                        SwitchSetting(
-                            title = "Settings",
-                            description = "Shows the settings icon on the search bar",
-                            value = uiState.showSettings,
-                            onValueChange = {
-                                onAction(HomeScreenAction.UpdateShowSettings(it))
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        SliderSetting(
-                            title = "Search Bar Opacity",
-                            description = "The search bar opacity",
-                            min = 0f,
-                            max = 1f,
-                            steps = 10,
-                            value = uiState.searchBarOpacity,
-                            onValueChange = {
-                                onAction(HomeScreenAction.UpdateSearchBarOpacity(it))
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        SliderSetting(
-                            title = "Search Bar Radius",
-                            description = "The search bar roundness. (-1) is fully round",
-                            min = -1f,
-                            max = 32f,
-                            steps = 33,
-                            value = uiState.searchBarRadius?.value ?: -1f,
-                            onValueChange = {
-                                onAction(HomeScreenAction.UpdateSearchBarRadius(it))
+                                    is HomeSettingsAction.SetShowSettings -> onAction(
+                                        HomeScreenAction.SetShowSettings(action.show)
+                                    )
+                                }
                             }
                         )
                     }

@@ -8,6 +8,7 @@ glassmorphicComposables = "0.0.4"
 hiltAndroidCompiler = "2.48"
 hiltAndroidVersion = "2.48"
 hiltNavigationCompose = "1.2.0"
+iconpackmanager = "3.5"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -40,6 +41,7 @@ glassmorphic-composables = { module = "com.github.jakhongirmadaminov:glassmorphi
 hilt-android-compiler-v248 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidCompiler" }
 hilt-android-v248 = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidVersion" }
+iconpackmanager = { module = "com.iamverylovely:IconPackManager", version.ref = "iconpackmanager" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

@@ -8,6 +8,7 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.graphics.drawable.toBitmap
+import com.iamverycute.iconpackmanager.IconPackManager
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
 class AppsRepository(
-    private val app: Application
+    private val app: Application,
+    private val settingsRepository: SettingsRepository
 ) {
     private val _apps = MutableStateFlow<List<AppShortcut>>(ArrayList())
     val apps = _apps.asStateFlow()
@@ -42,26 +44,31 @@ class AppsRepository(
                     updateShortcuts()
                 }
 
-                delay(5000)
+                delay(3000)
             }
         }
     }
 
     private fun updateShortcuts() {
         val newAppShortcuts = ArrayList<AppShortcut>()
+        val iconPackManager = IconPackManager(app)
+
 
         val intent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
 
+
         packageManager.queryIntentActivities(intent, 0).forEach { appIntent ->
             if (appIntent.activityInfo.packageName != "com.whiskersapps.clawlauncher") {
 
-                val info = packageManager.getApplicationInfo(appIntent.activityInfo.packageName, 0)
+                val info =
+                    packageManager.getApplicationInfo(appIntent.activityInfo.packageName, 0)
                 val iconDrawable = packageManager.getApplicationIcon(info)
 
                 val stream = ByteArrayOutputStream()
                 iconDrawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 10, stream)
+
 
                 var shortcut = AppShortcut(
                     name = info.loadLabel(packageManager).toString(),
@@ -72,26 +79,38 @@ class AppsRepository(
                         stream.toByteArray().size
                     )
                 )
+                /*
+                val themedIcon = iconPack?.value.loadIcon(info)
+
+                if (themedIcon != null) {
+                    shortcut = shortcut.copy(
+                        icon = themedIcon.toBitmap()
+                    )
+                } else {
 
 
+                 */
                 if (iconDrawable is AdaptiveIconDrawable) {
                     try {
                         shortcut = shortcut.copy(
                             foreground = iconDrawable.foreground.toBitmap(),
                             background = iconDrawable.background.toBitmap()
                         )
+
                     } catch (e: Exception) {
                         println(e)
                     }
                 }
+//                }
 
                 newAppShortcuts.add(shortcut)
             }
+
+
+            newAppShortcuts.sortBy { it.name.lowercase() }
+
+            _apps.update { newAppShortcuts }
         }
-
-        newAppShortcuts.sortBy { it.name.lowercase() }
-
-        _apps.update { newAppShortcuts }
     }
 
     fun openApp(packageName: String) {
