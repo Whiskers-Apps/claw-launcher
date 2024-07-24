@@ -88,7 +88,6 @@ fun SearchScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    //.alpha(0.9f)
                     .background(MaterialTheme.colorScheme.background)
             )
 
@@ -103,7 +102,7 @@ fun SearchScreen(
 
                 Column(
                     modifier = Modifier
-                        .widthIn(max = 800.dp)
+                        .widthIn(max = 650.dp)
                         .fillMaxSize()
                 ) {
                     SearchBar(

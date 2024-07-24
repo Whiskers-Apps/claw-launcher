@@ -2,7 +2,9 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,7 +23,7 @@ fun MainSetting(
     Column(modifier = Modifier
         .fillMaxWidth()
         .clickable { onClick() }
-        .padding(16.dp)
+        .padding(top = 16.dp, bottom = 16.dp)
     ) {
         Text(
             text = title,

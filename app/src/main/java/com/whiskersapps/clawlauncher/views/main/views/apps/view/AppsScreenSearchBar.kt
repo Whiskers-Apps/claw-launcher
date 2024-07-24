@@ -21,7 +21,7 @@ fun AppsScreenSearchBar(
             text = state.searchText,
             placeholder = if (state.showSearchBarPlaceholder) stringResource(id = R.string.Apps_search_apps) else "",
             onChange = {
-                onAction(AppsScreenAction.UpdateSearchText(it))
+                onAction(AppsScreenAction.SetSearchText(it))
             },
             showMenu = state.showSearchBarSettings,
             onMenuClick = {

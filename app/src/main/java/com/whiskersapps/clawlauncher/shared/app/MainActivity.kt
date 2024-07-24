@@ -26,7 +26,9 @@ import com.whiskersapps.clawlauncher.views.main.view.MainScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.model.SettingsScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.about.view.AboutScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.apps.view.AppsSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.bookmarks.view.BookmarksScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.home.view.HomeSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.view.SearchEnginesScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.layout.ui.LayoutScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
@@ -107,15 +109,11 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 composable(Routes.Main.Settings.HOME) {
-
+                                    HomeSettingsScreenRoot(navController)
                                 }
 
                                 composable(Routes.Main.Settings.APPS) {
-
-                                }
-
-                                composable(Routes.Main.Settings.SEARCH) {
-
+                                    AppsSettingsScreenRoot(navController = navController)
                                 }
 
                                 composable(Routes.Main.Settings.BOOKMARKS) {

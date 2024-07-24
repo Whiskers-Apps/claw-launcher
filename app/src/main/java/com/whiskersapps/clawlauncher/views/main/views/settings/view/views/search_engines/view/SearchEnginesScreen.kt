@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.intent.SearchEnginesScreenAction
@@ -47,103 +48,111 @@ fun SearchEnginesScreen(
     vm: SearchEnginesScreenVM
 ) {
 
-    val uiState = vm.uiState.collectAsState().value
+    val state = vm.state.collectAsState().value
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .systemBarsPadding()
+    ContentColumn(
+        navigationBar = {
+            NavBar(navigateBack = { onAction(SearchEnginesScreenAction.NavigateBack) }) {
+                if (!state.loading) {
+                    Text(
+                        modifier = Modifier.clickable {
+                            onAction(SearchEnginesScreenAction.ShowAddEngineDialog)
+                        },
+                        text = "Add",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        },
+        loading = state.loading,
+        scrollable = false
     ) {
-        NavBar(navigateBack = { onAction(SearchEnginesScreenAction.NavigateBack) }) {
-            if (!uiState.loading) {
-                Text(
-                    modifier = Modifier.clickable {
-                        onAction(SearchEnginesScreenAction.ShowAddEngineDialog)
-                    },
-                    text = "Add",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
+
+        LazyColumn {
+
+            item {
+                Column {
+                    Text(
+                        text = "Default",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = Typography.titleMedium
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    if (state.defaultSearchEngineId == null) {
+                        Text(
+                            text = "There's currently no default search engine",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    } else {
+                        state.defaultSearchEngine?.let {
+                            SearchEngineCard(
+                                onClick = {
+                                    onAction(
+                                        SearchEnginesScreenAction.ShowEditEngineDialog(
+                                            state.defaultSearchEngine
+                                        )
+                                    )
+                                },
+                                searchEngine = state.defaultSearchEngine,
+                                padding = 0.dp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Others",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = Typography.titleMedium
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            items(state.searchEngines) { searchEngine ->
+                if (state.defaultSearchEngineId != searchEngine._id) {
+                    SearchEngineCard(
+                        searchEngine = searchEngine,
+                        onClick = {
+                            onAction(
+                                SearchEnginesScreenAction.ShowEditEngineDialog(
+                                    searchEngine
+                                )
+                            )
+                        },
+                        padding = 0.dp
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
 
-        if (!uiState.loading) {
+        if (state.addEngineDialog.show) {
+            AddSearchEngineDialog(
+                onAction = { onAction(it) },
+                name = state.addEngineDialog.name,
+                query = state.addEngineDialog.query
+            )
+        }
 
-            LazyColumn {
-
-                item {
-                    Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
-                        Text(
-                            text = "Default",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = Typography.titleMedium
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        if (uiState.defaultSearchEngineId == null) {
-                            Text(
-                                text = "There's currently no default search engine",
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        } else {
-                            uiState.defaultSearchEngine?.let {
-                                SearchEngineCard(
-                                    onClick = {
-                                        onAction(
-                                            SearchEnginesScreenAction.ShowEditEngineDialog(
-                                                uiState.defaultSearchEngine
-                                            )
-                                        )
-                                    },
-                                    searchEngine = uiState.defaultSearchEngine,
-                                    padding = 0.dp
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = "Others",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = Typography.titleMedium
-                        )
-                    }
-                }
-
-                items(uiState.searchEngines) { searchEngine ->
-                    if (uiState.defaultSearchEngineId != searchEngine._id) {
-                        SearchEngineCard(
-                            searchEngine = searchEngine,
-                            onClick = {
-                                onAction(
-                                    SearchEnginesScreenAction.ShowEditEngineDialog(
-                                        searchEngine
-                                    )
-                                )
-                            })
-                    }
-                }
-            }
-
-            if (uiState.addEngineDialog.show) {
-                AddSearchEngineDialog(
-                    onAction = { onAction(it) },
-                    name = uiState.addEngineDialog.name,
-                    query = uiState.addEngineDialog.query
-                )
-            }
-
-            if (uiState.editEngineDialog.show) {
-                EditSearchEngineDialog(
-                    onAction = { onAction(it) },
-                    name = uiState.editEngineDialog.name,
-                    query = uiState.editEngineDialog.query,
-                    default = uiState.editEngineDialog.defaultEngine
-                )
-            }
+        if (state.editEngineDialog.show) {
+            EditSearchEngineDialog(
+                onAction = { onAction(it) },
+                name = state.editEngineDialog.name,
+                query = state.editEngineDialog.query,
+                default = state.editEngineDialog.defaultEngine
+            )
         }
     }
+
 }
+
 

@@ -51,7 +51,6 @@ class SettingsScreenVM @Inject constructor(
             SettingsScreenAction.NavigateToBookmarksSettings -> {}
             SettingsScreenAction.NavigateToHomeSettings -> {}
             SettingsScreenAction.NavigateToSearchEnginesSettings -> {}
-            SettingsScreenAction.NavigateToSearchSettings -> {}
             SettingsScreenAction.NavigateToStyleSettings -> {}
             SettingsScreenAction.SetDefaultLauncher -> setDefaultLauncher()
         }

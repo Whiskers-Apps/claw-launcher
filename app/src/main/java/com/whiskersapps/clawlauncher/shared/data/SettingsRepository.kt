@@ -94,61 +94,61 @@ class SettingsRepository(app: Application) {
         dataStore.edit { it[Settings.KEY_ICON_PADDING] = iconPadding }
     }
 
-    suspend fun updateAppsViewType(appsViewType: String) {
+    suspend fun setAppsViewType(appsViewType: String) {
         dataStore.edit { it[Settings.APPS_VIEW_TYPE] = appsViewType }
     }
 
-    suspend fun updateAppsOpacity(opacity: Float) {
+    suspend fun setAppsOpacity(opacity: Float) {
         dataStore.edit { it[Settings.APPS_OPACITY] = opacity }
     }
 
-    suspend fun updatePhoneCols(phoneCols: Int) {
+    suspend fun setPhoneCols(phoneCols: Int) {
         dataStore.edit { it[Settings.PHONE_COLS] = phoneCols }
     }
 
-    suspend fun updatePhoneLandscapeCols(landscapeCols: Int) {
+    suspend fun setPhoneLandscapeCols(landscapeCols: Int) {
         dataStore.edit { it[Settings.PHONE_LANDSCAPE_COLS] = landscapeCols }
     }
 
-    suspend fun updateTabletCols(tabletCols: Int) {
+    suspend fun setTabletCols(tabletCols: Int) {
         dataStore.edit { it[Settings.TABLET_COLS] = tabletCols }
     }
 
-    suspend fun updateTabletLandscapeCols(landscapeCols: Int) {
+    suspend fun setTabletLandscapeCols(landscapeCols: Int) {
         dataStore.edit { it[Settings.TABLET_LANDSCAPE_COLS] = landscapeCols }
     }
 
-    suspend fun updateShowHomeSearchBar(showHomeSearchBar: Boolean) {
+    suspend fun setShowHomeSearchBar(showHomeSearchBar: Boolean) {
         dataStore.edit { it[Settings.SHOW_HOME_SEARCH_BAR] = showHomeSearchBar }
     }
 
-    suspend fun updateShowHomeSearchBarPlaceholder(showHomeSearchBarPlaceholder: Boolean) {
+    suspend fun setShowHomeSearchBarPlaceholder(showHomeSearchBarPlaceholder: Boolean) {
         dataStore.edit {
             it[Settings.SHOW_HOME_SEARCH_BAR_PLACEHOLDER] = showHomeSearchBarPlaceholder
         }
     }
 
-    suspend fun updateShowHomeSearchBarSettings(showHomeSearchBarSettings: Boolean) {
+    suspend fun setShowHomeSearchBarSettings(showHomeSearchBarSettings: Boolean) {
         dataStore.edit { it[Settings.SHOW_HOME_SEARCH_BAR_SETTINGS] = showHomeSearchBarSettings }
     }
 
-    suspend fun updateHomeSearchBarOpacity(homeSearchBarOpacity: Float) {
+    suspend fun setHomeSearchBarOpacity(homeSearchBarOpacity: Float) {
         dataStore.edit { it[Settings.HOME_SEARCH_BAR_OPACITY] = homeSearchBarOpacity }
     }
 
-    suspend fun updateHomeSearchBarRadius(radius: Int) {
+    suspend fun setHomeSearchBarRadius(radius: Int) {
         dataStore.edit { it[Settings.HOME_SEARCH_BAR_RADIUS] = radius }
     }
 
-    suspend fun updateShowAppsSearchBar(showAppsSearchBar: Boolean) {
+    suspend fun setShowAppsSearchBar(showAppsSearchBar: Boolean) {
         dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR] = showAppsSearchBar }
     }
 
-    suspend fun updateAppsSearchBarPosition(appsSearchBarPosition: String) {
+    suspend fun setAppsSearchBarPosition(appsSearchBarPosition: String) {
         dataStore.edit { it[Settings.APPS_SEARCH_BAR_POSITION] = appsSearchBarPosition }
     }
 
-    suspend fun updateAppsSearchBarOpacity(appsSearchBarOpacity: Float) {
+    suspend fun setAppsSearchBarOpacity(appsSearchBarOpacity: Float) {
         dataStore.edit { it[Settings.APPS_SEARCH_BAR_OPACITY] = appsSearchBarOpacity }
     }
 
@@ -156,15 +156,15 @@ class SettingsRepository(app: Application) {
         dataStore.edit { it[Settings.DEFAULT_SEARCH_ENGINE] = id }
     }
 
-    suspend fun updateShowAppsSearchBarPlaceholder(show: Boolean) {
+    suspend fun setShowAppsSearchBarPlaceholder(show: Boolean) {
         dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR_PLACEHOLDER] = show }
     }
 
-    suspend fun updateShowAppsSearchBarSettings(show: Boolean) {
+    suspend fun setShowAppsSearchBarSettings(show: Boolean) {
         dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR_SETTINGS] = show }
     }
 
-    suspend fun updateAppsSearchBarRadius(radius: Int){
+    suspend fun setAppsSearchBarRadius(radius: Int){
         dataStore.edit { it[Settings.APPS_SEARCH_BAR_RADIUS] = radius }
     }
 }

@@ -19,7 +19,7 @@ class SearchEnginesScreenVM @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SearchEnginesScreenState())
-    val uiState = _state.asStateFlow()
+    val state = _state.asStateFlow()
 
     init {
 
@@ -78,13 +78,13 @@ class SearchEnginesScreenVM @Inject constructor(
     private fun addEngine() {
         viewModelScope.launch(Dispatchers.IO) {
             val searchEngine = SearchEngine().apply {
-                name = uiState.value.addEngineDialog.name
-                query = uiState.value.addEngineDialog.query
+                name = state.value.addEngineDialog.name
+                query = state.value.addEngineDialog.query
             }
 
             searchEnginesRepository.addSearchEngine(searchEngine)
 
-            if (uiState.value.editEngineDialog.defaultEngine) {
+            if (state.value.editEngineDialog.defaultEngine) {
                 searchEnginesRepository.makeDefaultEngine(searchEngine._id)
             } else {
                 searchEnginesRepository.clearDefaultEngine()
@@ -102,7 +102,7 @@ class SearchEnginesScreenVM @Inject constructor(
                     show = true,
                     name = searchEngine.name,
                     query = searchEngine.query,
-                    defaultEngine = searchEngine._id == uiState.value.defaultSearchEngineId
+                    defaultEngine = searchEngine._id == state.value.defaultSearchEngineId
                 )
             )
         }
@@ -131,9 +131,9 @@ class SearchEnginesScreenVM @Inject constructor(
     private fun saveEditEngine() {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val defaultEngineId = uiState.value.defaultSearchEngineId
-            val engineId = uiState.value.editEngineDialog.id
-            val editIsDefault = uiState.value.editEngineDialog.defaultEngine
+            val defaultEngineId = state.value.defaultSearchEngineId
+            val engineId = state.value.editEngineDialog.id
+            val editIsDefault = state.value.editEngineDialog.defaultEngine
 
             if (editIsDefault && defaultEngineId != engineId) {
                 searchEnginesRepository.makeDefaultEngine(engineId)
@@ -144,9 +144,9 @@ class SearchEnginesScreenVM @Inject constructor(
             }
 
             searchEnginesRepository.updateSearchEngine(
-                uiState.value.editEngineDialog.id,
-                uiState.value.editEngineDialog.name,
-                uiState.value.editEngineDialog.query
+                state.value.editEngineDialog.id,
+                state.value.editEngineDialog.name,
+                state.value.editEngineDialog.query
             )
 
             closeEditDialog()
@@ -155,7 +155,7 @@ class SearchEnginesScreenVM @Inject constructor(
 
     private fun deleteEngine() {
         viewModelScope.launch(Dispatchers.IO) {
-            searchEnginesRepository.deleteSearchEngine(uiState.value.editEngineDialog.id)
+            searchEnginesRepository.deleteSearchEngine(state.value.editEngineDialog.id)
 
             closeEditDialog()
         }

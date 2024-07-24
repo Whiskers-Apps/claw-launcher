@@ -1,0 +1,16 @@
+package com.whiskersapps.clawlauncher.shared.intent.settings
+
+sealed class AppsSettingsAction {
+    data class SetViewType(val type: String): AppsSettingsAction()
+    data class SetPhoneCols(val cols: Float) : AppsSettingsAction()
+    data class SetPhoneLandscapeCols(val cols: Float) : AppsSettingsAction()
+    data class SetTabletCols(val cols: Float) : AppsSettingsAction()
+    data class SetTabletLandscapeCols(val cols: Float) : AppsSettingsAction()
+    data class SetBackgroundOpacity(val opacity: Float) : AppsSettingsAction()
+    data class SetSearchBarPosition(val position: String) : AppsSettingsAction()
+    data class SetShowSearchBar(val show: Boolean) : AppsSettingsAction()
+    data class SetShowSearchBarPlaceholder(val show: Boolean) : AppsSettingsAction()
+    data class SetShowSearchBarSettings(val show: Boolean) : AppsSettingsAction()
+    data class SetSearchBarOpacity(val opacity: Float) : AppsSettingsAction()
+    data class SetSearchBarRadius(val radius: Float): AppsSettingsAction()
+}

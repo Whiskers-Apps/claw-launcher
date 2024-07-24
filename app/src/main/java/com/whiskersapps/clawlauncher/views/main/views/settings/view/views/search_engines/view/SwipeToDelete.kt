@@ -104,6 +104,5 @@ fun SwipeToDelete(
                 }
             )
         }
-
     }
 }

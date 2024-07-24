@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
+import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.intent.SettingsScreenAction
@@ -49,8 +50,6 @@ fun SettingsScreenRoot(
                 SettingsScreenAction.NavigateToSearchEnginesSettings -> navController.navigate(
                     Routes.Main.Settings.SEARCH_ENGINES
                 )
-
-                SettingsScreenAction.NavigateToSearchSettings -> navController.navigate(Routes.Main.Settings.SEARCH)
                 SettingsScreenAction.NavigateToStyleSettings -> navController.navigate(Routes.Main.Settings.STYLE)
                 SettingsScreenAction.NavigateToAbout -> navController.navigate(Routes.Main.Settings.ABOUT)
                 else -> vm.onAction(action)
@@ -68,100 +67,88 @@ fun SettingsScreen(
 
     val state = vm.state.collectAsState().value
 
-    Surface(
-        Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .systemBarsPadding()
-            .verticalScroll(rememberScrollState())
-    ) {
-        Column {
-
+    ContentColumn(
+        navigationBar = {
             NavBar(navigateBack = { onAction(SettingsScreenAction.NavigateBack) })
+        },
+        loading = state.loading
+    ) {
+        if (!state.isDefaultLauncher) {
+            Row(
+                modifier = Modifier
+                    .clickable { onAction(SettingsScreenAction.SetDefaultLauncher) }
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-            if (!state.isDefaultLauncher) {
-                Row(
+                Icon(
+                    modifier = Modifier.size(32.dp),
+                    painter = painterResource(id = R.drawable.warning),
+                    contentDescription = "warning icon",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
                     modifier = Modifier
-                        .clickable {onAction(SettingsScreenAction.SetDefaultLauncher)}
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxWidth()
+                        .weight(1f, fill = true)
                 ) {
-
-                    Icon(
-                        modifier = Modifier.size(32.dp),
-                        painter = painterResource(id = R.drawable.warning),
-                        contentDescription = "warning icon",
-                        tint = MaterialTheme.colorScheme.onBackground
+                    Text(
+                        text = "Default Launcher",
+                        style = Typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
 
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, fill = true)
-                    ) {
-                        Text(
-                            text = "Default Launcher",
-                            style = Typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-
-                        Text(
-                            text = "Claw is not your default launcher. Click to set it",
-                            style = Typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                    Text(
+                        text = "Claw is not your default launcher. Click to set it",
+                        style = Typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
-
-            MainSetting(
-                title = "Style",
-                description = "Layout, themes and icons",
-                onClick = { onAction(SettingsScreenAction.NavigateToStyleSettings) }
-            )
-
-            MainSetting(
-                title = "Home",
-                description = "Home screen settings",
-                onClick = { onAction(SettingsScreenAction.NavigateToHomeSettings) }
-            )
-
-            MainSetting(
-                title = "Apps",
-                description = "Apps screen settings",
-                onClick = { onAction(SettingsScreenAction.NavigateToAppsSettings) }
-            )
-
-            MainSetting(
-                title = "Search",
-                description = "Search screen settings",
-                onClick = { onAction(SettingsScreenAction.NavigateToSearchSettings) }
-            )
-
-            MainSetting(
-                title = "Bookmarks",
-                description = "Add website urls to quickly open them",
-                onClick = { onAction(SettingsScreenAction.NavigateToBookmarksSettings) }
-            )
-
-            MainSetting(
-                title = "Search Engines",
-                description = "Manage search engines when searching",
-                onClick = { onAction(SettingsScreenAction.NavigateToSearchEnginesSettings) }
-            )
-
-            MainSetting(
-                title = "About",
-                description = "App info",
-                onClick = { onAction(SettingsScreenAction.NavigateToAbout) }
-            )
         }
+
+        MainSetting(
+            title = "Style",
+            description = "Layout, themes and icons",
+            onClick = { onAction(SettingsScreenAction.NavigateToStyleSettings) }
+        )
+
+        MainSetting(
+            title = "Home",
+            description = "Home screen settings",
+            onClick = { onAction(SettingsScreenAction.NavigateToHomeSettings) }
+        )
+
+        MainSetting(
+            title = "Apps",
+            description = "Apps screen settings",
+            onClick = { onAction(SettingsScreenAction.NavigateToAppsSettings) }
+        )
+
+        MainSetting(
+            title = "Bookmarks",
+            description = "Add website urls to quickly open them",
+            onClick = { onAction(SettingsScreenAction.NavigateToBookmarksSettings) }
+        )
+
+        MainSetting(
+            title = "Search Engines",
+            description = "Manage search engines when searching",
+            onClick = { onAction(SettingsScreenAction.NavigateToSearchEnginesSettings) }
+        )
+
+        MainSetting(
+            title = "About",
+            description = "App info",
+            onClick = { onAction(SettingsScreenAction.NavigateToAbout) }
+        )
     }
 }
 

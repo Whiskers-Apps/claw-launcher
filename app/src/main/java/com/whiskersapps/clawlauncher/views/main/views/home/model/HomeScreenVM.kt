@@ -24,15 +24,17 @@ class HomeScreenVM @Inject constructor(
     val app: Application
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<HomeScreenUiState?>(null)
-    val uiState = _state.asStateFlow()
+    private val _state = MutableStateFlow(HomeScreenUiState())
+    val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.Main) {
             settingsRepository.settingsFlow.collect { settings ->
-                if (uiState.value == null) {
+                if (state.value.loading) {
                     _state.update {
                         HomeScreenUiState(
+                            loading = false,
+                            layout = settings.layout,
                             searchBarRadius = if (settings.homeSearchBarRadius != -1) settings.homeSearchBarRadius.dp else null,
                             searchBarOpacity = settings.homeSearchBarOpacity,
                             showSearchBar = settings.showHomeSearchBar,
@@ -44,7 +46,8 @@ class HomeScreenVM @Inject constructor(
                     }
                 } else {
                     _state.update {
-                        it?.copy(
+                        it.copy(
+                            layout = settings.layout,
                             showSearchBar = settings.showHomeSearchBar,
                             showPlaceholder = settings.showHomeSearchBarPlaceholder,
                             searchBarOpacity = settings.homeSearchBarOpacity,
@@ -62,11 +65,11 @@ class HomeScreenVM @Inject constructor(
                 val calendar = Calendar.getInstance()
                 val locale = Locale.getDefault()
                 val formatter = SimpleDateFormat("EEEE - dd/MM/yyyy", locale)
-                val hours = String.format(locale, "%02d", calendar.get(Calendar.HOUR))
+                val hours = String.format(locale, "%02d", calendar.get(Calendar.HOUR_OF_DAY))
                 val minutes = String.format(locale, "%02d", calendar.get(Calendar.MINUTE))
 
                 _state.update {
-                    it?.copy(
+                    it.copy(
                         clock = "$hours:$minutes",
                         date = formatter.format(calendar.time)
                     )
@@ -78,22 +81,35 @@ class HomeScreenVM @Inject constructor(
     }
 
     fun onAction(action: HomeScreenAction) {
-        when (action) {
-            HomeScreenAction.NavigateToSettings -> {}
-            HomeScreenAction.OpenSearchSheet -> {}
-            HomeScreenAction.OpenNotificationPanel -> openNotificationPanel()
-            HomeScreenAction.OpenMenuDialog -> updateShowMenuDialog(true)
-            HomeScreenAction.CloseMenuDialog -> updateShowMenuDialog(false)
-            HomeScreenAction.OpenSettingsDialog -> updateShowSettingsDialog(true)
-            HomeScreenAction.CloseSettingsDialog -> updateShowSettingsDialog(false)
-            is HomeScreenAction.SetSearchBarOpacity -> updateSearchBarOpacity(action.opacity)
-            is HomeScreenAction.SetSearchBarRadius -> updateSearchBarRadius(action.radius)
-            is HomeScreenAction.SetShowSearchBar -> updateShowSearchBar(action.show)
-            is HomeScreenAction.SetShowSearchBarPlaceholder -> updateShowSearchBarPlaceholder(
-                action.show
-            )
+        viewModelScope.launch(Dispatchers.Main) {
+            when (action) {
+                HomeScreenAction.NavigateToSettings -> {}
+                HomeScreenAction.OpenSearchSheet -> {}
+                HomeScreenAction.OpenNotificationPanel -> openNotificationPanel()
+                HomeScreenAction.OpenMenuDialog -> setShowMenuDialog(true)
+                HomeScreenAction.CloseMenuDialog -> setShowMenuDialog(false)
+                HomeScreenAction.OpenSettingsDialog -> setShowSettingsDialog(true)
+                HomeScreenAction.CloseSettingsDialog -> setShowSettingsDialog(false)
+                is HomeScreenAction.SetSearchBarOpacity -> settingsRepository.setHomeSearchBarOpacity(
+                    action.opacity
+                )
 
-            is HomeScreenAction.SetShowSettings -> updateShowSettings(action.show)
+                is HomeScreenAction.SetSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(
+                    action.radius.toInt()
+                )
+
+                is HomeScreenAction.SetShowSearchBar -> settingsRepository.setShowHomeSearchBar(
+                    action.show
+                )
+
+                is HomeScreenAction.SetShowSearchBarPlaceholder -> settingsRepository.setShowHomeSearchBarPlaceholder(
+                    action.show
+                )
+
+                is HomeScreenAction.SetShowSettings -> settingsRepository.setShowHomeSearchBarSettings(
+                    action.show
+                )
+            }
         }
     }
 
@@ -107,41 +123,11 @@ class HomeScreenVM @Inject constructor(
         }
     }
 
-    private fun updateShowSettingsDialog(show: Boolean) {
-        _state.update { it?.copy(showSettingsDialog = show) }
+    private fun setShowSettingsDialog(show: Boolean) {
+        _state.update { it.copy(showSettingsDialog = show) }
     }
 
-    private fun updateShowSearchBar(show: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.updateShowHomeSearchBar(show)
-        }
-    }
-
-    private fun updateShowSearchBarPlaceholder(show: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.updateShowHomeSearchBarPlaceholder(show)
-        }
-    }
-
-    private fun updateShowSettings(show: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.updateShowHomeSearchBarSettings(show)
-        }
-    }
-
-    private fun updateSearchBarOpacity(opacity: Float) {
-        viewModelScope.launch {
-            settingsRepository.updateHomeSearchBarOpacity(opacity)
-        }
-    }
-
-    private fun updateSearchBarRadius(radius: Float) {
-        viewModelScope.launch {
-            settingsRepository.updateHomeSearchBarRadius(radius.toInt())
-        }
-    }
-
-    private fun updateShowMenuDialog(show: Boolean) {
-        _state.update { it?.copy(showMenuDialog = show) }
+    private fun setShowMenuDialog(show: Boolean) {
+        _state.update { it.copy(showMenuDialog = show) }
     }
 }
