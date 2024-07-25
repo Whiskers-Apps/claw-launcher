@@ -20,61 +20,43 @@ class AppsScreenVM @Inject constructor(
     private val appsRepository: AppsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<AppsScreenState?>(null)
-    val uiState = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(AppsScreenState())
+    val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.Main) {
             settingsRepository.settingsFlow.collect { settings ->
-
-                if (uiState.value == null) {
-                    _uiState.update {
-                        AppsScreenState(
-                            appShortcuts = appsRepository.apps.value,
-                            layout = settings.layout,
-                            iconPadding = (settings.iconPadding).dp,
-                            viewType = settings.appsViewType,
-                            opacity = settings.appsOpacity,
-                            phoneCols = settings.phoneCols,
-                            phoneLandscapeCols = settings.phoneLandscapeCols,
-                            tabletCols = settings.tabletCols,
-                            tabletLandscapeCols = settings.tabletLandscapeCols,
-                            showSearchBar = settings.showAppsSearchBar,
-                            searchBarPosition = settings.appsSearchBarPosition,
-                            showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
-                            showSearchBarSettings = settings.showAppsSearchBarSettings,
-                            searchBarOpacity = settings.appsSearchBarOpacity,
-                            searchBarRadius = if (settings.appsSearchBarRadius != -1) settings.appsSearchBarRadius.dp else null,
-                            searchText = "",
-                            showSettingsDialog = false
-                        )
-                    }
-                } else {
-                    _uiState.update {
-                        it?.copy(
-                            layout = settings.layout,
-                            viewType = settings.appsViewType,
-                            iconPadding = (settings.iconPadding).dp,
-                            opacity = settings.appsOpacity,
-                            phoneCols = settings.phoneCols,
-                            phoneLandscapeCols = settings.phoneLandscapeCols,
-                            tabletCols = settings.tabletCols,
-                            tabletLandscapeCols = settings.tabletLandscapeCols,
-                            showSearchBar = settings.showAppsSearchBar,
-                            searchBarPosition = settings.appsSearchBarPosition,
-                            showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
-                            showSearchBarSettings = settings.showAppsSearchBarSettings,
-                            searchBarOpacity = settings.appsSearchBarOpacity,
-                            searchBarRadius = if (settings.appsSearchBarRadius != -1) settings.appsSearchBarRadius.dp else null,
-                        )
-                    }
+                _state.update {
+                    it.copy(
+                        loadingSettings = false,
+                        loading = it.loadingApps,
+                        viewType = settings.appsViewType,
+                        iconPadding = (settings.iconPadding).dp,
+                        opacity = settings.appsOpacity,
+                        cols = settings.portraitCols,
+                        landscapeCols = settings.landscapeCols,
+                        unfoldedCols = settings.unfoldedPortraitCols,
+                        unfoldedLandscapeCols = settings.unfoldedLandscapeCols,
+                        showSearchBar = settings.showAppsSearchBar,
+                        searchBarPosition = settings.appsSearchBarPosition,
+                        showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
+                        showSearchBarSettings = settings.showAppsSearchBarSettings,
+                        searchBarOpacity = settings.appsSearchBarOpacity,
+                        searchBarRadius = if(settings.appsSearchBarRadius == -1) null else settings.appsSearchBarRadius.dp,
+                    )
                 }
             }
         }
 
         viewModelScope.launch(Dispatchers.Main) {
             appsRepository.apps.collect { apps ->
-                _uiState.update { it?.copy(appShortcuts = apps) }
+                _state.update {
+                    it.copy(
+                        loading = it.loadingSettings,
+                        loadingApps = false,
+                        appShortcuts = apps
+                    )
+                }
             }
         }
     }
@@ -95,8 +77,8 @@ class AppsScreenVM @Inject constructor(
                 is AppsScreenAction.SetPhoneCols -> setPhoneCols(action.cols.toInt())
                 is AppsScreenAction.SetPhoneLandscapeCols -> setPhoneLandscapeCols(action.cols.toInt())
                 is AppsScreenAction.SetBackgroundOpacity -> setBackgroundOpacity(action.opacity)
-                is AppsScreenAction.SetTabletCols -> setTabletCols(action.cols.toInt())
-                is AppsScreenAction.SetTabletLandscapeCols -> setTabletLandscapeCols(action.cols.toInt())
+                is AppsScreenAction.SetUnfoldedCols -> setTabletCols(action.cols.toInt())
+                is AppsScreenAction.SetUnfoldedLandscapeCols -> setTabletLandscapeCols(action.cols.toInt())
                 is AppsScreenAction.SetSearchBarPosition -> setSearchBarPosition(action.position)
                 is AppsScreenAction.SetShowSearchBar -> setShowSearchBar(action.show)
                 is AppsScreenAction.SetShowSearchBarPlaceholder -> setShowSearchBarPlaceholder(
@@ -117,8 +99,8 @@ class AppsScreenVM @Inject constructor(
     }
 
     private fun setSearchText(text: String) {
-        _uiState.update {
-            it?.copy(
+        _state.update {
+            it.copy(
                 searchText = text,
                 appShortcuts = appsRepository.getSearchedApps(text)
             )
@@ -128,8 +110,8 @@ class AppsScreenVM @Inject constructor(
     private fun openApp(packageName: String) {
         appsRepository.openApp(packageName)
 
-        _uiState.update {
-            it?.copy(
+        _state.update {
+            it.copy(
                 searchText = "",
                 appShortcuts = appsRepository.apps.value
             )
@@ -137,13 +119,13 @@ class AppsScreenVM @Inject constructor(
     }
 
     private fun openFirstApp() {
-        if (uiState.value!!.appShortcuts.isNotEmpty()) {
-            openApp(uiState.value!!.appShortcuts[0].packageName)
+        if (state.value.appShortcuts.isNotEmpty()) {
+            openApp(state.value.appShortcuts[0].packageName)
         }
     }
 
     private fun setShowSettingsDialog(show: Boolean) {
-        _uiState.update { it?.copy(showSettingsDialog = show) }
+        _state.update { it.copy(showSettingsDialog = show) }
     }
 
     private fun setBackgroundOpacity(opacity: Float) {

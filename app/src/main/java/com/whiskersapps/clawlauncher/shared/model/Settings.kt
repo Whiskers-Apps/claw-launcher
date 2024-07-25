@@ -7,14 +7,13 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 
 data class Settings(
     val setupCompleted: Boolean = DEFAULT_SETUP_COMPLETED,
-    val layout: String = DEFAULT_KEY_LAYOUT,
     val iconPadding: Int = DEFAULT_ICON_PADDING,
     val appsViewType: String = DEFAULT_APPS_VIEW_TYPE,
     val appsOpacity: Float = DEFAULT_APPS_OPACITY,
-    val phoneCols: Int = DEFAULT_PHONE_COLS,
-    val phoneLandscapeCols: Int = DEFAULT_PHONE_LANDSCAPE_COLS,
-    val tabletCols: Int = DEFAULT_TABLET_COLS,
-    val tabletLandscapeCols: Int = DEFAULT_TABLET_LANDSCAPE_COLS,
+    val portraitCols: Int = DEFAULT_PORTRAIT_COLS,
+    val landscapeCols: Int = DEFAULT_LANDSCAPE_COLS,
+    val unfoldedPortraitCols: Int = DEFAULT_UNFOLDED_PORTRAIT_COLS,
+    val unfoldedLandscapeCols: Int = DEFAULT_UNFOLDED_LANDSCAPE_COLS,
     val showHomeSearchBar: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR,
     val showHomeSearchBarPlaceholder: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER,
     val showHomeSearchBarSettings: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS,
@@ -29,13 +28,10 @@ data class Settings(
     val defaultSearchEngine: String = DEFAULT_DEFAULT_SEARCH_ENGINE
 ){
     companion object{
-        val KEY_SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
+        val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
         const val DEFAULT_SETUP_COMPLETED = false
 
-        val KEY_LAYOUT = stringPreferencesKey("layout")
-        const val DEFAULT_KEY_LAYOUT = "minimal"
-
-        val KEY_ICON_PADDING = intPreferencesKey("icon-padding")
+        val ICON_PADDING = intPreferencesKey("icon-padding")
         const val DEFAULT_ICON_PADDING = 16
 
         val APPS_VIEW_TYPE = stringPreferencesKey("apps-view-type")
@@ -44,17 +40,17 @@ data class Settings(
         val APPS_OPACITY = floatPreferencesKey("apps-opacity")
         const val DEFAULT_APPS_OPACITY = 1f
 
-        val PHONE_COLS = intPreferencesKey("phone-cols")
-        const val DEFAULT_PHONE_COLS = 4
+        val PORTRAIT_COLS = intPreferencesKey("portrait-cols")
+        const val DEFAULT_PORTRAIT_COLS = 4
 
-        val PHONE_LANDSCAPE_COLS = intPreferencesKey("phone-landscape-cols")
-        const val DEFAULT_PHONE_LANDSCAPE_COLS = 6
+        val LANDSCAPE_COLS = intPreferencesKey("landscape-cols")
+        const val DEFAULT_LANDSCAPE_COLS = 7
 
-        val TABLET_COLS = intPreferencesKey("tablet-cols")
-        const val DEFAULT_TABLET_COLS = 6
+        val UNFOLDED_PORTRAIT_COLS = intPreferencesKey("unfolded-portrait-cols")
+        const val DEFAULT_UNFOLDED_PORTRAIT_COLS = 7
 
-        val TABLET_LANDSCAPE_COLS = intPreferencesKey("tablet-landscape-cols")
-        const val DEFAULT_TABLET_LANDSCAPE_COLS = 6
+        val UNFOLDED_LANDSCAPE_COLS = intPreferencesKey("unfolded-landscape-cols")
+        const val DEFAULT_UNFOLDED_LANDSCAPE_COLS = 7
 
         val SHOW_HOME_SEARCH_BAR = booleanPreferencesKey("show-home-search-bar")
         const val DEFAULT_SHOW_HOME_SEARCH_BAR = true

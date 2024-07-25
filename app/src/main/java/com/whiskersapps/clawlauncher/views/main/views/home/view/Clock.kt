@@ -31,12 +31,10 @@ import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 @Composable
 fun Clock(
     clock: String,
-    date: String,
-    layout: String
+    date: String
 ) {
 
-    val useBubblyLayout by remember { mutableStateOf(layout == "bubbly") }
-    val textShadow = if (useBubblyLayout) null else Shadow(
+    val textShadow = Shadow(
         Color.Black,
         offset = Offset(2f, 2f)
     )
@@ -49,12 +47,6 @@ fun Clock(
 
         Box(modifier = Modifier
             .fillMaxSize()
-            .modifyWhen(useBubblyLayout) {
-                this
-                    .clip(RoundedCornerShape(16.dp))
-                    .alpha(0.9f)
-                    .background(MaterialTheme.colorScheme.background)
-            }
         )
 
         Column(
@@ -63,7 +55,7 @@ fun Clock(
         ) {
             Text(
                 text = clock,
-                color = if (useBubblyLayout) MaterialTheme.colorScheme.primary else Color.White,
+                color = Color.White,
                 fontSize = 69.sp,
                 fontWeight = FontWeight.SemiBold,
                 style = TextStyle(shadow = textShadow)
@@ -71,7 +63,7 @@ fun Clock(
 
             Text(
                 text = date,
-                color = if (useBubblyLayout) MaterialTheme.colorScheme.primary else Color.White,
+                color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 style = TextStyle(shadow = textShadow)

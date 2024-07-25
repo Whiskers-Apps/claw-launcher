@@ -26,6 +26,7 @@ navigationComposeVersion = "2.7.7"
 realmGradlePlugin = "10.4.0"
 rebugger = "1.0.0-rc03"
 whiskersPaletteKt = "1.0.0"
+adaptiveAndroid = "1.0.0-beta04"
 
 [libraries]
 androidsvg-aar = { module = "com.caverock:androidsvg-aar", version.ref = "androidsvgAar" }
@@ -61,6 +62,7 @@ library-base = { module = "io.realm.kotlin:library-base", version.ref = "library
 realm-gradle-plugin = { module = "io.realm:realm-gradle-plugin", version.ref = "realmGradlePlugin" }
 rebugger = { module = "io.github.theapache64:rebugger", version.ref = "rebugger" }
 whiskers-palette-kt = { module = "com.github.Whiskers-Color-Scheme:whiskers-palette-kt", version.ref = "whiskersPaletteKt" }
+androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -20,13 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.lighttigerxiv.layout_scaffold.isTablet
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.intent.settings.AppsSettingsAction
+import com.whiskersapps.clawlauncher.shared.utils.isFoldable
 import com.whiskersapps.clawlauncher.shared.view.settings.AppsSettings
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
@@ -37,6 +38,8 @@ fun AppsSettingsDialog(
     onAction: (AppsScreenAction) -> Unit,
     state: AppsScreenState
 ) {
+
+    val context = LocalContext.current
 
     if (state.showSettingsDialog) {
         Dialog(
@@ -84,12 +87,12 @@ fun AppsSettingsDialog(
                         Spacer(modifier = Modifier.height(32.dp))
 
                         AppsSettings(
-                            isTablet = isTablet(),
+                            isFoldable = isFoldable(context),
                             viewType = state.viewType,
-                            phoneCols = state.phoneCols,
-                            phoneLandscapeCols = state.phoneLandscapeCols,
-                            tabletCols = state.tabletCols,
-                            tabletLandscapeCols = state.tabletLandscapeCols,
+                            phoneCols = state.cols,
+                            phoneLandscapeCols = state.landscapeCols,
+                            unfoldedCols = state.unfoldedCols,
+                            unfoldedLandscapeCols = state.unfoldedLandscapeCols,
                             backgroundOpacity = state.opacity,
                             searchBarPosition = state.searchBarPosition,
                             showSearchBar = state.showSearchBar,
@@ -151,14 +154,14 @@ fun AppsSettingsDialog(
                                     )
                                 )
 
-                                is AppsSettingsAction.SetTabletCols -> onAction(
-                                    AppsScreenAction.SetTabletCols(
+                                is AppsSettingsAction.SetUnfoldedCols -> onAction(
+                                    AppsScreenAction.SetUnfoldedCols(
                                         action.cols
                                     )
                                 )
 
-                                is AppsSettingsAction.SetTabletLandscapeCols -> onAction(
-                                    AppsScreenAction.SetTabletLandscapeCols(
+                                is AppsSettingsAction.SetUnfoldedLandscapeCols -> onAction(
+                                    AppsScreenAction.SetUnfoldedLandscapeCols(
                                         action.cols
                                     )
                                 )

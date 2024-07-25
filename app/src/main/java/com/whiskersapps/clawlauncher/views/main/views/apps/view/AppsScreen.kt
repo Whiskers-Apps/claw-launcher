@@ -1,9 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.view
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,19 +37,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lighttigerxiv.layout_scaffold.inLandscape
-import com.lighttigerxiv.layout_scaffold.isTablet
+import com.whiskersapps.clawlauncher.shared.utils.getColsCount
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
 import com.whiskersapps.clawlauncher.shared.view.composables.AppPopup
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.apps.model.AppsScreenVM
-import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchBar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -88,12 +82,15 @@ fun AppsScreen(
     vm: AppsScreenVM,
 ) {
 
-    val state = vm.uiState.collectAsState().value
-    val isTablet = isTablet()
-    val inLandscape = inLandscape()
+    val state = vm.state.collectAsState().value
+    val colsCount = getColsCount(
+        cols = state.cols,
+        landscapeCols = state.landscapeCols,
+        unfoldedCols = state.unfoldedCols,
+        unfoldedLandscapeCols = state.unfoldedLandscapeCols
+    )
 
-    state?.let {
-
+    if (!state.loading) {
         Box(contentAlignment = Alignment.Center) {
 
             Box(
@@ -181,18 +178,12 @@ fun AppsScreen(
 
                 if (state.viewType == "grid") {
 
-                    val phoneColumns =
-                        if (inLandscape) state.phoneLandscapeCols else state.phoneCols
-                    val tabletColumns =
-                        if (inLandscape) state.tabletLandscapeCols else state.tabletCols
-                    val columns = if (isTablet) tabletColumns else phoneColumns
-
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1f, fill = true)
                     ) {
-                        LazyVerticalGrid(columns = GridCells.Fixed(columns)) {
+                        LazyVerticalGrid(columns = GridCells.Fixed(colsCount)) {
                             itemsIndexed(
                                 items = state.appShortcuts,
                                 key = { index, app -> "$index - ${app.packageName}" }
@@ -218,7 +209,7 @@ fun AppsScreen(
                 }
 
                 if (state.showSearchBar && state.searchBarPosition == "bottom") {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     AppsScreenSearchBar(
                         onAction = { onAction(it) },

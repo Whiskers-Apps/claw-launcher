@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -35,12 +34,12 @@ import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 
 @Composable
 fun AppsSettings(
-    isTablet: Boolean,
+    isFoldable: Boolean,
     viewType: String,
     phoneCols: Int,
     phoneLandscapeCols: Int,
-    tabletCols: Int,
-    tabletLandscapeCols: Int,
+    unfoldedCols: Int,
+    unfoldedLandscapeCols: Int,
     backgroundOpacity: Float,
     searchBarPosition: String,
     showSearchBar: Boolean,
@@ -49,7 +48,8 @@ fun AppsSettings(
     searchBarOpacity: Float,
     searchBarRadius: Float?,
     onAction: (AppsSettingsAction) -> Unit
-){
+) {
+
     Text(
         modifier = Modifier.fillMaxWidth(),
         text = "View",
@@ -127,7 +127,7 @@ fun AppsSettings(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(4.dp)
             ) {
-                for(i in 0..4){
+                for (i in 0..4) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -159,116 +159,52 @@ fun AppsSettings(
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Column(
-            modifier = Modifier
-                .width(100.dp)
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(4.dp)
-        ) {
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxWidth(),
-                columns = GridCells.Fixed(phoneCols),
-                userScrollEnabled = false
-            ) {
-                items(items = arrayOfNulls<Int>(5 * phoneCols)) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .padding(4.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Column(
-            modifier = Modifier
-                .width(200.dp)
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(4.dp)
-        ) {
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxWidth(),
-                columns = GridCells.Fixed(phoneLandscapeCols),
-                userScrollEnabled = false
-            ) {
-                items(items = arrayOfNulls<Int>(5 * phoneLandscapeCols)) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .padding(4.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                    )
-                }
-            }
-        }
-    }
-
     Spacer(modifier = Modifier.height(16.dp))
 
-    if (isTablet) {
+    SliderSetting(
+        title = "Columns",
+        description = "The amount of columns to show when in Portrait",
+        min = 3f,
+        max = 8f,
+        steps = 6,
+        value = phoneCols.toFloat(),
+        onValueChange = { onAction(AppsSettingsAction.SetPhoneCols(it)) }
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+
+    SliderSetting(
+        title = "Landscape Columns",
+        description = "The amount of columns to show when in Landscape",
+        min = 3f,
+        max = 8f,
+        steps = 6,
+        value = phoneLandscapeCols.toFloat(),
+        onValueChange = {
+            onAction(AppsSettingsAction.SetPhoneLandscapeCols(it))
+        }
+    )
+
+    if (isFoldable) {
         SliderSetting(
-            title = "Columns",
-            description = "The amount of columns to show when in Portrait",
+            title = "Unfolded Columns",
+            description = "The amount of columns to show when in Portrait and the device is unfolded",
             min = 3f,
-            max = 6f,
-            steps = 3,
-            value = tabletCols.toFloat(),
-            onValueChange = { onAction(AppsSettingsAction.SetTabletCols(it)) }
+            max = 8f,
+            steps = 6,
+            value = unfoldedCols.toFloat(),
+            onValueChange = { onAction(AppsSettingsAction.SetUnfoldedCols(it)) }
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         SliderSetting(
-            title = "Landscape Columns",
-            description = "The amount of columns to show when in Landscape",
-            min = 6f,
-            max = 12f,
-            steps = 6,
-            value = tabletLandscapeCols.toFloat(),
-            onValueChange = {
-                onAction(AppsSettingsAction.SetTabletLandscapeCols(it))
-            }
-        )
-    } else {
-        SliderSetting(
-            title = "Columns",
-            description = "The amount of columns to show when in Portrait",
+            title = "Unfolded Landscape Columns",
+            description = "The amount of columns to show when in Landscape and the device is unfolded",
             min = 3f,
-            max = 6f,
-            steps = 3,
-            value = phoneCols.toFloat(),
-            onValueChange = { onAction(AppsSettingsAction.SetPhoneCols(it)) }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        SliderSetting(
-            title = "Landscape Columns",
-            description = "The amount of columns to show when in Landscape",
-            min = 6f,
-            max = 12f,
+            max = 8f,
             steps = 6,
-            value = phoneLandscapeCols.toFloat(),
+            value = unfoldedLandscapeCols.toFloat(),
             onValueChange = {
-                onAction(AppsSettingsAction.SetPhoneLandscapeCols(it))
+                onAction(AppsSettingsAction.SetUnfoldedLandscapeCols(it))
             }
         )
     }

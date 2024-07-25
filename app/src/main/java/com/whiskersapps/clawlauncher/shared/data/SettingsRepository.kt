@@ -24,26 +24,24 @@ class SettingsRepository(app: Application) {
 
     private fun getSettings(preferences: Preferences): Settings {
         return Settings(
-            setupCompleted = preferences[Settings.KEY_SETUP_COMPLETED]
+            setupCompleted = preferences[Settings.SETUP_COMPLETED]
                 ?: Settings.DEFAULT_SETUP_COMPLETED,
 
-            layout = preferences[Settings.KEY_LAYOUT] ?: Settings.DEFAULT_KEY_LAYOUT,
-
-            iconPadding = preferences[Settings.KEY_ICON_PADDING] ?: Settings.DEFAULT_ICON_PADDING,
+            iconPadding = preferences[Settings.ICON_PADDING] ?: Settings.DEFAULT_ICON_PADDING,
 
             appsViewType = preferences[Settings.APPS_VIEW_TYPE] ?: Settings.DEFAULT_APPS_VIEW_TYPE,
 
             appsOpacity = preferences[Settings.APPS_OPACITY] ?: Settings.DEFAULT_APPS_OPACITY,
 
-            phoneCols = preferences[Settings.PHONE_COLS] ?: Settings.DEFAULT_PHONE_COLS,
+            portraitCols = preferences[Settings.PORTRAIT_COLS] ?: Settings.DEFAULT_PORTRAIT_COLS,
 
-            phoneLandscapeCols = preferences[Settings.PHONE_LANDSCAPE_COLS]
-                ?: Settings.DEFAULT_PHONE_LANDSCAPE_COLS,
+            landscapeCols = preferences[Settings.LANDSCAPE_COLS]
+                ?: Settings.DEFAULT_LANDSCAPE_COLS,
 
-            tabletCols = preferences[Settings.TABLET_COLS] ?: Settings.DEFAULT_TABLET_COLS,
+            unfoldedPortraitCols = preferences[Settings.UNFOLDED_PORTRAIT_COLS] ?: Settings.DEFAULT_UNFOLDED_PORTRAIT_COLS,
 
-            tabletLandscapeCols = preferences[Settings.TABLET_LANDSCAPE_COLS]
-                ?: Settings.DEFAULT_TABLET_LANDSCAPE_COLS,
+            unfoldedLandscapeCols = preferences[Settings.UNFOLDED_LANDSCAPE_COLS]
+                ?: Settings.DEFAULT_UNFOLDED_LANDSCAPE_COLS,
 
             showHomeSearchBar = preferences[Settings.SHOW_HOME_SEARCH_BAR]
                 ?: Settings.DEFAULT_SHOW_HOME_SEARCH_BAR,
@@ -82,16 +80,12 @@ class SettingsRepository(app: Application) {
         )
     }
 
-    suspend fun updateSetupCompleted(setupCompleted: Boolean) {
-        dataStore.edit { it[Settings.KEY_SETUP_COMPLETED] = setupCompleted }
-    }
-
-    suspend fun updateLayout(layout: String) {
-        dataStore.edit { it[Settings.KEY_LAYOUT] = layout }
+    suspend fun setSetupCompleted(setupCompleted: Boolean) {
+        dataStore.edit { it[Settings.SETUP_COMPLETED] = setupCompleted }
     }
 
     suspend fun updateIconPadding(iconPadding: Int) {
-        dataStore.edit { it[Settings.KEY_ICON_PADDING] = iconPadding }
+        dataStore.edit { it[Settings.ICON_PADDING] = iconPadding }
     }
 
     suspend fun setAppsViewType(appsViewType: String) {
@@ -103,19 +97,19 @@ class SettingsRepository(app: Application) {
     }
 
     suspend fun setPhoneCols(phoneCols: Int) {
-        dataStore.edit { it[Settings.PHONE_COLS] = phoneCols }
+        dataStore.edit { it[Settings.PORTRAIT_COLS] = phoneCols }
     }
 
     suspend fun setPhoneLandscapeCols(landscapeCols: Int) {
-        dataStore.edit { it[Settings.PHONE_LANDSCAPE_COLS] = landscapeCols }
+        dataStore.edit { it[Settings.LANDSCAPE_COLS] = landscapeCols }
     }
 
     suspend fun setTabletCols(tabletCols: Int) {
-        dataStore.edit { it[Settings.TABLET_COLS] = tabletCols }
+        dataStore.edit { it[Settings.UNFOLDED_PORTRAIT_COLS] = tabletCols }
     }
 
     suspend fun setTabletLandscapeCols(landscapeCols: Int) {
-        dataStore.edit { it[Settings.TABLET_LANDSCAPE_COLS] = landscapeCols }
+        dataStore.edit { it[Settings.UNFOLDED_LANDSCAPE_COLS] = landscapeCols }
     }
 
     suspend fun setShowHomeSearchBar(showHomeSearchBar: Boolean) {

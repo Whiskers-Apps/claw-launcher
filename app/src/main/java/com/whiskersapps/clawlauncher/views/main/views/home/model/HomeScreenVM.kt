@@ -34,7 +34,6 @@ class HomeScreenVM @Inject constructor(
                     _state.update {
                         HomeScreenUiState(
                             loading = false,
-                            layout = settings.layout,
                             searchBarRadius = if (settings.homeSearchBarRadius != -1) settings.homeSearchBarRadius.dp else null,
                             searchBarOpacity = settings.homeSearchBarOpacity,
                             showSearchBar = settings.showHomeSearchBar,
@@ -47,7 +46,6 @@ class HomeScreenVM @Inject constructor(
                 } else {
                     _state.update {
                         it.copy(
-                            layout = settings.layout,
                             showSearchBar = settings.showHomeSearchBar,
                             showPlaceholder = settings.showHomeSearchBarPlaceholder,
                             searchBarOpacity = settings.homeSearchBarOpacity,

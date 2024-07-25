@@ -8,7 +8,6 @@ data class HomeScreenUiState(
     val loading: Boolean = true,
     val clock: String = "",
     val date: String = "",
-    val layout: String = "",
     val showSearchBar: Boolean = Settings.DEFAULT_SHOW_HOME_SEARCH_BAR,
     val showPlaceholder: Boolean = Settings.DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER,
     val showSettings: Boolean = Settings.DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS,

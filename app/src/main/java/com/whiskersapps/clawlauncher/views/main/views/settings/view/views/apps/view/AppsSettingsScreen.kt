@@ -2,10 +2,11 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.view.views.apps.
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.lighttigerxiv.layout_scaffold.isTablet
 import com.whiskersapps.clawlauncher.shared.intent.settings.AppsSettingsAction
+import com.whiskersapps.clawlauncher.shared.utils.isFoldable
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.settings.AppsSettings
@@ -36,6 +37,7 @@ fun AppsSettingsScreen(
 ) {
 
     val state = vm.state.collectAsState().value
+    val context = LocalContext.current
 
     ContentColumn(
         navigationBar = {
@@ -45,12 +47,12 @@ fun AppsSettingsScreen(
     ) {
 
         AppsSettings(
-            isTablet = isTablet(),
+            isFoldable = isFoldable(context),
             viewType = state.settings.appsViewType,
-            phoneCols = state.settings.phoneCols,
-            phoneLandscapeCols = state.settings.phoneLandscapeCols,
-            tabletCols = state.settings.tabletCols,
-            tabletLandscapeCols = state.settings.tabletLandscapeCols,
+            phoneCols = state.settings.portraitCols,
+            phoneLandscapeCols = state.settings.landscapeCols,
+            unfoldedCols = state.settings.unfoldedPortraitCols,
+            unfoldedLandscapeCols = state.settings.unfoldedLandscapeCols,
             backgroundOpacity = state.settings.appsOpacity,
             searchBarPosition = state.settings.appsSearchBarPosition,
             showSearchBar = state.settings.showAppsSearchBar,
@@ -112,13 +114,13 @@ fun AppsSettingsScreen(
                     )
                 )
 
-                is AppsSettingsAction.SetTabletCols -> onAction(
+                is AppsSettingsAction.SetUnfoldedCols -> onAction(
                     AppsSettingsScreenAction.SetTabletCols(
                         action.cols
                     )
                 )
 
-                is AppsSettingsAction.SetTabletLandscapeCols -> onAction(
+                is AppsSettingsAction.SetUnfoldedLandscapeCols -> onAction(
                     AppsSettingsScreenAction.SetTabletLandscapeCols(
                         action.cols
                     )

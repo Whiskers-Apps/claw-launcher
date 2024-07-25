@@ -32,7 +32,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -41,9 +40,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.lighttigerxiv.layout_scaffold.inLandscape
-import com.lighttigerxiv.layout_scaffold.isTablet
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.utils.getColsCount
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
@@ -62,8 +60,12 @@ fun SearchScreen(
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val inLandscape = inLandscape()
-    val isTablet = isTablet()
+    val colsCount = getColsCount(
+        cols = state.cols,
+        landscapeCols = state.landscapeCols,
+        unfoldedCols = state.unfoldedCols,
+        unfoldedLandscapeCols = state.unfoldedLandscapeCols
+    )
 
     LaunchedEffect(sheetState.currentValue) {
         if (sheetState.currentValue == SheetValue.Expanded) {
@@ -76,12 +78,6 @@ fun SearchScreen(
     }
 
     if (!state.loading) {
-
-        val phoneColumns =
-            if (inLandscape) state.phoneLandscapeCols else state.phoneCols
-        val tabletColumns =
-            if (inLandscape) state.tabletLandscapeCols else state.tabletCols
-        val columns = if (isTablet) tabletColumns else phoneColumns
 
         Box(contentAlignment = Alignment.Center) {
 
@@ -135,7 +131,7 @@ fun SearchScreen(
                         )
 
                         LazyVerticalGrid(
-                            columns = GridCells.Fixed(columns),
+                            columns = GridCells.Fixed(colsCount),
                         ) {
                             itemsIndexed(
                                 state.appShortcuts,

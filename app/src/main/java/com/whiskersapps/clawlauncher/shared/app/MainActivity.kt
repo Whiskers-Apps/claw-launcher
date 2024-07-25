@@ -30,7 +30,7 @@ import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.apps.v
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.bookmarks.view.BookmarksScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.home.view.HomeSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.view.SearchEnginesScreenRoot
-import com.whiskersapps.clawlauncher.views.setup.layout.ui.LayoutScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style.view.StyleSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .background(backgroundColor),
                             navController = navController,
-                            startDestination = if (settingsUiState.settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
+                            startDestination = Routes.Main.ROUTE//if (settingsUiState.settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
                         ) {
                             navigation(
                                 startDestination = Routes.Setup.WELCOME,
@@ -80,10 +80,6 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 composable(Routes.Setup.WELCOME) {
                                     WelcomeScreenRoot(navController = navController)
-                                }
-
-                                composable(Routes.Setup.LAYOUT) {
-                                    LayoutScreenRoot(navController = navController)
                                 }
                             }
 
@@ -105,11 +101,11 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 composable(Routes.Main.Settings.STYLE) {
-
+                                    StyleSettingsScreenRoot(navController = navController)
                                 }
 
                                 composable(Routes.Main.Settings.HOME) {
-                                    HomeSettingsScreenRoot(navController)
+                                    HomeSettingsScreenRoot(navController = navController)
                                 }
 
                                 composable(Routes.Main.Settings.APPS) {

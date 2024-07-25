@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.model.Routes
@@ -54,6 +55,7 @@ fun MainScreen(
     val sheetState = rememberModalBottomSheetState()
     val scaffoldState = rememberBottomSheetScaffoldState(sheetState)
     val scope = rememberCoroutineScope()
+
 
     BackHandler {
         if (pagerState.currentPage != 0) {

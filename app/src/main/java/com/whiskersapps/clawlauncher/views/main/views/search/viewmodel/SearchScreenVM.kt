@@ -18,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,16 +37,17 @@ class SearchScreenVM @Inject constructor(
             val loadingSettings: Boolean = true,
             val loadingBookmarks: Boolean = true,
             val loadingSearchEngines: Boolean = true,
+            val layout: String = "",
             val searchText: String = "",
             val appShortcuts: List<AppShortcut> = emptyList(),
             val bookmarks: List<Bookmark> = emptyList(),
             val groups: List<BookmarkGroup> = emptyList(),
             val focusSearchBar: Boolean = false,
             val searchEngine: SearchEngine? = null,
-            val phoneCols: Int = 0,
-            val phoneLandscapeCols: Int = 0,
-            val tabletCols: Int = 0,
-            val tabletLandscapeCols: Int = 0
+            val cols: Int = 0,
+            val landscapeCols: Int = 0,
+            val unfoldedCols: Int = 0,
+            val unfoldedLandscapeCols: Int = 0
         )
     }
 
@@ -61,10 +61,10 @@ class SearchScreenVM @Inject constructor(
                 _state.update {
                     it.copy(
                         loading = it.loadingSearchEngines || it.loadingBookmarks,
-                        phoneCols = settings.phoneCols,
-                        phoneLandscapeCols = settings.phoneLandscapeCols,
-                        tabletCols = settings.tabletCols,
-                        tabletLandscapeCols = settings.tabletLandscapeCols
+                        cols = settings.portraitCols,
+                        landscapeCols = settings.landscapeCols,
+                        unfoldedCols = settings.unfoldedPortraitCols,
+                        unfoldedLandscapeCols = settings.unfoldedLandscapeCols
                     )
                 }
             }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -58,7 +59,7 @@ fun SearchBar(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val fieldShape =
-        if (borderRadius == null) CircleShape else AbsoluteRoundedCornerShape(borderRadius)
+        if (borderRadius == null) CircleShape else RoundedCornerShape(100)
 
     var fieldHeight by remember { mutableStateOf(0.dp) }
 
