@@ -50,11 +50,25 @@ fun StyleSettingsScreen(
             onClick = { onAction(StyleSettingsScreenAction.OpenIconPackDialog) }
         )
 
+        SimpleSetting(
+            title = "Dark Mode",
+            value = state.settings.darkMode,
+            onClick = { onAction(StyleSettingsScreenAction.OpenDarkModeDialog) }
+        )
+
         if (state.showIconPackDialog) {
             IconPackDialog(
                 onDismiss = { onAction(StyleSettingsScreenAction.CloseIconPackDialog) },
                 iconPacks = state.iconPacks,
                 setIconPack = { iconPack -> onAction(StyleSettingsScreenAction.SetIconPack(iconPack)) }
+            )
+        }
+
+        if (state.showDarkModeDialog) {
+            DarkModeDialog(
+                onDismiss = { onAction(StyleSettingsScreenAction.CloseDarkModeDialog) },
+                save = { darkMode -> onAction(StyleSettingsScreenAction.SetDarkMode(darkMode)) },
+                defaultValue = state.settings.darkMode
             )
         }
     }

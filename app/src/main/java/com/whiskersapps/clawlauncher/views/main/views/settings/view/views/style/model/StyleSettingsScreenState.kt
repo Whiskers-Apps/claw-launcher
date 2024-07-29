@@ -10,5 +10,6 @@ data class StyleSettingsScreenState(
     val settings: Settings = Settings(),
     val iconPacks: List<IconPack> = emptyList(),
     val currentIconPackName: String = "",
-    val showIconPackDialog: Boolean = false
+    val showIconPackDialog: Boolean = false,
+    val showDarkModeDialog: Boolean = false
 )

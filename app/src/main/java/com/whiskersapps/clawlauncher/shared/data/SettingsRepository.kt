@@ -80,7 +80,9 @@ class SettingsRepository(app: Application) {
 
             defaultSearchEngine = preferences[Settings.DEFAULT_SEARCH_ENGINE] ?: Settings.DEFAULT_DEFAULT_SEARCH_ENGINE,
 
-            iconPack = preferences[Settings.ICON_PACK] ?: Settings.DEFAULT_ICON_PACK
+            iconPack = preferences[Settings.ICON_PACK] ?: Settings.DEFAULT_ICON_PACK,
+
+            darkMode = preferences[Settings.DARK_MODE] ?: Settings.DEFAULT_DARK_MODE
         )
     }
 

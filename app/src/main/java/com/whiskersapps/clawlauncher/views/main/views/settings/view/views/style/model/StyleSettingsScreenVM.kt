@@ -53,17 +53,31 @@ class StyleSettingsScreenVM @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             when (action) {
                 StyleSettingsScreenAction.NavigateBack -> {}
-                is StyleSettingsScreenAction.SetIconPack -> {
-                    settingsRepository.setIconPack(action.packageName)
-                    setShowIconPackDialog(false)
-                }
+                is StyleSettingsScreenAction.SetIconPack -> setIconPack(action.packageName)
                 StyleSettingsScreenAction.OpenIconPackDialog -> setShowIconPackDialog(true)
                 StyleSettingsScreenAction.CloseIconPackDialog -> setShowIconPackDialog(false)
+                StyleSettingsScreenAction.OpenDarkModeDialog -> setShowDarkModeDialog(true)
+                StyleSettingsScreenAction.CloseDarkModeDialog -> setShowDarkModeDialog(false)
+                is StyleSettingsScreenAction.SetDarkMode -> setDarkMode(action.darkMode)
             }
         }
     }
 
+    private suspend fun setIconPack(packageName: String){
+        settingsRepository.setIconPack(packageName)
+        setShowIconPackDialog(false)
+    }
+
+    private suspend fun setDarkMode(darkMode: String){
+        settingsRepository.setDarkMode(darkMode)
+        setShowDarkModeDialog(false)
+    }
+
     private fun setShowIconPackDialog(show: Boolean) {
         _state.update { it.copy(showIconPackDialog = show) }
+    }
+
+    private fun setShowDarkModeDialog(show: Boolean) {
+        _state.update { it.copy(showDarkModeDialog = show) }
     }
 }

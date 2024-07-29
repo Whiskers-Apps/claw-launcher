@@ -57,32 +57,31 @@ fun IconPackDialog(
                     title = "Icon Pack"
                 )
 
-                Column(
-                    modifier = Modifier.clickable { setIconPack("system") },
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .padding(8.dp),
-                        painter = painterResource(id = R.drawable.android),
-                        contentDescription = "android icon",
-
-                        )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "System",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontSize = 12.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
                 LazyVerticalGrid(columns = GridCells.Fixed(4)) {
+                    item{
+                        Column(
+                            modifier = Modifier.clickable { setIconPack("system") },
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(CircleShape)
+                                    .padding(8.dp),
+                                painter = painterResource(id = R.drawable.android),
+                                contentDescription = "android icon",
+
+                                )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = "System",
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
                     items(items = iconPacks, key = { it.packageName }) { iconPack ->
                         Column(
                             modifier = Modifier.clickable { setIconPack(iconPack.packageName) },
