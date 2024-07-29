@@ -46,7 +46,7 @@ fun SearchBar(
     onDone: () -> Unit = {},
     enabled: Boolean = true,
     placeholder: String = stringResource(id = R.string.Apps_search_apps),
-    borderRadius: Dp? = null,
+    borderRadius: Int = 100,
     opacity: Float = 1f,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     focus: Boolean = false,
@@ -58,9 +58,6 @@ fun SearchBar(
     val localDensity = LocalDensity.current
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    val fieldShape =
-        if (borderRadius == null) CircleShape else RoundedCornerShape(100)
-
     var fieldHeight by remember { mutableStateOf(0.dp) }
 
     LaunchedEffect(focus) {
@@ -76,7 +73,7 @@ fun SearchBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(fieldHeight)
-                .clip(fieldShape)
+                .clip(RoundedCornerShape(borderRadius))
                 .alpha(opacity)
                 .background(backgroundColor)
         )
@@ -88,7 +85,7 @@ fun SearchBar(
                 .onGloballyPositioned { fieldHeight = with(localDensity){it.size.height.toDp()} },
             value = text,
             onValueChange = { onChange(it) },
-            shape = fieldShape,
+            shape = RoundedCornerShape(borderRadius),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,

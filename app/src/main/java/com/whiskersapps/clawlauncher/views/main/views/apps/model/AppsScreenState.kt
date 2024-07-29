@@ -22,7 +22,7 @@ data class AppsScreenState(
     val showSearchBarPlaceholder: Boolean = Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER,
     val showSearchBarSettings: Boolean = Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
     val searchBarOpacity: Float = Settings.DEFAULT_APPS_SEARCH_BAR_OPACITY,
-    val searchBarRadius: Dp? = null,
+    val searchBarRadius: Int = Settings.DEFAULT_APPS_SEARCH_BAR_RADIUS,
     val searchText: String = "",
     val showSettingsDialog: Boolean = false
 )

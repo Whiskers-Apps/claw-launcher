@@ -15,10 +15,12 @@ private val Context.dataStore by preferencesDataStore("settings")
 class SettingsRepository(app: Application) {
 
     private val dataStore = app.dataStore
+    var settings = Settings()
 
     val settingsFlow: Flow<Settings> = dataStore.data.catch {
         Settings()
     }.map { preferences ->
+        settings = getSettings(preferences)
         getSettings(preferences)
     }
 
@@ -76,7 +78,9 @@ class SettingsRepository(app: Application) {
             appsSearchBarRadius = preferences[Settings.APPS_SEARCH_BAR_RADIUS]
                 ?: Settings.DEFAULT_APPS_SEARCH_BAR_RADIUS,
 
-            defaultSearchEngine = preferences[Settings.DEFAULT_SEARCH_ENGINE] ?: ""
+            defaultSearchEngine = preferences[Settings.DEFAULT_SEARCH_ENGINE] ?: Settings.DEFAULT_DEFAULT_SEARCH_ENGINE,
+
+            iconPack = preferences[Settings.ICON_PACK] ?: Settings.DEFAULT_ICON_PACK
         )
     }
 
@@ -160,5 +164,13 @@ class SettingsRepository(app: Application) {
 
     suspend fun setAppsSearchBarRadius(radius: Int){
         dataStore.edit { it[Settings.APPS_SEARCH_BAR_RADIUS] = radius }
+    }
+
+    suspend fun setIconPack(packageName: String){
+        dataStore.edit { it[Settings.ICON_PACK] = packageName }
+    }
+
+    suspend fun setDarkMode(darkMode: String){
+        dataStore.edit { it[Settings.DARK_MODE] = darkMode }
     }
 }

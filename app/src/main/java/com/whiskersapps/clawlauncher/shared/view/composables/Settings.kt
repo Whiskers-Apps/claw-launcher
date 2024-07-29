@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -75,7 +76,8 @@ fun SliderSetting(
                 Text(
                     text = if (textIsInt) value.toInt().toString() else DecimalFormat("#.#").format(
                         value
-                    )
+                    ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -116,5 +118,31 @@ fun SwitchSetting(
         Spacer(modifier = Modifier.width(8.dp))
 
         Switch(checked = value, onCheckedChange = { onValueChange(it) })
+    }
+}
+
+@Composable
+fun SimpleSetting(
+    title: String,
+    value: String,
+    onClick: () -> Unit
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(top = 16.dp, bottom = 16.dp)
+    ) {
+        Text(
+            text = title,
+            style = Typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        Text(
+            text = value,
+            style = Typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }

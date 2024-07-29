@@ -1,11 +1,16 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style.view
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
+import com.whiskersapps.clawlauncher.shared.view.composables.SimpleSetting
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style.intent.StyleSettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style.model.StyleSettingsScreenVM
 
@@ -39,6 +44,18 @@ fun StyleSettingsScreen(
             NavBar(navigateBack = { onAction(StyleSettingsScreenAction.NavigateBack) })
         }
     ) {
+        SimpleSetting(
+            title = "Icon Pack",
+            value = state.currentIconPackName,
+            onClick = { onAction(StyleSettingsScreenAction.OpenIconPackDialog) }
+        )
 
+        if (state.showIconPackDialog) {
+            IconPackDialog(
+                onDismiss = { onAction(StyleSettingsScreenAction.CloseIconPackDialog) },
+                iconPacks = state.iconPacks,
+                setIconPack = { iconPack -> onAction(StyleSettingsScreenAction.SetIconPack(iconPack)) }
+            )
+        }
     }
 }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -18,19 +17,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
 @Composable
 fun AppIcon(
     app: AppShortcut,
     shape: RoundedCornerShape = CircleShape,
 ) {
-    val image by remember { derivedStateOf { app.icon.asImageBitmap() } }
-    val background by remember { derivedStateOf { app.background?.asImageBitmap() } }
-    val foreground by remember { derivedStateOf { app.foreground?.asImageBitmap() } }
+    val stockIcon by remember { derivedStateOf { app.icon.stock.asImageBitmap() } }
+    val themedIcon by remember { derivedStateOf { app.icon.themed?.asImageBitmap() } }
+    val background by remember { derivedStateOf { app.icon.adaptive?.background?.asImageBitmap() } }
+    val foreground by remember { derivedStateOf { app.icon.adaptive?.foreground?.asImageBitmap() } }
 
-    if (background != null && foreground != null) {
+    if (app.icon.adaptive != null) {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
@@ -59,14 +59,17 @@ fun AppIcon(
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .clip(shape)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .modifyWhen(app.icon.themed == null) {
+                    this
+                        .clip(shape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                }
         ) {
             Image(
                 modifier = Modifier
                     .fillMaxHeight()
                     .aspectRatio(1f),
-                bitmap = image,
+                bitmap = if (app.icon.themed != null) themedIcon!! else stockIcon,
                 contentDescription = "${app.packageName} icon",
                 contentScale = ContentScale.Crop
             )

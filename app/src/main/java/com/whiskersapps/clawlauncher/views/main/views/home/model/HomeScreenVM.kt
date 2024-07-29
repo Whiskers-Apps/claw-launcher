@@ -24,7 +24,7 @@ class HomeScreenVM @Inject constructor(
     val app: Application
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeScreenUiState())
+    private val _state = MutableStateFlow(HomeScreenState())
     val state = _state.asStateFlow()
 
     init {
@@ -32,9 +32,9 @@ class HomeScreenVM @Inject constructor(
             settingsRepository.settingsFlow.collect { settings ->
                 if (state.value.loading) {
                     _state.update {
-                        HomeScreenUiState(
+                        HomeScreenState(
                             loading = false,
-                            searchBarRadius = if (settings.homeSearchBarRadius != -1) settings.homeSearchBarRadius.dp else null,
+                            searchBarRadius = settings.homeSearchBarRadius,
                             searchBarOpacity = settings.homeSearchBarOpacity,
                             showSearchBar = settings.showHomeSearchBar,
                             showPlaceholder = settings.showHomeSearchBarPlaceholder,
@@ -49,7 +49,7 @@ class HomeScreenVM @Inject constructor(
                             showSearchBar = settings.showHomeSearchBar,
                             showPlaceholder = settings.showHomeSearchBarPlaceholder,
                             searchBarOpacity = settings.homeSearchBarOpacity,
-                            searchBarRadius = if (settings.homeSearchBarRadius != -1) settings.homeSearchBarRadius.dp else null,
+                            searchBarRadius = settings.homeSearchBarRadius,
                             showSettings = settings.showHomeSearchBarSettings,
                         )
                     }

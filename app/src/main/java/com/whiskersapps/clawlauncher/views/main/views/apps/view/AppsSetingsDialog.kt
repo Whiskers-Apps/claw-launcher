@@ -99,7 +99,7 @@ fun AppsSettingsDialog(
                             showSearchBarPlaceholder = state.showSearchBarPlaceholder,
                             showSearchBarSettings = state.showSearchBarSettings,
                             searchBarOpacity = state.searchBarOpacity,
-                            searchBarRadius = state.searchBarRadius?.value
+                            searchBarRadius = state.searchBarRadius
                         ) { action ->
                             when (action) {
                                 is AppsSettingsAction.SetBackgroundOpacity -> onAction(

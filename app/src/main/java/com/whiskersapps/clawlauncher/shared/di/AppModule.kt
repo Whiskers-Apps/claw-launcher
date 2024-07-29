@@ -3,6 +3,7 @@ package com.whiskersapps.clawlauncher.shared.di
 import android.app.Application
 import com.whiskersapps.clawlauncher.shared.data.AppsRepository
 import com.whiskersapps.clawlauncher.shared.data.BookmarksRepository
+import com.whiskersapps.clawlauncher.shared.data.IconPackRepository
 import com.whiskersapps.clawlauncher.shared.data.SearchEnginesRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.shared.database.getRealm
@@ -25,7 +26,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideAppsRepository(app: Application, settingsRepository: SettingsRepository): AppsRepository {
+    fun provideAppsRepository(
+        app: Application,
+        settingsRepository: SettingsRepository
+    ): AppsRepository {
         return AppsRepository(app, settingsRepository)
     }
 
@@ -37,8 +41,21 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideSearchEnginesRepository(realm: Realm, settingsRepository: SettingsRepository): SearchEnginesRepository {
+    fun provideSearchEnginesRepository(
+        realm: Realm,
+        settingsRepository: SettingsRepository
+    ): SearchEnginesRepository {
         return SearchEnginesRepository(realm, settingsRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideIconPackRepository(
+        app: Application,
+        settingsRepository: SettingsRepository,
+        appsRepository: AppsRepository
+    ): IconPackRepository {
+        return IconPackRepository(app, settingsRepository, appsRepository)
     }
 
     @Singleton

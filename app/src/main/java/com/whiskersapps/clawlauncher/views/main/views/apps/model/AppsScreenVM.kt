@@ -42,7 +42,7 @@ class AppsScreenVM @Inject constructor(
                         showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
                         showSearchBarSettings = settings.showAppsSearchBarSettings,
                         searchBarOpacity = settings.appsSearchBarOpacity,
-                        searchBarRadius = if(settings.appsSearchBarRadius == -1) null else settings.appsSearchBarRadius.dp,
+                        searchBarRadius = settings.appsSearchBarRadius,
                     )
                 }
             }
@@ -99,12 +99,13 @@ class AppsScreenVM @Inject constructor(
     }
 
     private fun setSearchText(text: String) {
+
+        val apps = appsRepository.getSearchedApps(text)
+
         _state.update {
-            it.copy(
-                searchText = text,
-                appShortcuts = appsRepository.getSearchedApps(text)
-            )
+            it.copy(searchText = text, appShortcuts = apps)
         }
+
     }
 
     private fun openApp(packageName: String) {

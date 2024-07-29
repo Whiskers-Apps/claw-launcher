@@ -25,7 +25,9 @@ data class Settings(
     val appsSearchBarPosition: String = DEFAULT_APPS_SEARCH_BAR_POSITION,
     val appsSearchBarOpacity: Float = DEFAULT_APPS_SEARCH_BAR_OPACITY,
     val appsSearchBarRadius: Int = DEFAULT_APPS_SEARCH_BAR_RADIUS,
-    val defaultSearchEngine: String = DEFAULT_DEFAULT_SEARCH_ENGINE
+    val defaultSearchEngine: String = DEFAULT_DEFAULT_SEARCH_ENGINE,
+    val iconPack: String = DEFAULT_ICON_PACK,
+    val darkMode: String = DEFAULT_DARK_MODE
 ){
     companion object{
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
@@ -62,7 +64,7 @@ data class Settings(
         const val DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS = true
 
         val HOME_SEARCH_BAR_RADIUS = intPreferencesKey("home-search-bar-radius")
-        const val DEFAULT_HOME_SEARCH_BAR_RADIUS = -1
+        const val DEFAULT_HOME_SEARCH_BAR_RADIUS = 100
 
         val HOME_SEARCH_BAR_OPACITY = floatPreferencesKey("home-search-bar-opacity")
         const val DEFAULT_HOME_SEARCH_BAR_OPACITY = 1f
@@ -83,9 +85,15 @@ data class Settings(
         const val DEFAULT_APPS_SEARCH_BAR_OPACITY = 1f
 
         val APPS_SEARCH_BAR_RADIUS = intPreferencesKey("apps-search-bar-radius")
-        const val DEFAULT_APPS_SEARCH_BAR_RADIUS = -1
+        const val DEFAULT_APPS_SEARCH_BAR_RADIUS = 100
 
         val DEFAULT_SEARCH_ENGINE = stringPreferencesKey("default-search-engine")
         const val DEFAULT_DEFAULT_SEARCH_ENGINE = ""
+
+        val ICON_PACK = stringPreferencesKey("icon-pack")
+        const val DEFAULT_ICON_PACK = "system"
+
+        val DARK_MODE = stringPreferencesKey("dark-mode")
+        const val DEFAULT_DARK_MODE = "system"
     }
 }

@@ -59,7 +59,7 @@ fun AppsSettingsScreen(
             showSearchBarPlaceholder = state.settings.showAppsSearchBarPlaceholder,
             showSearchBarSettings = state.settings.showAppsSearchBarSettings,
             searchBarOpacity = state.settings.appsSearchBarOpacity,
-            searchBarRadius = state.settings.appsSearchBarRadius.toFloat()
+            searchBarRadius = state.settings.appsSearchBarRadius
         ) { action ->
             when (action) {
                 is AppsSettingsAction.SetBackgroundOpacity -> onAction(

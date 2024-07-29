@@ -154,7 +154,7 @@ fun AppsScreen(
                                     Spacer(modifier = Modifier.width(16.dp))
 
                                     Text(
-                                        text = app.name,
+                                        text = app.label,
                                         color = MaterialTheme.colorScheme.onBackground
                                     )
                                 }

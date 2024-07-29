@@ -55,7 +55,7 @@ fun HomeSettingsScreen(
             showPlaceholder = state.settings.showHomeSearchBarPlaceholder,
             showSettings = state.settings.showHomeSearchBarSettings,
             searchBarOpacity = state.settings.homeSearchBarOpacity,
-            searchBarRadius = state.settings.homeSearchBarRadius.toFloat(),
+            searchBarRadius = state.settings.homeSearchBarRadius,
             onAction = { action ->
                 when (action) {
                     is HomeSettingsAction.SetSearchBarOpacity -> onAction(

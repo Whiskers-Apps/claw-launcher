@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
 @Composable
 fun DialogFooter(
@@ -24,16 +25,21 @@ fun DialogFooter(
     Row {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             OutlinedButton(
+                modifier = Modifier.modifyWhen(primaryButtonText.isEmpty()){
+                    this.fillMaxWidth()
+                },
                 onClick = { onDismiss() },
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent)
             ) {
                 Text(text = "Cancel")
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
+            if (primaryButtonText.isNotEmpty()) {
+                Spacer(modifier = Modifier.width(8.dp))
 
-            Button(onClick = { onPrimaryClick() }, enabled = enabled) {
-                Text(text = primaryButtonText)
+                Button(onClick = { onPrimaryClick() }, enabled = enabled) {
+                    Text(text = primaryButtonText)
+                }
             }
         }
     }

@@ -2,6 +2,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.whiskersapps.clawlauncher.shared.data.IconPackRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style.intent.StyleSettingsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StyleSettingsScreenVM @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val iconPackRepository: IconPackRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(StyleSettingsScreenState())
@@ -23,7 +25,26 @@ class StyleSettingsScreenVM @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.Main) {
             settingsRepository.settingsFlow.collect { settings ->
-                _state.update { it.copy(loading = false, settings = settings) }
+                _state.update {
+                    it.copy(
+                        loading = it.loadingIconPacks,
+                        loadingSettings = false,
+                        settings = settings
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.Main) {
+            iconPackRepository.data.collect { data ->
+                _state.update {
+                    it.copy(
+                        loading = it.loadingSettings,
+                        loadingIconPacks = false,
+                        iconPacks = data.iconPacks,
+                        currentIconPackName = data.currentIconPack?.name ?: "System"
+                    )
+                }
             }
         }
     }
@@ -32,8 +53,17 @@ class StyleSettingsScreenVM @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             when (action) {
                 StyleSettingsScreenAction.NavigateBack -> {}
-                is StyleSettingsScreenAction.SetIconPack -> {}
+                is StyleSettingsScreenAction.SetIconPack -> {
+                    settingsRepository.setIconPack(action.packageName)
+                    setShowIconPackDialog(false)
+                }
+                StyleSettingsScreenAction.OpenIconPackDialog -> setShowIconPackDialog(true)
+                StyleSettingsScreenAction.CloseIconPackDialog -> setShowIconPackDialog(false)
             }
         }
+    }
+
+    private fun setShowIconPackDialog(show: Boolean) {
+        _state.update { it.copy(showIconPackDialog = show) }
     }
 }

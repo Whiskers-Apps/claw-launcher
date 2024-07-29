@@ -15,7 +15,7 @@ fun HomeSettings(
     showPlaceholder: Boolean,
     showSettings: Boolean,
     searchBarOpacity: Float,
-    searchBarRadius: Float?,
+    searchBarRadius: Int,
     onAction: (HomeSettingsAction) -> Unit,
 ) {
     SwitchSetting(
@@ -68,10 +68,10 @@ fun HomeSettings(
     SliderSetting(
         title = "Search Bar Radius",
         description = "The search bar roundness. (-1) is fully round",
-        min = -1f,
-        max = 32f,
-        steps = 33,
-        value = searchBarRadius ?: -1f,
+        min = 0f,
+        max = 100f,
+        steps = 100,
+        value = searchBarRadius.toFloat(),
         onValueChange = {
             onAction(HomeSettingsAction.SetSearchBarRadius(it))
         }

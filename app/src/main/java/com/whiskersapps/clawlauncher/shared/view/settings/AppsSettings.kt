@@ -46,7 +46,7 @@ fun AppsSettings(
     showSearchBarPlaceholder: Boolean,
     showSearchBarSettings: Boolean,
     searchBarOpacity: Float,
-    searchBarRadius: Float?,
+    searchBarRadius: Int,
     onAction: (AppsSettingsAction) -> Unit
 ) {
 
@@ -372,7 +372,7 @@ fun AppsSettings(
         min = -1f,
         max = 32f,
         steps = 33,
-        value = searchBarRadius ?: -1f,
+        value = searchBarRadius.toFloat(),
         onValueChange = {
             onAction(AppsSettingsAction.SetSearchBarRadius(it))
         }

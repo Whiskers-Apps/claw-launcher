@@ -28,12 +28,12 @@ import com.whiskersapps.clawlauncher.shared.intent.settings.HomeSettingsAction
 import com.whiskersapps.clawlauncher.shared.view.settings.HomeSettings
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
-import com.whiskersapps.clawlauncher.views.main.views.home.model.HomeScreenUiState
+import com.whiskersapps.clawlauncher.views.main.views.home.model.HomeScreenState
 
 @Composable
 fun HomeSettingsDialog(
     onAction: (HomeScreenAction) -> Unit,
-    state: HomeScreenUiState
+    state: HomeScreenState
 ) {
     if (state.showSettingsDialog) {
         Dialog(
@@ -81,7 +81,7 @@ fun HomeSettingsDialog(
                             showPlaceholder = state.showPlaceholder,
                             showSettings = state.showSettings,
                             searchBarOpacity = state.searchBarOpacity,
-                            searchBarRadius = state.searchBarRadius?.value,
+                            searchBarRadius = state.searchBarRadius,
                             onAction = { action ->
                                 when (action) {
                                     is HomeSettingsAction.SetSearchBarOpacity -> onAction(

@@ -29,10 +29,11 @@ class AppsRepository(
     private val packageManager = app.packageManager
 
     init {
-        updateShortcuts()
 
         // Listens to package changes and updates the apps list
         CoroutineScope(Dispatchers.IO).launch {
+            updateShortcuts()
+
             var sequenceNumber = 0
 
             while (true) {
@@ -47,17 +48,31 @@ class AppsRepository(
                 delay(3000)
             }
         }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            settingsRepository.settingsFlow.collect {
+                updateShortcuts()
+            }
+        }
     }
 
+    private data class Pack(
+        val name: String,
+        val packageName: String
+    )
+
     private fun updateShortcuts() {
+
+        val settings = settingsRepository.settings
+
         val newAppShortcuts = ArrayList<AppShortcut>()
         val iconPackManager = IconPackManager(app)
-
+        val iconPackMap = iconPackManager.isSupportedIconPacks()
+            .filterValues { it.getPackageName() == settings.iconPack }
 
         val intent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
-
 
         packageManager.queryIntentActivities(intent, 0).forEach { appIntent ->
             if (appIntent.activityInfo.packageName != "com.whiskersapps.clawlauncher") {
@@ -71,43 +86,48 @@ class AppsRepository(
 
 
                 var shortcut = AppShortcut(
-                    name = info.loadLabel(packageManager).toString(),
+                    label = info.loadLabel(packageManager).toString(),
                     packageName = info.packageName,
-                    icon = BitmapFactory.decodeByteArray(
-                        stream.toByteArray(),
-                        0,
-                        stream.toByteArray().size
+                    icon = AppShortcut.Icon(
+                        stock = BitmapFactory.decodeByteArray(
+                            stream.toByteArray(),
+                            0,
+                            stream.toByteArray().size
+                        )
                     )
                 )
-                /*
-                val themedIcon = iconPack?.value.loadIcon(info)
 
-                if (themedIcon != null) {
-                    shortcut = shortcut.copy(
-                        icon = themedIcon.toBitmap()
-                    )
+                if (iconPackMap.isNotEmpty()) {
+                    iconPackMap[settings.iconPack]?.also { pack ->
+                        shortcut =
+                            shortcut.copy(
+                                icon = shortcut.icon.copy(
+                                    themed = pack.loadIcon(info)?.toBitmap()
+                                )
+                            )
+                    }
                 } else {
+                    if (iconDrawable is AdaptiveIconDrawable) {
+                        try {
+                            shortcut = shortcut.copy(
+                                icon = shortcut.icon.copy(
+                                    adaptive = AppShortcut.Icon.Adaptive(
+                                        background = iconDrawable.background.toBitmap(),
+                                        foreground = iconDrawable.foreground.toBitmap()
+                                    )
+                                )
+                            )
 
-
-                 */
-                if (iconDrawable is AdaptiveIconDrawable) {
-                    try {
-                        shortcut = shortcut.copy(
-                            foreground = iconDrawable.foreground.toBitmap(),
-                            background = iconDrawable.background.toBitmap()
-                        )
-
-                    } catch (e: Exception) {
-                        println(e)
+                        } catch (e: Exception) {
+                            println(e)
+                        }
                     }
                 }
-//                }
 
                 newAppShortcuts.add(shortcut)
             }
 
-
-            newAppShortcuts.sortBy { it.name.lowercase() }
+            newAppShortcuts.sortBy { it.label.lowercase() }
 
             _apps.update { newAppShortcuts }
         }
@@ -121,7 +141,7 @@ class AppsRepository(
     }
 
     fun getSearchedApps(text: String): List<AppShortcut> {
-        return apps.value.filter { it.name.lowercase().contains(text.lowercase()) }
+        return apps.value.filter { it.label.lowercase().contains(text.lowercase()) }
     }
 
     fun openAppInfo(packageName: String) {
