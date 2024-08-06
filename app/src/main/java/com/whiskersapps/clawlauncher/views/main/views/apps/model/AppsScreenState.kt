@@ -10,9 +10,7 @@ data class AppsScreenState(
     val loadingApps: Boolean = true,
     val loadingSettings: Boolean = true,
     val appShortcuts: List<AppShortcut> = emptyList(),
-    val iconPadding: Dp = Settings.DEFAULT_ICON_PADDING.dp,
     val viewType: String = Settings.DEFAULT_APPS_VIEW_TYPE,
-    val opacity: Float = Settings.DEFAULT_APPS_OPACITY,
     val cols: Int = Settings.DEFAULT_PORTRAIT_COLS,
     val landscapeCols: Int = Settings.DEFAULT_LANDSCAPE_COLS,
     val unfoldedCols: Int = Settings.DEFAULT_UNFOLDED_PORTRAIT_COLS,
@@ -21,7 +19,6 @@ data class AppsScreenState(
     val searchBarPosition: String = Settings.DEFAULT_APPS_SEARCH_BAR_POSITION,
     val showSearchBarPlaceholder: Boolean = Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER,
     val showSearchBarSettings: Boolean = Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
-    val searchBarOpacity: Float = Settings.DEFAULT_APPS_SEARCH_BAR_OPACITY,
     val searchBarRadius: Int = Settings.DEFAULT_APPS_SEARCH_BAR_RADIUS,
     val searchText: String = "",
     val showSettingsDialog: Boolean = false

@@ -33,10 +33,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -104,10 +104,10 @@ fun SearchScreen(
                     SearchBar(
                         text = state.searchText,
                         onChange = { vm.updateSearchText(it) },
-                        placeholder = stringResource(R.string.Search_apps_and_much_more),
+                        placeholder = "Search",
                         focus = state.focusSearchBar,
                         onFocused = { vm.updateFocusSearchBar(false) },
-                        opacity = 0f,
+                        backgroundColor = Color.Transparent,
                         onDone = {
                             scope.launch {
                                 vm.runAction()

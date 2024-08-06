@@ -1,6 +1,5 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.model
 
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.AppsRepository
@@ -31,8 +30,6 @@ class AppsScreenVM @Inject constructor(
                         loadingSettings = false,
                         loading = it.loadingApps,
                         viewType = settings.appsViewType,
-                        iconPadding = (settings.iconPadding).dp,
-                        opacity = settings.appsOpacity,
                         cols = settings.portraitCols,
                         landscapeCols = settings.landscapeCols,
                         unfoldedCols = settings.unfoldedPortraitCols,
@@ -41,7 +38,6 @@ class AppsScreenVM @Inject constructor(
                         searchBarPosition = settings.appsSearchBarPosition,
                         showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
                         showSearchBarSettings = settings.showAppsSearchBarSettings,
-                        searchBarOpacity = settings.appsSearchBarOpacity,
                         searchBarRadius = settings.appsSearchBarRadius,
                     )
                 }
@@ -57,6 +53,8 @@ class AppsScreenVM @Inject constructor(
                         appShortcuts = apps
                     )
                 }
+
+                filterApps()
             }
         }
     }
@@ -65,47 +63,90 @@ class AppsScreenVM @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             when (action) {
                 AppsScreenAction.NavigateToHome -> {}
-                is AppsScreenAction.SetSearchText -> setSearchText(action.text)
-                AppsScreenAction.OpenFirstApp -> openFirstApp()
-                is AppsScreenAction.OpenApp -> openApp(action.packageName)
-                is AppsScreenAction.OpenAppInfo -> openAppInfo(action.packageName)
-                is AppsScreenAction.RequestUninstall -> requestUninstall(action.packageName)
-                AppsScreenAction.OpenSettingsDialog -> setShowSettingsDialog(true)
-                AppsScreenAction.CloseSettingsDialog -> setShowSettingsDialog(false)
-                AppsScreenAction.CloseKeyboard -> {}
-                is AppsScreenAction.SetViewType -> setViewType(action.type)
-                is AppsScreenAction.SetPhoneCols -> setPhoneCols(action.cols.toInt())
-                is AppsScreenAction.SetPhoneLandscapeCols -> setPhoneLandscapeCols(action.cols.toInt())
-                is AppsScreenAction.SetBackgroundOpacity -> setBackgroundOpacity(action.opacity)
-                is AppsScreenAction.SetUnfoldedCols -> setTabletCols(action.cols.toInt())
-                is AppsScreenAction.SetUnfoldedLandscapeCols -> setTabletLandscapeCols(action.cols.toInt())
-                is AppsScreenAction.SetSearchBarPosition -> setSearchBarPosition(action.position)
-                is AppsScreenAction.SetShowSearchBar -> setShowSearchBar(action.show)
-                is AppsScreenAction.SetShowSearchBarPlaceholder -> setShowSearchBarPlaceholder(
-                    action.show
-                )
 
-                is AppsScreenAction.SetShowSearchBarSettings -> setShowSearchBarSettings(action.show)
-                is AppsScreenAction.SetSearchBarOpacity -> setSearchBarOpacity(action.opacity)
-                is AppsScreenAction.SetSearchBarRadius -> setSearchBarRadius(action.radius.toInt())
+                is AppsScreenAction.SetSearchText -> {
+                    setSearchText(action.text)
+                }
+
+                AppsScreenAction.OpenFirstApp -> {
+                    openFirstApp()
+                }
+
+                is AppsScreenAction.OpenApp -> {
+                    openApp(action.packageName)
+                }
+
+                is AppsScreenAction.OpenAppInfo -> {
+                    openAppInfo(action.packageName)
+                }
+
+                is AppsScreenAction.RequestUninstall -> {
+                    requestUninstall(action.packageName)
+                }
+
+                AppsScreenAction.OpenSettingsDialog -> {
+                    setShowSettingsDialog(true)
+                }
+
+                AppsScreenAction.CloseSettingsDialog -> {
+                    setShowSettingsDialog(false)
+                }
+
+                AppsScreenAction.CloseKeyboard -> {}
+
+                is AppsScreenAction.SetViewType -> {
+                    settingsRepository.setAppsViewType(action.type)
+                }
+
+                is AppsScreenAction.SetPhoneCols -> {
+                    settingsRepository.setPortraitCols(action.cols.toInt())
+                }
+
+                is AppsScreenAction.SetPhoneLandscapeCols -> {
+                    settingsRepository.setLandscapeCols(action.cols.toInt())
+                }
+
+                is AppsScreenAction.SetUnfoldedCols -> {
+                    settingsRepository.setUnfoldedCols(action.cols.toInt())
+                }
+
+                is AppsScreenAction.SetUnfoldedLandscapeCols -> {
+                    settingsRepository.setUnfoldedLandscapeCols(action.cols.toInt())
+                }
+
+                is AppsScreenAction.SetSearchBarPosition -> {
+                    settingsRepository.setAppsSearchBarPosition(action.position)
+                }
+
+                is AppsScreenAction.SetShowSearchBar -> {
+                    settingsRepository.setShowAppsSearchBar(action.show)
+                }
+
+                is AppsScreenAction.SetShowSearchBarPlaceholder -> {
+                    settingsRepository.setShowAppsSearchBarPlaceholder(action.show)
+                }
+
+                is AppsScreenAction.SetShowSearchBarSettings -> {
+                    settingsRepository.setShowAppsSearchBarSettings(action.show)
+                }
+
+                is AppsScreenAction.SetSearchBarRadius -> {
+                    settingsRepository.setAppsSearchBarRadius(action.radius.toInt())
+                }
             }
         }
     }
 
-    private fun setShowSearchBarSettings(show: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.setShowAppsSearchBarSettings(show)
-        }
+    private fun setSearchText(text: String) {
+        _state.update { it.copy(searchText = text) }
+        filterApps()
     }
 
-    private fun setSearchText(text: String) {
-
-        val apps = appsRepository.getSearchedApps(text)
-
-        _state.update {
-            it.copy(searchText = text, appShortcuts = apps)
+    private fun filterApps() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val apps = appsRepository.getSearchedApps(state.value.searchText)
+            _state.update { it.copy(appShortcuts = apps) }
         }
-
     }
 
     private fun openApp(packageName: String) {
@@ -127,72 +168,6 @@ class AppsScreenVM @Inject constructor(
 
     private fun setShowSettingsDialog(show: Boolean) {
         _state.update { it.copy(showSettingsDialog = show) }
-    }
-
-    private fun setBackgroundOpacity(opacity: Float) {
-        viewModelScope.launch(Dispatchers.Main) {
-            settingsRepository.setAppsOpacity(opacity)
-        }
-    }
-
-    private fun setPhoneCols(cols: Int) {
-        viewModelScope.launch {
-            settingsRepository.setPhoneCols(cols)
-        }
-    }
-
-    private fun setPhoneLandscapeCols(cols: Int) {
-        viewModelScope.launch {
-            settingsRepository.setPhoneLandscapeCols(cols)
-        }
-    }
-
-    private fun setTabletCols(cols: Int) {
-        viewModelScope.launch {
-            settingsRepository.setTabletCols(cols)
-        }
-    }
-
-    private fun setTabletLandscapeCols(cols: Int) {
-        viewModelScope.launch {
-            settingsRepository.setTabletLandscapeCols(cols)
-        }
-    }
-
-    private fun setSearchBarPosition(position: String) {
-        viewModelScope.launch {
-            settingsRepository.setAppsSearchBarPosition(position)
-        }
-    }
-
-    private fun setShowSearchBarPlaceholder(show: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.setShowAppsSearchBarPlaceholder(show)
-        }
-    }
-
-    private fun setViewType(viewType: String) {
-        viewModelScope.launch {
-            settingsRepository.setAppsViewType(viewType)
-        }
-    }
-
-    private fun setSearchBarOpacity(it: Float) {
-        viewModelScope.launch {
-            settingsRepository.setAppsSearchBarOpacity(it)
-        }
-    }
-
-    private fun setSearchBarRadius(radius: Int) {
-        viewModelScope.launch {
-            settingsRepository.setAppsSearchBarRadius(radius)
-        }
-    }
-
-    private fun setShowSearchBar(show: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.setShowAppsSearchBar(show)
-        }
     }
 
     private fun openAppInfo(packageName: String) {

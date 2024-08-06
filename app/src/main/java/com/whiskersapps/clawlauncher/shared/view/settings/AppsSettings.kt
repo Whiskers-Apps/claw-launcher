@@ -40,12 +40,10 @@ fun AppsSettings(
     phoneLandscapeCols: Int,
     unfoldedCols: Int,
     unfoldedLandscapeCols: Int,
-    backgroundOpacity: Float,
     searchBarPosition: String,
     showSearchBar: Boolean,
     showSearchBarPlaceholder: Boolean,
     showSearchBarSettings: Boolean,
-    searchBarOpacity: Float,
     searchBarRadius: Int,
     onAction: (AppsSettingsAction) -> Unit
 ) {
@@ -159,67 +157,57 @@ fun AppsSettings(
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    Spacer(modifier = Modifier.height(16.dp))
+    if (viewType == "grid") {
+        Spacer(modifier = Modifier.height(16.dp))
 
-    SliderSetting(
-        title = "Columns",
-        description = "The amount of columns to show when in Portrait",
-        min = 3f,
-        max = 8f,
-        steps = 6,
-        value = phoneCols.toFloat(),
-        onValueChange = { onAction(AppsSettingsAction.SetPhoneCols(it)) }
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-
-    SliderSetting(
-        title = "Landscape Columns",
-        description = "The amount of columns to show when in Landscape",
-        min = 3f,
-        max = 8f,
-        steps = 6,
-        value = phoneLandscapeCols.toFloat(),
-        onValueChange = {
-            onAction(AppsSettingsAction.SetPhoneLandscapeCols(it))
-        }
-    )
-
-    if (isFoldable) {
         SliderSetting(
-            title = "Unfolded Columns",
-            description = "The amount of columns to show when in Portrait and the device is unfolded",
+            title = "Columns",
+            description = "The amount of columns to show when in Portrait",
             min = 3f,
             max = 8f,
             steps = 6,
-            value = unfoldedCols.toFloat(),
-            onValueChange = { onAction(AppsSettingsAction.SetUnfoldedCols(it)) }
+            value = phoneCols.toFloat(),
+            onValueChange = { onAction(AppsSettingsAction.SetPhoneCols(it)) }
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         SliderSetting(
-            title = "Unfolded Landscape Columns",
-            description = "The amount of columns to show when in Landscape and the device is unfolded",
+            title = "Landscape Columns",
+            description = "The amount of columns to show when in Landscape",
             min = 3f,
             max = 8f,
             steps = 6,
-            value = unfoldedLandscapeCols.toFloat(),
+            value = phoneLandscapeCols.toFloat(),
             onValueChange = {
-                onAction(AppsSettingsAction.SetUnfoldedLandscapeCols(it))
+                onAction(AppsSettingsAction.SetPhoneLandscapeCols(it))
             }
         )
+
+        if (isFoldable) {
+            SliderSetting(
+                title = "Unfolded Columns",
+                description = "The amount of columns to show when in Portrait and the device is unfolded",
+                min = 3f,
+                max = 8f,
+                steps = 6,
+                value = unfoldedCols.toFloat(),
+                onValueChange = { onAction(AppsSettingsAction.SetUnfoldedCols(it)) }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            SliderSetting(
+                title = "Unfolded Landscape Columns",
+                description = "The amount of columns to show when in Landscape and the device is unfolded",
+                min = 3f,
+                max = 8f,
+                steps = 6,
+                value = unfoldedLandscapeCols.toFloat(),
+                onValueChange = {
+                    onAction(AppsSettingsAction.SetUnfoldedLandscapeCols(it))
+                }
+            )
+        }
     }
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    SliderSetting(
-        title = "Background Opacity",
-        description = "The background opacity",
-        min = 0f,
-        max = 1f,
-        steps = 10,
-        value = backgroundOpacity,
-        onValueChange = { onAction(AppsSettingsAction.SetBackgroundOpacity(it)) }
-    )
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -352,26 +340,12 @@ fun AppsSettings(
         }
     )
 
-    Spacer(modifier = Modifier.height(16.dp))
-
-    SliderSetting(
-        title = "Search Bar Opacity",
-        description = "The search bar opacity",
-        min = 0f,
-        max = 1f,
-        steps = 10,
-        value = searchBarOpacity,
-        onValueChange = {
-            onAction(AppsSettingsAction.SetSearchBarOpacity(it))
-        }
-    )
-
     SliderSetting(
         title = "Search Bar Radius",
-        description = "The search bar roundness. (-1) is fully round",
-        min = -1f,
-        max = 32f,
-        steps = 33,
+        description = "The search bar roundness.",
+        min = 0f,
+        max = 50f,
+        steps = 50,
         value = searchBarRadius.toFloat(),
         onValueChange = {
             onAction(AppsSettingsAction.SetSearchBarRadius(it))

@@ -4,6 +4,5 @@ sealed class HomeSettingsAction {
     data class SetShowSearchBar(val show: Boolean) : HomeSettingsAction()
     data class SetShowSearchBarPlaceholder(val show: Boolean) : HomeSettingsAction()
     data class SetShowSettings(val show: Boolean) : HomeSettingsAction()
-    data class SetSearchBarOpacity(val opacity: Float) : HomeSettingsAction()
     data class SetSearchBarRadius(val radius: Float) : HomeSettingsAction()
 }

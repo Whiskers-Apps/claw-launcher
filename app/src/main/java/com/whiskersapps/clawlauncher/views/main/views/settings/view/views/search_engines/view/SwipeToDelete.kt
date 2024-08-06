@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,6 +41,8 @@ fun SwipeToDelete(
     val source = remember { MutableInteractionSource() }
     val scale = remember { 12f }
     val height = remember { (4 * scale).dp }
+    var initialDragValue: Float? by remember { mutableStateOf(null) } //To prevent accidental deletes and make sure the user actually swipes
+
 
     Box(
         contentAlignment = Alignment.Center, modifier = Modifier
@@ -61,13 +64,22 @@ fun SwipeToDelete(
 
             Slider(
                 value = value,
-                onValueChange = { value = it },
-                onValueChangeFinished = {
-                    if (value == 100f) {
-                        onDelete()
-                    } else {
-                        value = 0f
+                onValueChange = {
+                    if (initialDragValue == null) {
+                        initialDragValue = it
                     }
+
+                    value = it
+                },
+                onValueChangeFinished = {
+                    initialDragValue?.let { initialDragValue ->
+                        if (initialDragValue < 50f && value == 100f) {
+                            onDelete()
+                        }
+                    }
+
+                    value = 0f
+                    initialDragValue = null
                 },
                 steps = 100,
                 valueRange = 0f..100f,
@@ -93,7 +105,7 @@ fun SwipeToDelete(
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.error),
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         Icon(
                             modifier = Modifier.size(14.dp),
                             painter = painterResource(id = R.drawable.double_chevron_right),

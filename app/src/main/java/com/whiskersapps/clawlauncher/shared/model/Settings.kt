@@ -1,15 +1,14 @@
 package com.whiskersapps.clawlauncher.shared.model
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.lighttigerxiv.whiskers_palette_kt.WhiskersColor
+import com.lighttigerxiv.whiskers_palette_kt.getColor
 
 data class Settings(
     val setupCompleted: Boolean = DEFAULT_SETUP_COMPLETED,
-    val iconPadding: Int = DEFAULT_ICON_PADDING,
     val appsViewType: String = DEFAULT_APPS_VIEW_TYPE,
-    val appsOpacity: Float = DEFAULT_APPS_OPACITY,
     val portraitCols: Int = DEFAULT_PORTRAIT_COLS,
     val landscapeCols: Int = DEFAULT_LANDSCAPE_COLS,
     val unfoldedPortraitCols: Int = DEFAULT_UNFOLDED_PORTRAIT_COLS,
@@ -18,29 +17,25 @@ data class Settings(
     val showHomeSearchBarPlaceholder: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER,
     val showHomeSearchBarSettings: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS,
     val homeSearchBarRadius: Int = DEFAULT_HOME_SEARCH_BAR_RADIUS,
-    val homeSearchBarOpacity: Float = DEFAULT_HOME_SEARCH_BAR_OPACITY,
     val showAppsSearchBar: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR,
     val showAppsSearchBarPlaceholder: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER,
     val showAppsSearchBarSettings: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
     val appsSearchBarPosition: String = DEFAULT_APPS_SEARCH_BAR_POSITION,
-    val appsSearchBarOpacity: Float = DEFAULT_APPS_SEARCH_BAR_OPACITY,
     val appsSearchBarRadius: Int = DEFAULT_APPS_SEARCH_BAR_RADIUS,
     val defaultSearchEngine: String = DEFAULT_DEFAULT_SEARCH_ENGINE,
-    val iconPack: String = DEFAULT_ICON_PACK,
-    val darkMode: String = DEFAULT_DARK_MODE
+    val darkMode: String = DEFAULT_DARK_MODE,
+    val lightTheme: String = DEFAULT_LIGHT_THEME,
+    val darkTheme: String = DEFAULT_DARK_THEME,
+    val customThemeBackground: String = DEFAULT_CUSTOM_THEME_BACKGROUND,
+    val customThemeSecondaryBackground: String = DEFAULT_CUSTOM_THEME_SECONDARY_BACKGROUND,
+    val customThemeText: String = DEFAULT_CUSTOM_THEME_TEXT
 ){
     companion object{
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
         const val DEFAULT_SETUP_COMPLETED = false
 
-        val ICON_PADDING = intPreferencesKey("icon-padding")
-        const val DEFAULT_ICON_PADDING = 16
-
         val APPS_VIEW_TYPE = stringPreferencesKey("apps-view-type")
         const val DEFAULT_APPS_VIEW_TYPE = "grid"
-
-        val APPS_OPACITY = floatPreferencesKey("apps-opacity")
-        const val DEFAULT_APPS_OPACITY = 1f
 
         val PORTRAIT_COLS = intPreferencesKey("portrait-cols")
         const val DEFAULT_PORTRAIT_COLS = 4
@@ -64,10 +59,7 @@ data class Settings(
         const val DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS = true
 
         val HOME_SEARCH_BAR_RADIUS = intPreferencesKey("home-search-bar-radius")
-        const val DEFAULT_HOME_SEARCH_BAR_RADIUS = 100
-
-        val HOME_SEARCH_BAR_OPACITY = floatPreferencesKey("home-search-bar-opacity")
-        const val DEFAULT_HOME_SEARCH_BAR_OPACITY = 1f
+        const val DEFAULT_HOME_SEARCH_BAR_RADIUS = 50
 
         val SHOW_APPS_SEARCH_BAR = booleanPreferencesKey("show-apps-search-bar")
         const val DEFAULT_SHOW_APPS_SEARCH_BAR = true
@@ -81,19 +73,28 @@ data class Settings(
         val APPS_SEARCH_BAR_POSITION = stringPreferencesKey("apps-search-bar-position")
         const val DEFAULT_APPS_SEARCH_BAR_POSITION = "bottom"
 
-        val APPS_SEARCH_BAR_OPACITY = floatPreferencesKey("apps-search-bar-opacity")
-        const val DEFAULT_APPS_SEARCH_BAR_OPACITY = 1f
-
         val APPS_SEARCH_BAR_RADIUS = intPreferencesKey("apps-search-bar-radius")
-        const val DEFAULT_APPS_SEARCH_BAR_RADIUS = 100
+        const val DEFAULT_APPS_SEARCH_BAR_RADIUS = 50
 
         val DEFAULT_SEARCH_ENGINE = stringPreferencesKey("default-search-engine")
         const val DEFAULT_DEFAULT_SEARCH_ENGINE = ""
 
-        val ICON_PACK = stringPreferencesKey("icon-pack")
-        const val DEFAULT_ICON_PACK = "system"
-
         val DARK_MODE = stringPreferencesKey("dark-mode")
         const val DEFAULT_DARK_MODE = "system"
+
+        val LIGHT_THEME = stringPreferencesKey("light-theme")
+        const val DEFAULT_LIGHT_THEME = "tiger-banana"
+
+        val DARK_THEME = stringPreferencesKey("dark-theme")
+        const val DEFAULT_DARK_THEME = "panther-banana"
+
+        val CUSTOM_THEME_BACKGROUND = stringPreferencesKey("custom-theme-background")
+        val DEFAULT_CUSTOM_THEME_BACKGROUND = getColor(WhiskersColor.TigerNeutralTwo).hex
+
+        val CUSTOM_THEME_SECONDARY_BACKGROUND = stringPreferencesKey("custom-theme-secondary-background")
+        val DEFAULT_CUSTOM_THEME_SECONDARY_BACKGROUND = getColor(WhiskersColor.TigerNeutralFor).hex
+
+        val CUSTOM_THEME_TEXT = stringPreferencesKey("custom-theme-text")
+        val DEFAULT_CUSTOM_THEME_TEXT = getColor(WhiskersColor.TigerText).hex
     }
 }

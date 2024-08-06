@@ -8,11 +8,7 @@ data class HomeScreenState(
     val loading: Boolean = true,
     val clock: String = "",
     val date: String = "",
-    val showSearchBar: Boolean = Settings.DEFAULT_SHOW_HOME_SEARCH_BAR,
-    val showPlaceholder: Boolean = Settings.DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER,
-    val showSettings: Boolean = Settings.DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS,
-    val searchBarOpacity: Float = Settings.DEFAULT_HOME_SEARCH_BAR_OPACITY,
-    val searchBarRadius: Int = Settings.DEFAULT_HOME_SEARCH_BAR_RADIUS,
+    val settings: Settings = Settings(),
     val showSettingsDialog: Boolean = false,
     val showMenuDialog: Boolean = false
 )

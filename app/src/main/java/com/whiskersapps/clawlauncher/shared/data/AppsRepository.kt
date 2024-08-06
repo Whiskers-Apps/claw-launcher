@@ -8,7 +8,6 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.graphics.drawable.toBitmap
-import com.iamverycute.iconpackmanager.IconPackManager
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +30,7 @@ class AppsRepository(
     init {
 
         // Listens to package changes and updates the apps list
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             updateShortcuts()
 
             var sequenceNumber = 0
@@ -49,26 +48,16 @@ class AppsRepository(
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             settingsRepository.settingsFlow.collect {
                 updateShortcuts()
             }
         }
     }
 
-    private data class Pack(
-        val name: String,
-        val packageName: String
-    )
-
     private fun updateShortcuts() {
 
-        val settings = settingsRepository.settings
-
         val newAppShortcuts = ArrayList<AppShortcut>()
-        val iconPackManager = IconPackManager(app)
-        val iconPackMap = iconPackManager.isSupportedIconPacks()
-            .filterValues { it.getPackageName() == settings.iconPack }
 
         val intent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
@@ -84,7 +73,6 @@ class AppsRepository(
                 val stream = ByteArrayOutputStream()
                 iconDrawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 10, stream)
 
-
                 var shortcut = AppShortcut(
                     label = info.loadLabel(packageManager).toString(),
                     packageName = info.packageName,
@@ -97,32 +85,23 @@ class AppsRepository(
                     )
                 )
 
-                if (iconPackMap.isNotEmpty()) {
-                    iconPackMap[settings.iconPack]?.also { pack ->
-                        shortcut =
-                            shortcut.copy(
-                                icon = shortcut.icon.copy(
-                                    themed = pack.loadIcon(info)?.toBitmap()
-                                )
-                            )
-                    }
-                } else {
-                    if (iconDrawable is AdaptiveIconDrawable) {
-                        try {
-                            shortcut = shortcut.copy(
-                                icon = shortcut.icon.copy(
-                                    adaptive = AppShortcut.Icon.Adaptive(
-                                        background = iconDrawable.background.toBitmap(),
-                                        foreground = iconDrawable.foreground.toBitmap()
-                                    )
-                                )
-                            )
 
-                        } catch (e: Exception) {
-                            println(e)
-                        }
+                if (iconDrawable is AdaptiveIconDrawable) {
+                    try {
+                        shortcut = shortcut.copy(
+                            icon = shortcut.icon.copy(
+                                adaptive = AppShortcut.Icon.Adaptive(
+                                    background = iconDrawable.background.toBitmap(),
+                                    foreground = iconDrawable.foreground.toBitmap()
+                                )
+                            )
+                        )
+
+                    } catch (e: Exception) {
+                        println(e)
                     }
                 }
+
 
                 newAppShortcuts.add(shortcut)
             }

@@ -32,20 +32,13 @@ class AppsSettingsScreenVM @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             when (action) {
                 AppsSettingsScreenAction.NavigateBack -> {}
-                is AppsSettingsScreenAction.SetBackgroundOpacity -> settingsRepository.setAppsOpacity(
-                    action.opacity
-                )
 
-                is AppsSettingsScreenAction.SetPhoneCols -> settingsRepository.setPhoneCols(
+                is AppsSettingsScreenAction.SetPhoneCols -> settingsRepository.setPortraitCols(
                     action.cols.toInt()
                 )
 
-                is AppsSettingsScreenAction.SetPhoneLandscapeCols -> settingsRepository.setPhoneLandscapeCols(
+                is AppsSettingsScreenAction.SetPhoneLandscapeCols -> settingsRepository.setLandscapeCols(
                     action.cols.toInt()
-                )
-
-                is AppsSettingsScreenAction.SetSearchBarOpacity -> settingsRepository.setAppsSearchBarOpacity(
-                    action.opacity
                 )
 
                 is AppsSettingsScreenAction.SetSearchBarPosition -> settingsRepository.setAppsSearchBarPosition(
@@ -68,11 +61,11 @@ class AppsSettingsScreenVM @Inject constructor(
                     action.show
                 )
 
-                is AppsSettingsScreenAction.SetTabletCols -> settingsRepository.setTabletCols(
+                is AppsSettingsScreenAction.SetTabletCols -> settingsRepository.setUnfoldedCols(
                     action.cols.toInt()
                 )
 
-                is AppsSettingsScreenAction.SetTabletLandscapeCols -> settingsRepository.setTabletLandscapeCols(
+                is AppsSettingsScreenAction.SetTabletLandscapeCols -> settingsRepository.setUnfoldedLandscapeCols(
                     action.cols.toInt()
                 )
 

@@ -1,11 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style.view
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
@@ -44,25 +40,12 @@ fun StyleSettingsScreen(
             NavBar(navigateBack = { onAction(StyleSettingsScreenAction.NavigateBack) })
         }
     ) {
-        SimpleSetting(
-            title = "Icon Pack",
-            value = state.currentIconPackName,
-            onClick = { onAction(StyleSettingsScreenAction.OpenIconPackDialog) }
-        )
 
         SimpleSetting(
             title = "Dark Mode",
             value = state.settings.darkMode,
             onClick = { onAction(StyleSettingsScreenAction.OpenDarkModeDialog) }
         )
-
-        if (state.showIconPackDialog) {
-            IconPackDialog(
-                onDismiss = { onAction(StyleSettingsScreenAction.CloseIconPackDialog) },
-                iconPacks = state.iconPacks,
-                setIconPack = { iconPack -> onAction(StyleSettingsScreenAction.SetIconPack(iconPack)) }
-            )
-        }
 
         if (state.showDarkModeDialog) {
             DarkModeDialog(

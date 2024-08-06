@@ -1,6 +1,5 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.view
 
-import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -27,10 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -38,12 +33,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
@@ -136,14 +129,14 @@ fun HomeScreen(
                             modifier = Modifier
                                 .clickable { onAction(HomeScreenAction.OpenSearchSheet) }
                         ) {
-                            if (state.showSearchBar) {
+                            if (state.settings.showHomeSearchBar) {
                                 SearchBar(
                                     enabled = false,
-                                    placeholder = if (state.showPlaceholder) stringResource(R.string.Search_touch_or_swipe_up_to_search) else "",
-                                    showMenu = state.showSettings,
+                                    placeholder = if (state.settings.showHomeSearchBarPlaceholder) stringResource(R.string.Search) else "",
+                                    showMenu = state.settings.showHomeSearchBarSettings,
                                     onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
-                                    borderRadius = state.searchBarRadius,
-                                    opacity = state.searchBarOpacity
+                                    borderRadius = state.settings.homeSearchBarRadius,
+                                    backgroundColor = MaterialTheme.colorScheme.background
                                 )
                             }
                         }
@@ -162,7 +155,10 @@ fun HomeScreen(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .weight(1f, fill = true)
-                                            .clickable { }
+                                            .clickable {
+                                                onAction(HomeScreenAction.CloseMenuDialog)
+                                                onAction(HomeScreenAction.ChangeWallpaper)
+                                            }
                                             .padding(16.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.Center
@@ -178,7 +174,7 @@ fun HomeScreen(
                                         Spacer(modifier = Modifier.height(8.dp))
 
                                         Text(
-                                            text = "Select Wallpaper",
+                                            text = "Change Wallpaper",
                                             color = MaterialTheme.colorScheme.onBackground,
                                             style = Typography.labelSmall
                                         )

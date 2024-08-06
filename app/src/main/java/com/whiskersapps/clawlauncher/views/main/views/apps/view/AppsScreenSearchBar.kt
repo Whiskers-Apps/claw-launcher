@@ -28,7 +28,6 @@ fun AppsScreenSearchBar(
             onMenuClick = {
                 onAction(AppsScreenAction.OpenSettingsDialog)
             },
-            opacity = state.searchBarOpacity,
             borderRadius = state.searchBarRadius,
             backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
             onDone = {

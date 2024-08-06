@@ -31,9 +31,6 @@ class HomeSettingsScreenVM @Inject constructor(
     fun onAction(action: HomeSettingsScreenAction) {
         viewModelScope.launch(Dispatchers.Main) {
             when (action) {
-                is HomeSettingsScreenAction.SetSearchBarOpacity -> settingsRepository.setHomeSearchBarOpacity(
-                    action.opacity
-                )
 
                 is HomeSettingsScreenAction.SetSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(
                     action.radius.toInt()

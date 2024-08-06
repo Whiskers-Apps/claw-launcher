@@ -53,20 +53,13 @@ fun AppsSettingsScreen(
             phoneLandscapeCols = state.settings.landscapeCols,
             unfoldedCols = state.settings.unfoldedPortraitCols,
             unfoldedLandscapeCols = state.settings.unfoldedLandscapeCols,
-            backgroundOpacity = state.settings.appsOpacity,
             searchBarPosition = state.settings.appsSearchBarPosition,
             showSearchBar = state.settings.showAppsSearchBar,
             showSearchBarPlaceholder = state.settings.showAppsSearchBarPlaceholder,
             showSearchBarSettings = state.settings.showAppsSearchBarSettings,
-            searchBarOpacity = state.settings.appsSearchBarOpacity,
             searchBarRadius = state.settings.appsSearchBarRadius
         ) { action ->
             when (action) {
-                is AppsSettingsAction.SetBackgroundOpacity -> onAction(
-                    AppsSettingsScreenAction.SetBackgroundOpacity(
-                        action.opacity
-                    )
-                )
 
                 is AppsSettingsAction.SetPhoneCols -> onAction(
                     AppsSettingsScreenAction.SetPhoneCols(
@@ -77,12 +70,6 @@ fun AppsSettingsScreen(
                 is AppsSettingsAction.SetPhoneLandscapeCols -> onAction(
                     AppsSettingsScreenAction.SetPhoneLandscapeCols(
                         action.cols
-                    )
-                )
-
-                is AppsSettingsAction.SetSearchBarOpacity -> onAction(
-                    AppsSettingsScreenAction.SetSearchBarOpacity(
-                        action.opacity
                     )
                 )
 

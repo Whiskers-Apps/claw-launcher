@@ -26,7 +26,6 @@ fun AppIcon(
     shape: RoundedCornerShape = CircleShape,
 ) {
     val stockIcon by remember { derivedStateOf { app.icon.stock.asImageBitmap() } }
-    val themedIcon by remember { derivedStateOf { app.icon.themed?.asImageBitmap() } }
     val background by remember { derivedStateOf { app.icon.adaptive?.background?.asImageBitmap() } }
     val foreground by remember { derivedStateOf { app.icon.adaptive?.foreground?.asImageBitmap() } }
 
@@ -35,6 +34,7 @@ fun AppIcon(
             modifier = Modifier
                 .fillMaxHeight()
                 .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Image(
                 modifier = Modifier
@@ -59,17 +59,14 @@ fun AppIcon(
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .modifyWhen(app.icon.themed == null) {
-                    this
-                        .clip(shape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                }
+                .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Image(
                 modifier = Modifier
                     .fillMaxHeight()
                     .aspectRatio(1f),
-                bitmap = if (app.icon.themed != null) themedIcon!! else stockIcon,
+                bitmap = stockIcon,
                 contentDescription = "${app.packageName} icon",
                 contentScale = ContentScale.Crop
             )

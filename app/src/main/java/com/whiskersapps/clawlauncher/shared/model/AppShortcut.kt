@@ -9,7 +9,6 @@ data class AppShortcut(
 ){
     data class Icon(
         val stock: Bitmap,
-        val themed: Bitmap? = null,
         val adaptive: Adaptive? = null
     ){
         data class Adaptive(

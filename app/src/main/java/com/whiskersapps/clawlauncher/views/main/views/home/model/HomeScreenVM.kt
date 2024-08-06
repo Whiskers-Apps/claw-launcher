@@ -1,7 +1,8 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.model
 
 import android.app.Application
-import androidx.compose.ui.unit.dp
+import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
@@ -34,24 +35,12 @@ class HomeScreenVM @Inject constructor(
                     _state.update {
                         HomeScreenState(
                             loading = false,
-                            searchBarRadius = settings.homeSearchBarRadius,
-                            searchBarOpacity = settings.homeSearchBarOpacity,
-                            showSearchBar = settings.showHomeSearchBar,
-                            showPlaceholder = settings.showHomeSearchBarPlaceholder,
-                            showSettings = settings.showHomeSearchBarSettings,
-                            showSettingsDialog = false,
-                            showMenuDialog = false
+                            settings = settings,
                         )
                     }
                 } else {
                     _state.update {
-                        it.copy(
-                            showSearchBar = settings.showHomeSearchBar,
-                            showPlaceholder = settings.showHomeSearchBarPlaceholder,
-                            searchBarOpacity = settings.homeSearchBarOpacity,
-                            searchBarRadius = settings.homeSearchBarRadius,
-                            showSettings = settings.showHomeSearchBarSettings,
-                        )
+                        it.copy(settings = settings)
                     }
                 }
             }
@@ -81,33 +70,56 @@ class HomeScreenVM @Inject constructor(
     fun onAction(action: HomeScreenAction) {
         viewModelScope.launch(Dispatchers.Main) {
             when (action) {
+                HomeScreenAction.ChangeWallpaper -> {
+                    openWallpaperSetter()
+                }
+
                 HomeScreenAction.NavigateToSettings -> {}
+
                 HomeScreenAction.OpenSearchSheet -> {}
-                HomeScreenAction.OpenNotificationPanel -> openNotificationPanel()
-                HomeScreenAction.OpenMenuDialog -> setShowMenuDialog(true)
-                HomeScreenAction.CloseMenuDialog -> setShowMenuDialog(false)
-                HomeScreenAction.OpenSettingsDialog -> setShowSettingsDialog(true)
-                HomeScreenAction.CloseSettingsDialog -> setShowSettingsDialog(false)
-                is HomeScreenAction.SetSearchBarOpacity -> settingsRepository.setHomeSearchBarOpacity(
-                    action.opacity
-                )
 
-                is HomeScreenAction.SetSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(
-                    action.radius.toInt()
-                )
+                HomeScreenAction.OpenNotificationPanel -> {
+                    openNotificationPanel()
+                }
+                HomeScreenAction.OpenMenuDialog -> {
+                    setShowMenuDialog(true)
+                }
+                HomeScreenAction.CloseMenuDialog -> {
+                    setShowMenuDialog(false)
+                }
+                HomeScreenAction.OpenSettingsDialog -> {
+                    setShowSettingsDialog(true)
+                }
+                HomeScreenAction.CloseSettingsDialog -> {
+                    setShowSettingsDialog(false)
+                }
 
-                is HomeScreenAction.SetShowSearchBar -> settingsRepository.setShowHomeSearchBar(
-                    action.show
-                )
+                is HomeScreenAction.SetSearchBarRadius -> {
+                    settingsRepository.setHomeSearchBarRadius(action.radius.toInt())
+                }
 
-                is HomeScreenAction.SetShowSearchBarPlaceholder -> settingsRepository.setShowHomeSearchBarPlaceholder(
-                    action.show
-                )
+                is HomeScreenAction.SetShowSearchBar -> {
+                    settingsRepository.setShowHomeSearchBar(action.show)
+                }
 
-                is HomeScreenAction.SetShowSettings -> settingsRepository.setShowHomeSearchBarSettings(
-                    action.show
-                )
+                is HomeScreenAction.SetShowSearchBarPlaceholder -> {
+                    settingsRepository.setShowHomeSearchBarPlaceholder(action.show)
+                }
+
+                is HomeScreenAction.SetShowSettings -> {
+                    settingsRepository.setShowHomeSearchBarSettings(action.show)
+                }
             }
+        }
+    }
+
+    private fun openWallpaperSetter() {
+        try {
+            val intent = Intent(Intent.ACTION_SET_WALLPAPER)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            app.startActivity(intent)
+        } catch (e: Exception) {
+            Log.e("Debug", "Error opening wallpaper selector. $e")
         }
     }
 

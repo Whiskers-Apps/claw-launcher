@@ -1,7 +1,11 @@
 package com.whiskersapps.clawlauncher.shared.utils
 
+import android.content.res.Configuration
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun getColsCount(
@@ -13,40 +17,27 @@ fun getColsCount(
 
     val context = LocalContext.current
 
-    /*
-        println("Cols: $cols; landscapeCols: $landscapeCols; unfoldedCols: $unfoldedCols; unfoldedLandscapeCols: $unfoldedLandscapeCols")
-     */
 
-    // Tested on Pixel Fold Emulator ...
 
-    if (isFoldable(context)) {
+    // println("Cols: $cols; landscapeCols: $landscapeCols; unfoldedCols: $unfoldedCols; unfoldedLandscapeCols: $unfoldedLandscapeCols")
+    //println("Widths: (${isCompactWidth()}, ${isMediumWidth()}, ${isExpandedWidth()})")
+    //println("Heights: (${isCompactHeight()}, ${isMediumHeight()}, ${isExpandedHeight()})")
+    //println("Is foldable: ${isFoldable(context)}")
 
-        // If unfolded in portrait
-        if(isMediumWidth() && isMediumHeight()){
-            return unfoldedCols
-        }
-
-        // If unfolded in landscape
-        if(isMediumHeight() && isExpandedWidth()){
-            return unfoldedLandscapeCols
-        }
-        // If folded in portrait
-        return if(isCompactWidth() && isMediumHeight()){
-            cols
-        }
-        // If folded in landscape
-        else{
-            landscapeCols
-        }
-
+    return if (isFoldable(context)) {
+        getSizedCols(cols = unfoldedCols, landscapeCols = unfoldedLandscapeCols )
     } else {
-
-        //if in landscape
-        return if(isExpandedWidth() || isCompactHeight() || isMediumHeight()){
-            landscapeCols
-        // if in portrait
-        }else{
-            cols
-        }
+        getSizedCols(cols = cols, landscapeCols = landscapeCols )
     }
 }
+
+@Composable
+fun getSizedCols(cols: Int, landscapeCols: Int): Int{
+
+    val context = LocalContext.current
+    val configuration = context.resources.configuration
+    val inPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+    return if(inPortrait) cols else landscapeCols
+}
+

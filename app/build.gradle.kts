@@ -97,9 +97,6 @@ dependencies {
 
     // Coil for async image loading
     implementation(libs.coil.compose)
-
-    // Icon Pack Manager
-    implementation(libs.iconpackmanager)
 }
 
 kapt {

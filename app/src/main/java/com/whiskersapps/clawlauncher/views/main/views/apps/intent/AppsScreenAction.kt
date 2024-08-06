@@ -15,11 +15,9 @@ sealed class AppsScreenAction {
     data class SetPhoneLandscapeCols(val cols: Float) : AppsScreenAction()
     data class SetUnfoldedCols(val cols: Float) : AppsScreenAction()
     data class SetUnfoldedLandscapeCols(val cols: Float) : AppsScreenAction()
-    data class SetBackgroundOpacity(val opacity: Float) : AppsScreenAction()
     data class SetSearchBarPosition(val position: String) : AppsScreenAction()
     data class SetShowSearchBar(val show: Boolean) : AppsScreenAction()
     data class SetShowSearchBarPlaceholder(val show: Boolean) : AppsScreenAction()
     data class SetShowSearchBarSettings(val show: Boolean) : AppsScreenAction()
-    data class SetSearchBarOpacity(val opacity: Float) : AppsScreenAction()
     data class SetSearchBarRadius(val radius: Float): AppsScreenAction()
 }

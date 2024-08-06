@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -20,10 +21,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.utils.isUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
 import com.whiskersapps.clawlauncher.shared.view.composables.RoundTextField
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.intent.SearchEnginesScreenAction
@@ -42,6 +45,7 @@ fun AddSearchEngineDialog(
     ) {
         Column(
             modifier = Modifier
+                .widthIn(max = 650.dp)
                 .padding(16.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.background)
@@ -111,7 +115,7 @@ fun AddSearchEngineDialog(
             DialogFooter(
                 onDismiss = { onAction(SearchEnginesScreenAction.CloseAddEngineDialog) },
                 primaryButtonText = "Add",
-                enabled = name.trim().isNotEmpty() && query.trim().isNotEmpty(),
+                enabled = name.trim().isNotEmpty() && query.trim().isNotEmpty() && query.isUrl(),
                 onPrimaryClick = { onAction(SearchEnginesScreenAction.AddEngine) }
             )
         }

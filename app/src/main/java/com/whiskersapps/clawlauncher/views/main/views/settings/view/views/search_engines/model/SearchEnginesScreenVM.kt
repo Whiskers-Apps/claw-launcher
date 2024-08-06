@@ -90,7 +90,7 @@ class SearchEnginesScreenVM @Inject constructor(
                 searchEnginesRepository.clearDefaultEngine()
             }
 
-            _state.update { it.copy(addEngineDialog = it.addEngineDialog.copy(show = false)) }
+            closeAddEngineDialog()
         }
     }
 

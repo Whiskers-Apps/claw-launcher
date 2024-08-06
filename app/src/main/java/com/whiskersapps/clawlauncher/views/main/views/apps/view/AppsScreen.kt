@@ -35,7 +35,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -96,7 +95,6 @@ fun AppsScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(state.opacity)
                     .background(MaterialTheme.colorScheme.background)
             )
 
@@ -190,7 +188,6 @@ fun AppsScreen(
                             ) { _, app ->
                                 GridAppShortcut(
                                     app = app,
-                                    padding = state.iconPadding,
                                     openApp = {
                                         onAction(AppsScreenAction.OpenApp(app.packageName))
                                         onAction(AppsScreenAction.CloseKeyboard)
