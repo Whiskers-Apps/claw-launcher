@@ -13,4 +13,5 @@ sealed class HomeScreenAction{
     data class SetShowSearchBarPlaceholder(val show: Boolean): HomeScreenAction()
     data class SetShowSettings(val show: Boolean): HomeScreenAction()
     data class SetSearchBarRadius(val radius: Float): HomeScreenAction()
+    data class SaveSearchBarRadius(val radius: Float): HomeScreenAction()
 }

@@ -22,7 +22,7 @@ fun AppsSettingsDialog(
         show = state.showSettingsDialog,
         onDismiss = {onAction(AppsScreenAction.CloseSettingsDialog)}
     ) {
-        NavBar(navigateBack = { onAction(AppsScreenAction.CloseSettingsDialog) })
+        NavBar(navigateBack = { onAction(AppsScreenAction.CloseSettingsDialog) }, useCloseIcon = true)
 
         AppsSettings(
             isFoldable = isFoldable(context),
@@ -40,11 +40,11 @@ fun AppsSettingsDialog(
             when (action) {
 
                 is AppsSettingsAction.SetPhoneCols -> {
-                    onAction(AppsScreenAction.SetPhoneCols(action.cols))
+                    onAction(AppsScreenAction.SetCols(action.cols))
                 }
 
                 is AppsSettingsAction.SetPhoneLandscapeCols -> {
-                    onAction(AppsScreenAction.SetPhoneLandscapeCols(action.cols))
+                    onAction(AppsScreenAction.SetLandscapeCols(action.cols))
                 }
 
                 is AppsSettingsAction.SetSearchBarPosition -> {

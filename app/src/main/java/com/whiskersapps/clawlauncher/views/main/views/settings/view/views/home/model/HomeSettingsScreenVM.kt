@@ -21,7 +21,7 @@ class HomeSettingsScreenVM @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.settingsFlow.collect { settings ->
                 _state.update { it.copy(loading = false, settings = settings) }
             }
@@ -29,7 +29,7 @@ class HomeSettingsScreenVM @Inject constructor(
     }
 
     fun onAction(action: HomeSettingsScreenAction) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             when (action) {
 
                 is HomeSettingsScreenAction.SetSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(
@@ -49,6 +49,8 @@ class HomeSettingsScreenVM @Inject constructor(
                 )
 
                 HomeSettingsScreenAction.NavigateBack -> {}
+
+                is HomeSettingsScreenAction.SaveSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(action.radius.toInt())
             }
         }
     }

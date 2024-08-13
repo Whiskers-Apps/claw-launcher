@@ -1,7 +1,8 @@
 [versions]
-agp = "8.5.1"
+agp = "8.5.2"
 coilCompose = "2.6.0"
 datastorePreferences = "1.1.1"
+fuzzywuzzyKotlin = "0.1.1"
 hiltAndroidCompiler = "2.48"
 hiltAndroidVersion = "2.48"
 hiltNavigationCompose = "1.2.0"
@@ -17,6 +18,7 @@ activityCompose = "1.8.0"
 composeBom = "2024.04.01"
 lifecycleViewmodelKtx = "2.8.3"
 navigationComposeVersion = "2.7.7"
+snifferKt = "1.0.0"
 whiskersPaletteKt = "1.0.0"
 adaptiveAndroid = "1.0.0-beta04"
 appcompat = "1.7.0"
@@ -29,6 +31,7 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+fuzzywuzzy-kotlin = { module = "com.willowtreeapps:fuzzywuzzy-kotlin", version.ref = "fuzzywuzzyKotlin" }
 hilt-android-compiler-v248 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidCompiler" }
 hilt-android-v248 = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidVersion" }
@@ -47,6 +50,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 library-base = { module = "io.realm.kotlin:library-base", version.ref = "libraryBase" }
+sniffer-kt = { module = "com.github.Whiskers-Apps:sniffer-kt", version.ref = "snifferKt" }
 whiskers-palette-kt = { module = "com.github.Whiskers-Color-Scheme:whiskers-palette-kt", version.ref = "whiskersPaletteKt" }
 androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

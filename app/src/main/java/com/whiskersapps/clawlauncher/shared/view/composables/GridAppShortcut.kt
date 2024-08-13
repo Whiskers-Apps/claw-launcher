@@ -1,6 +1,7 @@
 package com.whiskersapps.clawlauncher.shared.view.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -29,8 +32,9 @@ import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 @Composable
 fun GridAppShortcut(
     app: AppShortcut,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    radius: Dp = 8.dp,
     openApp: () -> Unit,
-    padding: Dp = 8.dp,
     openInfo: () -> Unit,
     requestUninstall: () -> Unit,
 ) {
@@ -40,12 +44,13 @@ fun GridAppShortcut(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(radius))
+            .background(backgroundColor)
             .combinedClickable(
                 onClick = { openApp() },
                 onLongClick = { showMenu = true },
             )
-            .padding(padding),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 

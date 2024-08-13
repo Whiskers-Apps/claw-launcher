@@ -21,7 +21,7 @@ class AppsSettingsScreenVM @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.settingsFlow.collect { settings ->
                 _state.update { it.copy(loading = false, settings = settings) }
             }
@@ -29,7 +29,7 @@ class AppsSettingsScreenVM @Inject constructor(
     }
 
     fun onAction(action: AppsSettingsScreenAction) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             when (action) {
                 AppsSettingsScreenAction.NavigateBack -> {}
 

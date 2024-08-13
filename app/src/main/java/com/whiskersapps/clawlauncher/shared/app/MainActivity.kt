@@ -1,7 +1,9 @@
 package com.whiskersapps.clawlauncher.shared.app
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -38,6 +40,7 @@ import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.bookma
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.home.view.HomeSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.view.SearchEnginesScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style.view.StyleSettingsScreenRoot
+import com.whiskersapps.clawlauncher.views.setup.search_engines.view.SearchEnginesSetupScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -81,7 +84,7 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .background(backgroundColor),
                             navController = navController,
-                            startDestination = Routes.Main.ROUTE//if (settingsUiState.settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
+                            startDestination = if (settingsUiState.settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
                         ) {
                             navigation(
                                 startDestination = Routes.Setup.WELCOME,
@@ -89,6 +92,10 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 composable(Routes.Setup.WELCOME) {
                                     WelcomeScreenRoot(navController = navController)
+                                }
+
+                                composable(Routes.Setup.SEARCH_ENGINES){
+                                    SearchEnginesSetupScreenRoot(navController = navController)
                                 }
                             }
 

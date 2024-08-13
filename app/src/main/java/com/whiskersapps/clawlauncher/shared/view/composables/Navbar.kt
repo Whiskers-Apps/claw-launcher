@@ -24,6 +24,7 @@ import com.whiskersapps.clawlauncher.R
 @Composable
 fun NavBar(
     navigateBack: () -> Unit,
+    useCloseIcon: Boolean = false,
     endContent: @Composable RowScope.() -> Unit = {}
 ) {
     Column {
@@ -33,7 +34,7 @@ fun NavBar(
                 modifier = Modifier
                     .size(24.dp)
                     .clickable { navigateBack() },
-                painter = painterResource(id = R.drawable.chevron_left),
+                painter = if(useCloseIcon) painterResource(id = R.drawable.close) else painterResource(id = R.drawable.chevron_left),
                 contentDescription = "back icon",
                 tint = MaterialTheme.colorScheme.onBackground
             )

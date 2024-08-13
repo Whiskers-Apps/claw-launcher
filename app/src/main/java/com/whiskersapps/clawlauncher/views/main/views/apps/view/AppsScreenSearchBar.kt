@@ -31,11 +31,12 @@ fun AppsScreenSearchBar(
             borderRadius = state.searchBarRadius,
             backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
             onDone = {
-                onAction(AppsScreenAction.OpenFirstApp)
-
                 if (state.searchText.isNotEmpty()) {
+                    onAction(AppsScreenAction.OpenFirstApp)
                     onAction(AppsScreenAction.CloseKeyboard)
                     onAction(AppsScreenAction.NavigateToHome)
+                }else{
+                    onAction(AppsScreenAction.CloseKeyboard)
                 }
             }
         )

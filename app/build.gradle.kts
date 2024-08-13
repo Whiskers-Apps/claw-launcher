@@ -97,6 +97,9 @@ dependencies {
 
     // Coil for async image loading
     implementation(libs.coil.compose)
+
+    // Sniffer (Fuzzy String Matching)
+    implementation (libs.sniffer.kt)
 }
 
 kapt {

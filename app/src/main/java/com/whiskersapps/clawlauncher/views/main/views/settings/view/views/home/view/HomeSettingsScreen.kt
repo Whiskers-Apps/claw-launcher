@@ -50,11 +50,12 @@ fun HomeSettingsScreen(
         },
         loading = state.loading
     ) {
+
         HomeSettings(
             showSearchBar = state.settings.showHomeSearchBar,
             showPlaceholder = state.settings.showHomeSearchBarPlaceholder,
             showSettings = state.settings.showHomeSearchBarSettings,
-            searchBarRadius = state.settings.homeSearchBarRadius,
+            searchBarRadius = state.settings.homeSearchBarRadius.toFloat(),
             onAction = { action ->
                 when (action) {
 
@@ -72,6 +73,10 @@ fun HomeSettingsScreen(
 
                     is HomeSettingsAction.SetShowSettings -> onAction(
                         HomeSettingsScreenAction.SetShowSettings(action.show)
+                    )
+
+                    is HomeSettingsAction.SaveSearchBarRadius -> onAction(
+                        HomeSettingsScreenAction.SaveSearchBarRadius(action.radius)
                     )
                 }
             }

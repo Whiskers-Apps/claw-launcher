@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.shared.intent.settings.HomeSettingsAction
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -29,24 +31,23 @@ class HomeScreenVM @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.settingsFlow.collect { settings ->
-                if (state.value.loading) {
+                if (!state.value.showSettingsDialog) {
                     _state.update {
-                        HomeScreenState(
+                        it.copy(
                             loading = false,
-                            settings = settings,
+                            showSearchBar = settings.showHomeSearchBar,
+                            showSearchBarPlaceholder = settings.showHomeSearchBarPlaceholder,
+                            showSearchBarSettings = settings.showHomeSearchBarSettings,
+                            searchBarRadius = settings.homeSearchBarRadius.toFloat()
                         )
-                    }
-                } else {
-                    _state.update {
-                        it.copy(settings = settings)
                     }
                 }
             }
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             while (true) {
 
                 val calendar = Calendar.getInstance()
@@ -68,48 +69,46 @@ class HomeScreenVM @Inject constructor(
     }
 
     fun onAction(action: HomeScreenAction) {
-        viewModelScope.launch(Dispatchers.Main) {
-            when (action) {
-                HomeScreenAction.ChangeWallpaper -> {
-                    openWallpaperSetter()
-                }
-
-                HomeScreenAction.NavigateToSettings -> {}
-
-                HomeScreenAction.OpenSearchSheet -> {}
-
-                HomeScreenAction.OpenNotificationPanel -> {
-                    openNotificationPanel()
-                }
-                HomeScreenAction.OpenMenuDialog -> {
-                    setShowMenuDialog(true)
-                }
-                HomeScreenAction.CloseMenuDialog -> {
-                    setShowMenuDialog(false)
-                }
-                HomeScreenAction.OpenSettingsDialog -> {
-                    setShowSettingsDialog(true)
-                }
-                HomeScreenAction.CloseSettingsDialog -> {
-                    setShowSettingsDialog(false)
-                }
-
-                is HomeScreenAction.SetSearchBarRadius -> {
-                    settingsRepository.setHomeSearchBarRadius(action.radius.toInt())
-                }
-
-                is HomeScreenAction.SetShowSearchBar -> {
-                    settingsRepository.setShowHomeSearchBar(action.show)
-                }
-
-                is HomeScreenAction.SetShowSearchBarPlaceholder -> {
-                    settingsRepository.setShowHomeSearchBarPlaceholder(action.show)
-                }
-
-                is HomeScreenAction.SetShowSettings -> {
-                    settingsRepository.setShowHomeSearchBarSettings(action.show)
-                }
+        when (action) {
+            HomeScreenAction.ChangeWallpaper -> {
+                openWallpaperSetter()
             }
+
+            HomeScreenAction.NavigateToSettings -> {}
+
+            HomeScreenAction.OpenSearchSheet -> {}
+
+            HomeScreenAction.OpenNotificationPanel -> {
+                openNotificationPanel()
+            }
+
+            HomeScreenAction.OpenMenuDialog -> {
+                setShowMenuDialog(true)
+            }
+
+            HomeScreenAction.CloseMenuDialog -> {
+                setShowMenuDialog(false)
+            }
+
+            HomeScreenAction.OpenSettingsDialog -> {
+                setShowSettingsDialog(true)
+            }
+
+            HomeScreenAction.CloseSettingsDialog -> {
+                setShowSettingsDialog(false)
+            }
+
+            is HomeScreenAction.SetSearchBarRadius -> setSearchBarRadius(
+                action.radius.toInt().toFloat()
+            )
+
+            is HomeScreenAction.SaveSearchBarRadius -> saveSearchBarRadius(action.radius.toInt())
+
+            is HomeScreenAction.SetShowSearchBar -> setShowSearchBar(action.show)
+
+            is HomeScreenAction.SetShowSearchBarPlaceholder -> setShowPlaceholder(action.show)
+
+            is HomeScreenAction.SetShowSettings -> setShowSearchBarSettings(action.show)
         }
     }
 
@@ -139,5 +138,31 @@ class HomeScreenVM @Inject constructor(
 
     private fun setShowMenuDialog(show: Boolean) {
         _state.update { it.copy(showMenuDialog = show) }
+    }
+
+    private fun setShowSearchBar(show: Boolean) {
+        _state.update { it.copy(showSearchBar = show) }
+    }
+
+    private fun setSearchBarRadius(radius: Float) {
+        _state.update { it.copy(searchBarRadius = radius) }
+    }
+
+    private fun setShowSearchBarSettings(show: Boolean) {
+        _state.update { it.copy(showSearchBarSettings = show) }
+    }
+
+    private fun saveSearchBarRadius(radius: Int) {
+        viewModelScope.launch(Dispatchers.IO){
+            settingsRepository.setHomeSearchBarRadius(radius)
+        }
+    }
+
+    private fun setShowPlaceholder(show: Boolean) {
+        _state.update { it.copy(showSearchBarPlaceholder = show) }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.setShowHomeSearchBarPlaceholder(show)
+        }
     }
 }

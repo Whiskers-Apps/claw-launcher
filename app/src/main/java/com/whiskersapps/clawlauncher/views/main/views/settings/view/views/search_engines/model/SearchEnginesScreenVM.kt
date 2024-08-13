@@ -23,7 +23,7 @@ class SearchEnginesScreenVM @Inject constructor(
 
     init {
 
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             searchEnginesRepository.data.collect { data ->
                 _state.update {
                     it.copy(

@@ -21,7 +21,7 @@ class StyleSettingsScreenVM @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.settingsFlow.collect { settings ->
                 _state.update {
                     it.copy(
@@ -35,7 +35,7 @@ class StyleSettingsScreenVM @Inject constructor(
     }
 
     fun onAction(action: StyleSettingsScreenAction) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             when (action) {
                 StyleSettingsScreenAction.NavigateBack -> {}
                 StyleSettingsScreenAction.OpenDarkModeDialog -> setShowDarkModeDialog(true)

@@ -129,13 +129,13 @@ fun HomeScreen(
                             modifier = Modifier
                                 .clickable { onAction(HomeScreenAction.OpenSearchSheet) }
                         ) {
-                            if (state.settings.showHomeSearchBar) {
+                            if (state.showSearchBar) {
                                 SearchBar(
                                     enabled = false,
-                                    placeholder = if (state.settings.showHomeSearchBarPlaceholder) stringResource(R.string.Search) else "",
-                                    showMenu = state.settings.showHomeSearchBarSettings,
+                                    placeholder = if (state.showSearchBarPlaceholder) stringResource(R.string.Search) else "",
+                                    showMenu = state.showSearchBarSettings,
                                     onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
-                                    borderRadius = state.settings.homeSearchBarRadius,
+                                    borderRadius = state.searchBarRadius.toInt(),
                                     backgroundColor = MaterialTheme.colorScheme.background
                                 )
                             }

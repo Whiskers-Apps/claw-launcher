@@ -23,19 +23,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.views.setup.welcome.intent.WelcomeScreenAction
+import com.whiskersapps.clawlauncher.views.setup.welcome.model.WelcomeScreenVM
 
 @Composable
 fun WelcomeScreenRoot(
-    navController: NavController
+    navController: NavController,
+    vm: WelcomeScreenVM = hiltViewModel()
 ) {
     WelcomeScreen(
         onAction = { action ->
             when (action) {
-                WelcomeScreenAction.NavigateNext -> navController.navigate(Routes.Setup.LAYOUT)
+                WelcomeScreenAction.NavigateNext -> navController.navigate(Routes.Setup.SEARCH_ENGINES)
             }
         }
     )

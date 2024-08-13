@@ -34,6 +34,7 @@ fun SliderSetting(
     steps: Int,
     value: Float,
     onValueChange: (value: Float) -> Unit,
+    onValueChangeFinished: (Float) -> Unit = {},
     textIsInt: Boolean = false
 ) {
     Column(Modifier.fillMaxWidth()) {
@@ -56,6 +57,7 @@ fun SliderSetting(
                     .weight(1f, fill = true),
                 value = value,
                 onValueChange = { onValueChange(it) },
+                onValueChangeFinished = { onValueChangeFinished(value) },
                 steps = steps,
                 valueRange = min..max,
                 colors = SliderDefaults.colors(

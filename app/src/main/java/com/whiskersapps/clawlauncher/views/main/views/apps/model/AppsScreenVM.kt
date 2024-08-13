@@ -23,7 +23,7 @@ class AppsScreenVM @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.settingsFlow.collect { settings ->
                 _state.update {
                     it.copy(
@@ -44,7 +44,7 @@ class AppsScreenVM @Inject constructor(
             }
         }
 
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             appsRepository.apps.collect { apps ->
                 _state.update {
                     it.copy(
@@ -54,98 +54,68 @@ class AppsScreenVM @Inject constructor(
                     )
                 }
 
-                filterApps()
+                _state.update {
+                    it.copy(
+                        appShortcuts = appsRepository.getSearchedApps(state.value.searchText)
+                    )
+                }
             }
         }
     }
 
     fun onAction(action: AppsScreenAction) {
-        viewModelScope.launch(Dispatchers.Main) {
-            when (action) {
-                AppsScreenAction.NavigateToHome -> {}
+        when (action) {
+            AppsScreenAction.NavigateToHome -> {}
 
-                is AppsScreenAction.SetSearchText -> {
-                    setSearchText(action.text)
-                }
+            is AppsScreenAction.SetSearchText -> setSearchText(action.text)
 
-                AppsScreenAction.OpenFirstApp -> {
-                    openFirstApp()
-                }
+            AppsScreenAction.OpenFirstApp -> openFirstApp()
 
-                is AppsScreenAction.OpenApp -> {
-                    openApp(action.packageName)
-                }
+            is AppsScreenAction.OpenApp -> openApp(action.packageName)
 
-                is AppsScreenAction.OpenAppInfo -> {
-                    openAppInfo(action.packageName)
-                }
+            is AppsScreenAction.OpenAppInfo -> openAppInfo(action.packageName)
 
-                is AppsScreenAction.RequestUninstall -> {
-                    requestUninstall(action.packageName)
-                }
+            is AppsScreenAction.RequestUninstall -> requestUninstall(action.packageName)
 
-                AppsScreenAction.OpenSettingsDialog -> {
-                    setShowSettingsDialog(true)
-                }
+            AppsScreenAction.OpenSettingsDialog -> setShowSettingsDialog(true)
 
-                AppsScreenAction.CloseSettingsDialog -> {
-                    setShowSettingsDialog(false)
-                }
+            AppsScreenAction.CloseSettingsDialog -> setShowSettingsDialog(false)
 
-                AppsScreenAction.CloseKeyboard -> {}
+            AppsScreenAction.CloseKeyboard -> {}
 
-                is AppsScreenAction.SetViewType -> {
-                    settingsRepository.setAppsViewType(action.type)
-                }
+            is AppsScreenAction.SetViewType -> setViewType(action.type)
 
-                is AppsScreenAction.SetPhoneCols -> {
-                    settingsRepository.setPortraitCols(action.cols.toInt())
-                }
+            is AppsScreenAction.SetCols -> setCols(action.cols.toInt())
 
-                is AppsScreenAction.SetPhoneLandscapeCols -> {
-                    settingsRepository.setLandscapeCols(action.cols.toInt())
-                }
+            is AppsScreenAction.SetLandscapeCols -> setLandscapeCols(action.cols.toInt())
 
-                is AppsScreenAction.SetUnfoldedCols -> {
-                    settingsRepository.setUnfoldedCols(action.cols.toInt())
-                }
+            is AppsScreenAction.SetUnfoldedCols -> setUnfoldedCols(action.cols.toInt())
 
-                is AppsScreenAction.SetUnfoldedLandscapeCols -> {
-                    settingsRepository.setUnfoldedLandscapeCols(action.cols.toInt())
-                }
+            is AppsScreenAction.SetUnfoldedLandscapeCols -> setUnfoldedLandscapeCols(action.cols.toInt())
 
-                is AppsScreenAction.SetSearchBarPosition -> {
-                    settingsRepository.setAppsSearchBarPosition(action.position)
-                }
+            is AppsScreenAction.SetSearchBarPosition -> setSearchBarPosition(action.position)
 
-                is AppsScreenAction.SetShowSearchBar -> {
-                    settingsRepository.setShowAppsSearchBar(action.show)
-                }
+            is AppsScreenAction.SetShowSearchBar -> setShowSearchBar(action.show)
 
-                is AppsScreenAction.SetShowSearchBarPlaceholder -> {
-                    settingsRepository.setShowAppsSearchBarPlaceholder(action.show)
-                }
+            is AppsScreenAction.SetShowSearchBarPlaceholder -> setShowSearchBarPlaceholder(
+                action.show
+            )
 
-                is AppsScreenAction.SetShowSearchBarSettings -> {
-                    settingsRepository.setShowAppsSearchBarSettings(action.show)
-                }
+            is AppsScreenAction.SetShowSearchBarSettings -> setShowSearchBarSettings(action.show)
 
-                is AppsScreenAction.SetSearchBarRadius -> {
-                    settingsRepository.setAppsSearchBarRadius(action.radius.toInt())
-                }
-            }
+            is AppsScreenAction.SetSearchBarRadius -> setSearchBarRadius(action.radius.toInt())
         }
     }
 
     private fun setSearchText(text: String) {
-        _state.update { it.copy(searchText = text) }
-        filterApps()
-    }
+        _state.update {
+            it.copy(searchText = text)
+        }
 
-    private fun filterApps() {
         viewModelScope.launch(Dispatchers.IO) {
-            val apps = appsRepository.getSearchedApps(state.value.searchText)
-            _state.update { it.copy(appShortcuts = apps) }
+            _state.update {
+                it.copy(appShortcuts = appsRepository.getSearchedApps(state.value.searchText))
+            }
         }
     }
 
@@ -176,5 +146,75 @@ class AppsScreenVM @Inject constructor(
 
     private fun requestUninstall(packageName: String) {
         appsRepository.requestUninstall(packageName)
+    }
+
+    private fun setViewType(type: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(viewType = type) }
+            settingsRepository.setAppsViewType(type)
+        }
+    }
+
+    private fun setCols(cols: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(cols = cols) }
+            settingsRepository.setPortraitCols(cols)
+        }
+    }
+
+    private fun setLandscapeCols(cols: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(landscapeCols = cols) }
+            settingsRepository.setLandscapeCols(cols)
+        }
+    }
+
+    private fun setUnfoldedCols(cols: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(unfoldedCols = cols) }
+            settingsRepository.setUnfoldedCols(cols)
+        }
+    }
+
+    private fun setUnfoldedLandscapeCols(cols: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(unfoldedLandscapeCols = cols) }
+            settingsRepository.setUnfoldedLandscapeCols(cols)
+        }
+    }
+
+    private fun setSearchBarPosition(position: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(searchBarPosition = position) }
+            settingsRepository.setAppsSearchBarPosition(position)
+        }
+    }
+
+    private fun setShowSearchBar(show: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(showSearchBar = show) }
+            settingsRepository.setShowAppsSearchBar(show)
+        }
+    }
+
+    private fun setShowSearchBarPlaceholder(show: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(showSearchBarPlaceholder = show) }
+            settingsRepository.setShowAppsSearchBarPlaceholder(show)
+        }
+    }
+
+    private fun setShowSearchBarSettings(show: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(showSearchBarSettings = show) }
+            settingsRepository.setShowAppsSearchBarSettings(show)
+        }
+    }
+
+    private fun setSearchBarRadius(radius: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(searchBarRadius = radius) }
+            settingsRepository.setAppsSearchBarRadius(radius)
+        }
     }
 }

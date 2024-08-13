@@ -9,13 +9,16 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.core.graphics.drawable.toBitmap
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import com.whiskersapps.lib.Sniffer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 class AppsRepository(
@@ -30,7 +33,7 @@ class AppsRepository(
     init {
 
         // Listens to package changes and updates the apps list
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             updateShortcuts()
 
             var sequenceNumber = 0
@@ -48,67 +51,57 @@ class AppsRepository(
             }
         }
 
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             settingsRepository.settingsFlow.collect {
                 updateShortcuts()
             }
         }
     }
 
-    private fun updateShortcuts() {
+    private suspend fun updateShortcuts() {
 
-        val newAppShortcuts = ArrayList<AppShortcut>()
+        /* This fetching for the shortcuts requires to be in the Main thread
+        so this workaround is needed so the app doesn't lag when changing settings. 😅
+        * */
+        withContext(Dispatchers.Main) {
 
-        val intent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
+            val asyncShortcuts = async(Dispatchers.IO){
+                val newAppShortcuts = ArrayList<AppShortcut>()
+                val intent = Intent(Intent.ACTION_MAIN, null).apply {
+                    addCategory(Intent.CATEGORY_LAUNCHER)
+                }
 
-        packageManager.queryIntentActivities(intent, 0).forEach { appIntent ->
-            if (appIntent.activityInfo.packageName != "com.whiskersapps.clawlauncher") {
+                packageManager.queryIntentActivities(intent, 0).forEach { appIntent ->
+                    if (appIntent.activityInfo.packageName != "com.whiskersapps.clawlauncher") {
 
-                val info =
-                    packageManager.getApplicationInfo(appIntent.activityInfo.packageName, 0)
-                val iconDrawable = packageManager.getApplicationIcon(info)
+                        val info =
+                            packageManager.getApplicationInfo(appIntent.activityInfo.packageName, 0)
+                        val iconDrawable = packageManager.getApplicationIcon(info)
 
-                val stream = ByteArrayOutputStream()
-                iconDrawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 10, stream)
+                        val stream = ByteArrayOutputStream()
+                        iconDrawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 10, stream)
 
-                var shortcut = AppShortcut(
-                    label = info.loadLabel(packageManager).toString(),
-                    packageName = info.packageName,
-                    icon = AppShortcut.Icon(
-                        stock = BitmapFactory.decodeByteArray(
-                            stream.toByteArray(),
-                            0,
-                            stream.toByteArray().size
-                        )
-                    )
-                )
-
-
-                if (iconDrawable is AdaptiveIconDrawable) {
-                    try {
-                        shortcut = shortcut.copy(
-                            icon = shortcut.icon.copy(
-                                adaptive = AppShortcut.Icon.Adaptive(
-                                    background = iconDrawable.background.toBitmap(),
-                                    foreground = iconDrawable.foreground.toBitmap()
+                        newAppShortcuts.add(
+                            AppShortcut(
+                                label = info.loadLabel(packageManager).toString(),
+                                packageName = info.packageName,
+                                icon = BitmapFactory.decodeByteArray(
+                                    stream.toByteArray(),
+                                    0,
+                                    stream.toByteArray().size
                                 )
                             )
                         )
-
-                    } catch (e: Exception) {
-                        println(e)
                     }
                 }
 
-
-                newAppShortcuts.add(shortcut)
+                newAppShortcuts
             }
 
-            newAppShortcuts.sortBy { it.label.lowercase() }
+            val shortcuts = asyncShortcuts.await()
+            shortcuts.sortBy { it.label.lowercase() }
 
-            _apps.update { newAppShortcuts }
+            _apps.update { shortcuts }
         }
     }
 
@@ -120,7 +113,9 @@ class AppsRepository(
     }
 
     fun getSearchedApps(text: String): List<AppShortcut> {
-        return apps.value.filter { it.label.lowercase().contains(text.lowercase()) }
+        val sniffer = Sniffer()
+
+        return apps.value.filter { sniffer.matches(it.label, text) }
     }
 
     fun openAppInfo(packageName: String) {
@@ -136,7 +131,6 @@ class AppsRepository(
         val packageUri = Uri.parse("package:${packageName}")
         val intent = Intent(Intent.ACTION_DELETE, packageUri)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
 
         app.startActivity(intent)
     }

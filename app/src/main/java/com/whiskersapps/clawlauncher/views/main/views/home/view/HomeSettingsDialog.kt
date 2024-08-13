@@ -17,18 +17,25 @@ fun HomeSettingsDialog(
         show = state.showSettingsDialog,
         onDismiss = { onAction(HomeScreenAction.CloseSettingsDialog) }
     ) {
-        NavBar(navigateBack = {onAction(HomeScreenAction.CloseSettingsDialog)})
+        NavBar(
+            navigateBack = { onAction(HomeScreenAction.CloseSettingsDialog) },
+            useCloseIcon = true
+        )
 
         HomeSettings(
-            showSearchBar = state.settings.showHomeSearchBar,
-            showPlaceholder = state.settings.showHomeSearchBarPlaceholder,
-            showSettings = state.settings.showHomeSearchBarSettings,
-            searchBarRadius = state.settings.homeSearchBarRadius,
+            showSearchBar = state.showSearchBar,
+            showPlaceholder = state.showSearchBarPlaceholder,
+            showSettings = state.showSearchBarSettings,
+            searchBarRadius = state.searchBarRadius,
             onAction = { action ->
                 when (action) {
 
                     is HomeSettingsAction.SetSearchBarRadius -> onAction(
                         HomeScreenAction.SetSearchBarRadius(action.radius)
+                    )
+
+                    is HomeSettingsAction.SaveSearchBarRadius -> onAction(
+                        HomeScreenAction.SaveSearchBarRadius(action.radius)
                     )
 
                     is HomeSettingsAction.SetShowSearchBar -> onAction(

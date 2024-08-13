@@ -28,7 +28,7 @@ class SettingsScreenVM @Inject constructor(
 
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
 
 
             settingsRepository.settingsFlow.collect { settings ->

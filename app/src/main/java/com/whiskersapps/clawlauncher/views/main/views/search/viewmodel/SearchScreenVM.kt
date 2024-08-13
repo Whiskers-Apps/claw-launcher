@@ -56,11 +56,12 @@ class SearchScreenVM @Inject constructor(
 
     init {
 
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.settingsFlow.collect { settings->
                 _state.update {
                     it.copy(
                         loading = it.loadingSearchEngines || it.loadingBookmarks,
+                        loadingSettings = false,
                         cols = settings.portraitCols,
                         landscapeCols = settings.landscapeCols,
                         unfoldedCols = settings.unfoldedPortraitCols,
@@ -70,7 +71,7 @@ class SearchScreenVM @Inject constructor(
             }
         }
 
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             searchEnginesRepository.data.collect { data ->
                 _state.update {
                     it.copy(
@@ -82,7 +83,7 @@ class SearchScreenVM @Inject constructor(
             }
         }
 
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             bookmarksRepository.data.collect { data ->
                 _state.update {
                     it.copy(

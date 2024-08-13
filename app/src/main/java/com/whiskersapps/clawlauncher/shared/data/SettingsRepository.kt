@@ -15,17 +15,11 @@ private val Context.dataStore by preferencesDataStore("settings")
 class SettingsRepository(app: Application) {
 
     private val dataStore = app.dataStore
-    var settings = Settings()
 
     val settingsFlow: Flow<Settings> = dataStore.data.catch {
         Settings()
     }.map { preferences ->
-        settings = getSettings(preferences)
-        getSettings(preferences)
-    }
-
-    private fun getSettings(preferences: Preferences): Settings {
-        return Settings(
+        Settings(
             setupCompleted = preferences[Settings.SETUP_COMPLETED]
                 ?: Settings.DEFAULT_SETUP_COMPLETED,
 
@@ -36,7 +30,8 @@ class SettingsRepository(app: Application) {
             landscapeCols = preferences[Settings.LANDSCAPE_COLS]
                 ?: Settings.DEFAULT_LANDSCAPE_COLS,
 
-            unfoldedPortraitCols = preferences[Settings.UNFOLDED_PORTRAIT_COLS] ?: Settings.DEFAULT_UNFOLDED_PORTRAIT_COLS,
+            unfoldedPortraitCols = preferences[Settings.UNFOLDED_PORTRAIT_COLS]
+                ?: Settings.DEFAULT_UNFOLDED_PORTRAIT_COLS,
 
             unfoldedLandscapeCols = preferences[Settings.UNFOLDED_LANDSCAPE_COLS]
                 ?: Settings.DEFAULT_UNFOLDED_LANDSCAPE_COLS,
@@ -68,7 +63,8 @@ class SettingsRepository(app: Application) {
             appsSearchBarRadius = preferences[Settings.APPS_SEARCH_BAR_RADIUS]
                 ?: Settings.DEFAULT_APPS_SEARCH_BAR_RADIUS,
 
-            defaultSearchEngine = preferences[Settings.DEFAULT_SEARCH_ENGINE] ?: Settings.DEFAULT_DEFAULT_SEARCH_ENGINE,
+            defaultSearchEngine = preferences[Settings.DEFAULT_SEARCH_ENGINE]
+                ?: Settings.DEFAULT_DEFAULT_SEARCH_ENGINE,
 
             darkMode = preferences[Settings.DARK_MODE] ?: Settings.DEFAULT_DARK_MODE,
 
@@ -76,11 +72,14 @@ class SettingsRepository(app: Application) {
 
             darkTheme = preferences[Settings.DARK_THEME] ?: Settings.DEFAULT_DARK_THEME,
 
-            customThemeBackground = preferences[Settings.CUSTOM_THEME_BACKGROUND] ?: Settings.DEFAULT_CUSTOM_THEME_BACKGROUND,
+            customThemeBackground = preferences[Settings.CUSTOM_THEME_BACKGROUND]
+                ?: Settings.DEFAULT_CUSTOM_THEME_BACKGROUND,
 
-            customThemeSecondaryBackground = preferences[Settings.CUSTOM_THEME_SECONDARY_BACKGROUND] ?: Settings.DEFAULT_CUSTOM_THEME_SECONDARY_BACKGROUND,
+            customThemeSecondaryBackground = preferences[Settings.CUSTOM_THEME_SECONDARY_BACKGROUND]
+                ?: Settings.DEFAULT_CUSTOM_THEME_SECONDARY_BACKGROUND,
 
-            customThemeText = preferences[Settings.CUSTOM_THEME_TEXT] ?: Settings.DEFAULT_CUSTOM_THEME_TEXT
+            customThemeText = preferences[Settings.CUSTOM_THEME_TEXT]
+                ?: Settings.DEFAULT_CUSTOM_THEME_TEXT
         )
     }
 
@@ -92,29 +91,29 @@ class SettingsRepository(app: Application) {
         dataStore.edit { it[Settings.APPS_VIEW_TYPE] = appsViewType }
     }
 
-    suspend fun setPortraitCols(phoneCols: Int) {
-        dataStore.edit { it[Settings.PORTRAIT_COLS] = phoneCols }
+    suspend fun setPortraitCols(cols: Int) {
+        dataStore.edit { it[Settings.PORTRAIT_COLS] = cols }
     }
 
-    suspend fun setLandscapeCols(landscapeCols: Int) {
-        dataStore.edit { it[Settings.LANDSCAPE_COLS] = landscapeCols }
+    suspend fun setLandscapeCols(cols: Int) {
+        dataStore.edit { it[Settings.LANDSCAPE_COLS] = cols }
     }
 
-    suspend fun setUnfoldedCols(tabletCols: Int) {
-        dataStore.edit { it[Settings.UNFOLDED_PORTRAIT_COLS] = tabletCols }
+    suspend fun setUnfoldedCols(cols: Int) {
+        dataStore.edit { it[Settings.UNFOLDED_PORTRAIT_COLS] = cols }
     }
 
-    suspend fun setUnfoldedLandscapeCols(landscapeCols: Int) {
-        dataStore.edit { it[Settings.UNFOLDED_LANDSCAPE_COLS] = landscapeCols }
+    suspend fun setUnfoldedLandscapeCols(cols: Int) {
+        dataStore.edit { it[Settings.UNFOLDED_LANDSCAPE_COLS] = cols }
     }
 
-    suspend fun setShowHomeSearchBar(showHomeSearchBar: Boolean) {
-        dataStore.edit { it[Settings.SHOW_HOME_SEARCH_BAR] = showHomeSearchBar }
+    suspend fun setShowHomeSearchBar(show: Boolean) {
+        dataStore.edit { it[Settings.SHOW_HOME_SEARCH_BAR] = show }
     }
 
-    suspend fun setShowHomeSearchBarPlaceholder(showHomeSearchBarPlaceholder: Boolean) {
+    suspend fun setShowHomeSearchBarPlaceholder(show: Boolean) {
         dataStore.edit {
-            it[Settings.SHOW_HOME_SEARCH_BAR_PLACEHOLDER] = showHomeSearchBarPlaceholder
+            it[Settings.SHOW_HOME_SEARCH_BAR_PLACEHOLDER] = show
         }
     }
 
@@ -146,31 +145,31 @@ class SettingsRepository(app: Application) {
         dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR_SETTINGS] = show }
     }
 
-    suspend fun setAppsSearchBarRadius(radius: Int){
+    suspend fun setAppsSearchBarRadius(radius: Int) {
         dataStore.edit { it[Settings.APPS_SEARCH_BAR_RADIUS] = radius }
     }
 
-    suspend fun setDarkMode(darkMode: String){
+    suspend fun setDarkMode(darkMode: String) {
         dataStore.edit { it[Settings.DARK_MODE] = darkMode }
     }
 
-    suspend fun setLightTheme(lightTheme: String){
+    suspend fun setLightTheme(lightTheme: String) {
         dataStore.edit { it[Settings.LIGHT_THEME] = lightTheme }
     }
 
-    suspend fun setDarkTheme(darkTheme: String){
+    suspend fun setDarkTheme(darkTheme: String) {
         dataStore.edit { it[Settings.DARK_THEME] = darkTheme }
     }
 
-    suspend fun setCustomThemeBackground(color: String){
+    suspend fun setCustomThemeBackground(color: String) {
         dataStore.edit { it[Settings.CUSTOM_THEME_BACKGROUND] = color }
     }
 
-    suspend fun setCustomThemeSecondaryBackground(color: String){
+    suspend fun setCustomThemeSecondaryBackground(color: String) {
         dataStore.edit { it[Settings.CUSTOM_THEME_SECONDARY_BACKGROUND] = color }
     }
 
-    suspend fun setCustomThemeText(color: String){
+    suspend fun setCustomThemeText(color: String) {
         dataStore.edit { it[Settings.CUSTOM_THEME_TEXT] = color }
     }
 }

@@ -22,6 +22,7 @@ class SearchEnginesRepository(
 
     companion object {
         data class Data(
+            val loading: Boolean = true,
             val searchEngines: List<SearchEngine> = emptyList(),
             val defaultSearchEngine: SearchEngine? = null
         )
@@ -87,7 +88,7 @@ class SearchEnginesRepository(
             }
 
             val qwant = SearchEngine().apply {
-                name = "https://www.qwant.com/?q=%s"
+                name = "Qwant"
                 query = "https://www.qwant.com/?q=%s"
             }
 
@@ -120,6 +121,7 @@ class SearchEnginesRepository(
 
                     _data.update {
                         Data(
+                            loading = false,
                             searchEngines = searchEngines,
                             defaultSearchEngine = defaultEngine
                         )

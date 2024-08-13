@@ -5,11 +5,16 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.AbsoluteCutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -70,14 +75,16 @@ fun MainScreen(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
+            
             SearchScreen(
                 sheetState = sheetState,
                 closeSheet = { scope.launch { sheetState.hide() } }
             )
+
         },
         sheetPeekHeight = 0.dp,
         sheetDragHandle = {},
-        sheetShape = AbsoluteCutCornerShape(0.dp),
+        sheetShape = RoundedCornerShape(0.dp),
         sheetMaxWidth = Dp.Unspecified,
         contentColor = Color.Transparent,
         containerColor = Color.Transparent,
@@ -87,6 +94,7 @@ fun MainScreen(
         sheetTonalElevation = 0.dp
     ) {
 
+
         Box {
             Column(
                 modifier = Modifier
@@ -95,6 +103,7 @@ fun MainScreen(
 
                 HorizontalPager(modifier = Modifier.fillMaxSize(), state = pagerState) { page ->
                     if (page == 0) {
+
                         HomeScreenRoot(
                             navigateToSettings = { onAction(MainScreenAction.NavigateToSettings) },
                             sheetState = sheetState

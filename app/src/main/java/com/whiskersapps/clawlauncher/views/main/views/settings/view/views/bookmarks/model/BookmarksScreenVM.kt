@@ -251,7 +251,7 @@ class BookmarksScreenVM @Inject constructor(
     }
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             bookmarksRepository.data.collect { data ->
                 _state.update {
                     it.copy(

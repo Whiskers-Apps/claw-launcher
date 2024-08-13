@@ -4,7 +4,7 @@ object Routes {
     object Setup {
         const val ROUTE = "setup"
         const val WELCOME = "welcome"
-        const val LAYOUT = "minimal"
+        const val SEARCH_ENGINES = "search-engines"
     }
 
     object Main {

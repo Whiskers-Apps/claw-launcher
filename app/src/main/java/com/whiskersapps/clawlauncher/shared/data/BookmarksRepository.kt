@@ -2,6 +2,7 @@ package com.whiskersapps.clawlauncher.shared.data
 
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
 import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
+import com.whiskersapps.lib.Sniffer
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.toRealmList
@@ -71,11 +72,13 @@ class BookmarksRepository(
     }
 
     fun getSearchedBookmarks(text: String): List<Bookmark> {
-        return data.value.bookmarks.filter { it.name.lowercase().contains(text.lowercase()) }
+        val sniffer = Sniffer()
+        return data.value.bookmarks.filter {sniffer.matches(it.name, text)}
     }
 
     fun getSearchedGroups(text: String): List<BookmarkGroup> {
-        return data.value.groups.filter { it.name.lowercase().contains(text.lowercase()) }
+        val sniffer = Sniffer()
+        return data.value.groups.filter { sniffer.matches(it.name, text) }
     }
 
     init {

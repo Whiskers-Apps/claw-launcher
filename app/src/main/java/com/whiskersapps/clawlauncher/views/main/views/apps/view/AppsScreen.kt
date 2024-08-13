@@ -123,16 +123,16 @@ fun AppsScreen(
                         itemsIndexed(
                             items = state.appShortcuts,
                             key = { index, app -> "${index}-${app.packageName}" }
-                        ) { _, app ->
+                        ) { index, app ->
 
                             var showMenu by remember { mutableStateOf(false) }
 
                             Column {
-
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clip(CircleShape)
+                                        .background(if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background)
                                         .combinedClickable(
                                             onClick = {
                                                 onAction(AppsScreenAction.OpenApp(app.packageName))
@@ -185,7 +185,7 @@ fun AppsScreen(
                             itemsIndexed(
                                 items = state.appShortcuts,
                                 key = { index, app -> "$index - ${app.packageName}" }
-                            ) { _, app ->
+                            ) { index, app ->
                                 GridAppShortcut(
                                     app = app,
                                     openApp = {
@@ -198,7 +198,8 @@ fun AppsScreen(
                                     },
                                     requestUninstall = {
                                         onAction(AppsScreenAction.RequestUninstall(app.packageName))
-                                    }
+                                    },
+                                    backgroundColor = if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background
                                 )
                             }
                         }

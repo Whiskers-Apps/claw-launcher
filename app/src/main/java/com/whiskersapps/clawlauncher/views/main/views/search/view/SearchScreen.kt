@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -77,17 +78,13 @@ fun SearchScreen(
         }
     }
 
-    if (!state.loading) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
 
-        Box(contentAlignment = Alignment.Center) {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-            )
-
-
+        if (!state.loading) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -131,15 +128,18 @@ fun SearchScreen(
                         )
 
                         LazyVerticalGrid(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(32.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .padding(8.dp),
                             columns = GridCells.Fixed(colsCount),
                         ) {
                             itemsIndexed(
                                 state.appShortcuts,
                                 key = { index, app -> "${index}-${app.packageName}" }
-                            ) { _, app ->
+                            ) { index, app ->
                                 GridAppShortcut(
                                     app = app,
-                                    padding = 16.dp,
                                     openApp = {
                                         scope.launch {
                                             vm.openApp(app.packageName)
@@ -151,10 +151,14 @@ fun SearchScreen(
                                         }
                                     },
                                     openInfo = { vm.openAppInfo(app.packageName) },
-                                    requestUninstall = { vm.requestUninstall(app.packageName) }
+                                    requestUninstall = { vm.requestUninstall(app.packageName) },
+                                    backgroundColor = if(index == 0) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceVariant,
+                                    radius = 24.dp
                                 )
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
                     if (state.searchText.isNotEmpty()) {
@@ -167,7 +171,11 @@ fun SearchScreen(
                                 style = Typography.titleSmall
                             )
 
-                            LazyColumn {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(32.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                            ) {
                                 items(
                                     items = state.groups,
                                     key = { "group - ${it._id.toHexString()}" }
@@ -235,6 +243,8 @@ fun SearchScreen(
                                     }
                                 }
                             }
+
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
 
                         state.searchEngine?.let {
@@ -247,8 +257,10 @@ fun SearchScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .clip(RoundedCornerShape(32.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant)
                                     .clickable { vm.openUrl(vm.getSearchEngineUrl()) }
-                                    .padding(top = 16.dp, bottom = 16.dp),
+                                    .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 AsyncImage(
