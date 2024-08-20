@@ -68,6 +68,7 @@ fun SettingsScreen(
     val state = vm.state.collectAsState().value
 
     ContentColumn(
+        useSystemBarsPadding = true,
         navigationBar = {
             NavBar(navigateBack = { onAction(SettingsScreenAction.NavigateBack) })
         },

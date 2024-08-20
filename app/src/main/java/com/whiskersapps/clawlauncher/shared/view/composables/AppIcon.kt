@@ -38,10 +38,11 @@ fun AppIcon(
         Image(
             modifier = Modifier
                 .fillMaxHeight()
-                .aspectRatio(1f),
+                .aspectRatio(1f)
+                .scale(1.05f),
             bitmap = stockIcon,
             contentDescription = "${app.packageName} icon",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
     }
 }

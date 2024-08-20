@@ -1,16 +1,13 @@
 package com.whiskersapps.clawlauncher.shared.app
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,33 +15,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.window.layout.FoldingFeature
-import androidx.window.layout.WindowInfoTracker
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
 import com.whiskersapps.clawlauncher.views.main.view.MainScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.model.SettingsScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.about.view.AboutScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.apps.view.AppsSettingsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.bookmarks.view.BookmarksScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.home.view.HomeSettingsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.view.SearchEnginesScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.style.view.StyleSettingsScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view.AboutScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.view.AppsSettingsScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view.BookmarksScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.view.HomeSettingsScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view.StyleSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.search_engines.view.SearchEnginesSetupScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -54,91 +43,72 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-
             val settingsScreenVM = hiltViewModel<SettingsScreenVM>()
             val settingsUiState = settingsScreenVM.state.collectAsState().value
 
             if (!settingsUiState.loading) {
                 ClawLauncherTheme(settings = settingsUiState.settings) {
 
-                    val navController = rememberNavController()
-                    val bgColor = MaterialTheme.colorScheme.background
-                    var backgroundColor by remember { mutableStateOf(Color.Transparent) }
+                    val mainNavController = rememberNavController()
 
-                    navController.addOnDestinationChangedListener { _, destination, _ ->
-
-                        backgroundColor = if (destination.route == Routes.Main.HOME) {
-                            Color.Transparent
-                        } else {
-                            bgColor
-                        }
-                    }
-
-                    Column(
+                    NavHost(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .background(backgroundColor)
+                            .fillMaxSize(),
+                        navController = mainNavController,
+                        startDestination = if (settingsUiState.settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
                     ) {
-                        NavHost(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(backgroundColor),
-                            navController = navController,
-                            startDestination = if (settingsUiState.settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
+                        navigation(
+                            startDestination = Routes.Setup.WELCOME,
+                            route = Routes.Setup.ROUTE
                         ) {
-                            navigation(
-                                startDestination = Routes.Setup.WELCOME,
-                                route = Routes.Setup.ROUTE
-                            ) {
-                                composable(Routes.Setup.WELCOME) {
-                                    WelcomeScreenRoot(navController = navController)
-                                }
-
-                                composable(Routes.Setup.SEARCH_ENGINES){
-                                    SearchEnginesSetupScreenRoot(navController = navController)
-                                }
+                            composable(Routes.Setup.WELCOME) {
+                                WelcomeScreenRoot(navController = mainNavController)
                             }
 
-                            navigation(
-                                startDestination = Routes.Main.HOME,
-                                route = Routes.Main.ROUTE
-                            ) {
-                                composable(Routes.Main.HOME) {
-                                    MainScreenRoot(navController = navController)
-                                }
+                            composable(Routes.Setup.SEARCH_ENGINES) {
+                                SearchEnginesSetupScreenRoot(navController = mainNavController)
+                            }
+                        }
+
+                        navigation(
+                            startDestination = Routes.Main.HOME,
+                            route = Routes.Main.ROUTE
+                        ) {
+                            composable(Routes.Main.HOME) {
+                                MainScreenRoot(navController = mainNavController)
+                            }
+                        }
+
+                        navigation(
+                            startDestination = Routes.Main.Settings.MAIN,
+                            route = Routes.Main.Settings.ROUTE
+                        ) {
+                            composable(Routes.Main.Settings.MAIN) {
+                                SettingsScreenRoot(navController = mainNavController)
                             }
 
-                            navigation(
-                                startDestination = Routes.Main.Settings.MAIN,
-                                route = Routes.Main.Settings.ROUTE
-                            ) {
-                                composable(Routes.Main.Settings.MAIN) {
-                                    SettingsScreenRoot(navController = navController)
-                                }
+                            composable(Routes.Main.Settings.STYLE) {
+                                StyleSettingsScreenRoot(navController = mainNavController)
+                            }
 
-                                composable(Routes.Main.Settings.STYLE) {
-                                    StyleSettingsScreenRoot(navController = navController)
-                                }
+                            composable(Routes.Main.Settings.HOME) {
+                                HomeSettingsScreenRoot(navController = mainNavController)
+                            }
 
-                                composable(Routes.Main.Settings.HOME) {
-                                    HomeSettingsScreenRoot(navController = navController)
-                                }
+                            composable(Routes.Main.Settings.APPS) {
+                                AppsSettingsScreenRoot(navController = mainNavController)
+                            }
 
-                                composable(Routes.Main.Settings.APPS) {
-                                    AppsSettingsScreenRoot(navController = navController)
-                                }
+                            composable(Routes.Main.Settings.BOOKMARKS) {
+                                BookmarksScreenRoot(navController = mainNavController)
+                            }
 
-                                composable(Routes.Main.Settings.BOOKMARKS) {
-                                    BookmarksScreenRoot(navController = navController)
-                                }
+                            composable(Routes.Main.Settings.SEARCH_ENGINES) {
+                                SearchEnginesScreenRoot(navController = mainNavController)
+                            }
 
-                                composable(Routes.Main.Settings.SEARCH_ENGINES) {
-                                    SearchEnginesScreenRoot(navController = navController)
-                                }
-
-                                composable(Routes.Main.Settings.ABOUT) {
-                                    AboutScreenRoot(navController = navController)
-                                }
+                            composable(Routes.Main.Settings.ABOUT) {
+                                AboutScreenRoot(navController = mainNavController)
                             }
                         }
                     }

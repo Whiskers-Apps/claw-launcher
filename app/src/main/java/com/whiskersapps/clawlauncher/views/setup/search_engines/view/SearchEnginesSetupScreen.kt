@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,10 +24,9 @@ import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.views.search_engines.view.SearchEngineCard
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEngineCard
 import com.whiskersapps.clawlauncher.views.setup.search_engines.intent.SearchEnginesSetupScreenAction
 import com.whiskersapps.clawlauncher.views.setup.search_engines.model.SearchEnginesSetupScreenVM
-import com.whiskersapps.clawlauncher.views.setup.welcome.intent.WelcomeScreenAction
 
 @Composable
 fun SearchEnginesSetupScreenRoot(
@@ -63,6 +62,7 @@ fun SearchEnginesSetupScreen(
     val state = vm.state.collectAsState().value
 
     ContentColumn(
+        useSystemBarsPadding = true,
         scrollable = false
     ) {
         NavBar(navigateBack = { onAction(SearchEnginesSetupScreenAction.NavigateBack) })

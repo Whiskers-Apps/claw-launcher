@@ -24,6 +24,7 @@ import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
 @Composable
 fun ContentColumn(
+    useSystemBarsPadding: Boolean = false,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
     scrollable: Boolean = true,
     loading: Boolean = false,
@@ -34,7 +35,9 @@ fun ContentColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
-            .systemBarsPadding()
+            .modifyWhen(useSystemBarsPadding){
+                this.systemBarsPadding()
+            }
             .padding(16.dp)
     ) {
         Row(

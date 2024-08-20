@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.AbsoluteCutCornerShape
@@ -44,7 +45,7 @@ fun MainScreenRoot(
     MainScreen(
         onAction = { action ->
             when (action) {
-                MainScreenAction.NavigateToSettings -> navController.navigate(Routes.Main.Settings.ROUTE)
+                MainScreenAction.NavigateToSettings -> navController.navigate(Routes.Main.Settings.MAIN)
             }
         }
     )
@@ -93,8 +94,6 @@ fun MainScreen(
         sheetShadowElevation = 0.dp,
         sheetTonalElevation = 0.dp
     ) {
-
-
         Box {
             Column(
                 modifier = Modifier

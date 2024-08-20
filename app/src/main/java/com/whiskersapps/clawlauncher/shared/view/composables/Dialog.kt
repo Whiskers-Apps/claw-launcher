@@ -16,11 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
 @Composable
 fun Dialog(
     show: Boolean,
     onDismiss: () -> Unit,
+    fullScreen: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     if (show) {
@@ -30,12 +32,25 @@ fun Dialog(
         ) {
             Surface(
                 Modifier
-                    .widthIn(max = 650.dp)
+                    .modifyWhen(fullScreen) {
+                        this.fillMaxSize()
+                    }
+                    .modifyWhen(!fullScreen) {
+                        this.widthIn(max = 650.dp)
+                    }
                     .padding(16.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.colorScheme.background)
-            ){
-                Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())){
+                    .padding(16.dp)
+
+            ) {
+                Column(modifier = Modifier
+                    .modifyWhen(fullScreen){
+                        this.fillMaxSize()
+                    }
+                    .background(MaterialTheme.colorScheme.background)
+                    .verticalScroll(rememberScrollState())
+                ) {
                     content()
                 }
             }

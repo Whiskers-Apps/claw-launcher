@@ -2,7 +2,6 @@ package com.whiskersapps.clawlauncher.shared.data
 
 import android.app.Application
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.whiskersapps.clawlauncher.shared.model.Settings
@@ -68,18 +67,9 @@ class SettingsRepository(app: Application) {
 
             darkMode = preferences[Settings.DARK_MODE] ?: Settings.DEFAULT_DARK_MODE,
 
-            lightTheme = preferences[Settings.LIGHT_THEME] ?: Settings.DEFAULT_LIGHT_THEME,
+            theme = preferences[Settings.THEME] ?: Settings.DEFAULT_THEME,
 
-            darkTheme = preferences[Settings.DARK_THEME] ?: Settings.DEFAULT_DARK_THEME,
-
-            customThemeBackground = preferences[Settings.CUSTOM_THEME_BACKGROUND]
-                ?: Settings.DEFAULT_CUSTOM_THEME_BACKGROUND,
-
-            customThemeSecondaryBackground = preferences[Settings.CUSTOM_THEME_SECONDARY_BACKGROUND]
-                ?: Settings.DEFAULT_CUSTOM_THEME_SECONDARY_BACKGROUND,
-
-            customThemeText = preferences[Settings.CUSTOM_THEME_TEXT]
-                ?: Settings.DEFAULT_CUSTOM_THEME_TEXT
+            darkTheme = preferences[Settings.DARK_THEME] ?: Settings.DEFAULT_DARK_THEME
         )
     }
 
@@ -153,23 +143,11 @@ class SettingsRepository(app: Application) {
         dataStore.edit { it[Settings.DARK_MODE] = darkMode }
     }
 
-    suspend fun setLightTheme(lightTheme: String) {
-        dataStore.edit { it[Settings.LIGHT_THEME] = lightTheme }
+    suspend fun setTheme(theme: String) {
+        dataStore.edit { it[Settings.THEME] = theme }
     }
 
-    suspend fun setDarkTheme(darkTheme: String) {
-        dataStore.edit { it[Settings.DARK_THEME] = darkTheme }
-    }
-
-    suspend fun setCustomThemeBackground(color: String) {
-        dataStore.edit { it[Settings.CUSTOM_THEME_BACKGROUND] = color }
-    }
-
-    suspend fun setCustomThemeSecondaryBackground(color: String) {
-        dataStore.edit { it[Settings.CUSTOM_THEME_SECONDARY_BACKGROUND] = color }
-    }
-
-    suspend fun setCustomThemeText(color: String) {
-        dataStore.edit { it[Settings.CUSTOM_THEME_TEXT] = color }
+    suspend fun setDarkTheme(theme: String){
+        dataStore.edit { it[Settings.DARK_THEME] = theme }
     }
 }

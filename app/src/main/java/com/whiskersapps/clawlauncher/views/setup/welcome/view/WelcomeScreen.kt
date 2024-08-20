@@ -50,8 +50,8 @@ fun WelcomeScreen(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
             .systemBarsPadding()
             .padding(16.dp)
     ) {

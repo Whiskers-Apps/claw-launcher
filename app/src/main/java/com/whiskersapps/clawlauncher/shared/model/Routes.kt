@@ -10,7 +10,8 @@ object Routes {
     object Main {
         const val ROUTE = "main"
         const val HOME = "home"
-        object Settings{
+
+        object Settings {
             const val ROUTE = "settings"
             const val MAIN = "settings-main"
             const val STYLE = "settings-style"

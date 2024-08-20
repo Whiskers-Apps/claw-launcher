@@ -2,9 +2,11 @@ package com.whiskersapps.clawlauncher.shared.model
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.lighttigerxiv.whiskers_palette_kt.WhiskersColor
 import com.lighttigerxiv.whiskers_palette_kt.getColor
+import com.whiskersapps.clawlauncher.shared.utils.isAtLeastAndroid12
 
 data class Settings(
     val setupCompleted: Boolean = DEFAULT_SETUP_COMPLETED,
@@ -24,13 +26,10 @@ data class Settings(
     val appsSearchBarRadius: Int = DEFAULT_APPS_SEARCH_BAR_RADIUS,
     val defaultSearchEngine: String = DEFAULT_DEFAULT_SEARCH_ENGINE,
     val darkMode: String = DEFAULT_DARK_MODE,
-    val lightTheme: String = DEFAULT_LIGHT_THEME,
-    val darkTheme: String = DEFAULT_DARK_THEME,
-    val customThemeBackground: String = DEFAULT_CUSTOM_THEME_BACKGROUND,
-    val customThemeSecondaryBackground: String = DEFAULT_CUSTOM_THEME_SECONDARY_BACKGROUND,
-    val customThemeText: String = DEFAULT_CUSTOM_THEME_TEXT
-){
-    companion object{
+    val theme: String = DEFAULT_THEME,
+    val darkTheme: String = DEFAULT_DARK_THEME
+) {
+    companion object {
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
         const val DEFAULT_SETUP_COMPLETED = false
 
@@ -52,7 +51,8 @@ data class Settings(
         val SHOW_HOME_SEARCH_BAR = booleanPreferencesKey("show-home-search-bar")
         const val DEFAULT_SHOW_HOME_SEARCH_BAR = true
 
-        val SHOW_HOME_SEARCH_BAR_PLACEHOLDER = booleanPreferencesKey("show-home-search-bar-placeholder")
+        val SHOW_HOME_SEARCH_BAR_PLACEHOLDER =
+            booleanPreferencesKey("show-home-search-bar-placeholder")
         const val DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER = true
 
         val SHOW_HOME_SEARCH_BAR_SETTINGS = booleanPreferencesKey("show-home-search-bar-settings")
@@ -64,7 +64,8 @@ data class Settings(
         val SHOW_APPS_SEARCH_BAR = booleanPreferencesKey("show-apps-search-bar")
         const val DEFAULT_SHOW_APPS_SEARCH_BAR = true
 
-        val SHOW_APPS_SEARCH_BAR_PLACEHOLDER = booleanPreferencesKey("show-apps-search-bar-placeholder")
+        val SHOW_APPS_SEARCH_BAR_PLACEHOLDER =
+            booleanPreferencesKey("show-apps-search-bar-placeholder")
         const val DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER = true
 
         val SHOW_APPS_SEARCH_BAR_SETTINGS = booleanPreferencesKey("show-apps-search-bar-settings")
@@ -82,19 +83,10 @@ data class Settings(
         val DARK_MODE = stringPreferencesKey("dark-mode")
         const val DEFAULT_DARK_MODE = "system"
 
-        val LIGHT_THEME = stringPreferencesKey("light-theme")
-        const val DEFAULT_LIGHT_THEME = "tiger-banana"
+        val THEME = stringPreferencesKey("theme")
+        val DEFAULT_THEME = if (isAtLeastAndroid12()) "monet" else "tiger-banana"
 
         val DARK_THEME = stringPreferencesKey("dark-theme")
-        const val DEFAULT_DARK_THEME = "panther-banana"
-
-        val CUSTOM_THEME_BACKGROUND = stringPreferencesKey("custom-theme-background")
-        val DEFAULT_CUSTOM_THEME_BACKGROUND = getColor(WhiskersColor.TigerNeutralTwo).hex
-
-        val CUSTOM_THEME_SECONDARY_BACKGROUND = stringPreferencesKey("custom-theme-secondary-background")
-        val DEFAULT_CUSTOM_THEME_SECONDARY_BACKGROUND = getColor(WhiskersColor.TigerNeutralFor).hex
-
-        val CUSTOM_THEME_TEXT = stringPreferencesKey("custom-theme-text")
-        val DEFAULT_CUSTOM_THEME_TEXT = getColor(WhiskersColor.TigerText).hex
+        val DEFAULT_DARK_THEME = if(isAtLeastAndroid12()) "monet" else "panther-banana"
     }
 }
