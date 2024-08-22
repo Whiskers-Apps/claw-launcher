@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.theme.PANTHER_THEMES
+import com.whiskersapps.clawlauncher.shared.view.theme.PreviewTheme
 import com.whiskersapps.clawlauncher.shared.view.theme.TIGER_THEMES
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.intent.StyleSettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.model.StyleSettingsScreenState
@@ -33,79 +34,88 @@ fun ThemeDialog(
     state: StyleSettingsScreenState,
     onAction: (StyleSettingsScreenAction) -> Unit
 ) {
-
-    Dialog(
-        show = show,
-        fullScreen = true,
-        onDismiss = { onDismiss() },
+    PreviewTheme(
+        useMonet = if (showDarkThemes) state.settings.darkTheme == "monet" else state.settings.theme == "monet",
+        dark = showDarkThemes,
+        theme = if (showDarkThemes) state.settings.darkTheme else state.settings.theme
     ) {
-        NavBar(
-            navigateBack = { onDismiss() },
-            useCloseIcon = true
-        )
 
-        if (state.isAtLeastAndroid12) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .clickable {
-                        if (showDarkThemes) {
-                            onAction(StyleSettingsScreenAction.SetDarkTheme("monet"))
-                        }else{
-                            onAction(StyleSettingsScreenAction.SetTheme("monet"))
+        Dialog(
+            show = show,
+            fullScreen = true,
+            onDismiss = { onDismiss() },
+        ) {
+            NavBar(
+                navigateBack = { onDismiss() },
+                useCloseIcon = true
+            )
+
+            if (state.isAtLeastAndroid12) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .clickable {
+                            if (showDarkThemes) {
+                                onAction(StyleSettingsScreenAction.SetDarkTheme("monet"))
+                            } else {
+                                onAction(StyleSettingsScreenAction.SetTheme("monet"))
+                            }
                         }
-                    }
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = state.settings.theme == "monet",
-                    onClick = {
-                        if (showDarkThemes) {
-                            onAction(StyleSettingsScreenAction.SetDarkTheme("monet"))
-                        }else{
-                            onAction(StyleSettingsScreenAction.SetTheme("monet"))
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = if (showDarkThemes)
+                            state.settings.darkTheme == "monet"
+                        else
+                            state.settings.theme == "monet",
+                        onClick = {
+                            if (showDarkThemes) {
+                                onAction(StyleSettingsScreenAction.SetDarkTheme("monet"))
+                            } else {
+                                onAction(StyleSettingsScreenAction.SetTheme("monet"))
+                            }
                         }
-                    }
-                )
+                    )
 
-                Text(
-                    text = "Material You Colors",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (showDarkThemes) {
-            LazyRow {
-                items(PANTHER_THEMES, key = { it.id }) { theme ->
-                    ThemeCard(
-                        name = theme.name,
-                        backgroundColor = theme.background,
-                        secondaryBackgroundColor = theme.secondaryBackground,
-                        textColor = theme.text,
-                        accentColor = theme.accent,
-                        onAccentColor = theme.onAccent,
-                        onSetTheme = { onAction(StyleSettingsScreenAction.SetDarkTheme(theme.id)) }
+                    Text(
+                        text = "Material You Colors",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
-        } else {
-            LazyRow {
-                items(TIGER_THEMES, key = { it.id }) { theme ->
-                    ThemeCard(
-                        name = theme.name,
-                        backgroundColor = theme.background,
-                        secondaryBackgroundColor = theme.secondaryBackground,
-                        textColor = theme.text,
-                        accentColor = theme.accent,
-                        onAccentColor = theme.onAccent,
-                        onSetTheme = { onAction(StyleSettingsScreenAction.SetTheme(theme.id)) }
-                    )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (showDarkThemes) {
+                LazyRow {
+                    items(PANTHER_THEMES, key = { it.id }) { theme ->
+                        ThemeCard(
+                            name = theme.name,
+                            backgroundColor = theme.background,
+                            secondaryBackgroundColor = theme.secondaryBackground,
+                            textColor = theme.text,
+                            accentColor = theme.accent,
+                            onAccentColor = theme.onAccent,
+                            onSetTheme = { onAction(StyleSettingsScreenAction.SetDarkTheme(theme.id)) }
+                        )
+                    }
+                }
+            } else {
+                LazyRow {
+                    items(TIGER_THEMES, key = { it.id }) { theme ->
+                        ThemeCard(
+                            name = theme.name,
+                            backgroundColor = theme.background,
+                            secondaryBackgroundColor = theme.secondaryBackground,
+                            textColor = theme.text,
+                            accentColor = theme.accent,
+                            onAccentColor = theme.onAccent,
+                            onSetTheme = { onAction(StyleSettingsScreenAction.SetTheme(theme.id)) }
+                        )
+                    }
                 }
             }
         }
