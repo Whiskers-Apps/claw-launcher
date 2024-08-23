@@ -28,15 +28,15 @@ fun ClawLauncherTheme(
 
     AppCompatDelegate.setDefaultNightMode(darkMode)
 
-    val useMonet = settings.theme == "monet" || settings.darkTheme == "monet"
+    val useMonet = settings.theme == "monet"
+    val useDarkMonet = settings.darkTheme == "monet"
     val useDarkTheme = useDarkTheme(darkMode = settings.darkMode)
 
     MaterialTheme(
-        colorScheme = if (useMonet && isAtLeastAndroid12()) {
-            if (useDarkTheme)
-                dynamicDarkColorScheme(context)
-            else
-                dynamicLightColorScheme(context)
+        colorScheme = if (useMonet && isAtLeastAndroid12() && !useDarkTheme) {
+            dynamicLightColorScheme(context)
+        } else if (useDarkMonet && isAtLeastAndroid12() && useDarkTheme) {
+            dynamicDarkColorScheme(context)
         } else {
             if (useDarkTheme)
                 getDarkColorScheme(id = settings.darkTheme)
@@ -51,6 +51,7 @@ fun ClawLauncherTheme(
 @Composable
 fun PreviewTheme(
     useMonet: Boolean,
+    useDarkMonet: Boolean,
     dark: Boolean,
     theme: String,
     content: @Composable () -> Unit
@@ -58,8 +59,10 @@ fun PreviewTheme(
     val context = LocalContext.current
 
     MaterialTheme(
-        colorScheme = if (useMonet && isAtLeastAndroid12()) {
-            if (dark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        colorScheme = if (useMonet && isAtLeastAndroid12() && !dark) {
+            dynamicLightColorScheme(context)
+        } else if (useDarkMonet && isAtLeastAndroid12() && dark) {
+            dynamicDarkColorScheme(context)
         } else {
             if (dark) getDarkColorScheme(id = theme) else getLightColorScheme(id = theme)
         },

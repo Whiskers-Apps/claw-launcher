@@ -35,7 +35,8 @@ fun ThemeDialog(
     onAction: (StyleSettingsScreenAction) -> Unit
 ) {
     PreviewTheme(
-        useMonet = if (showDarkThemes) state.settings.darkTheme == "monet" else state.settings.theme == "monet",
+        useMonet = state.settings.theme == "monet" && !showDarkThemes,
+        useDarkMonet = state.settings.darkTheme == "monet" && showDarkThemes,
         dark = showDarkThemes,
         theme = if (showDarkThemes) state.settings.darkTheme else state.settings.theme
     ) {
