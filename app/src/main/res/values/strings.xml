@@ -15,5 +15,5 @@
     <string name="PermissionsScreen_manage_external_storage_explain">Due to the same reason as above it also needs manage files permission 🙄</string>
     <string name="PermissionsScreen_manage_external_storage">Manage External Storage</string>
     <string name="Apps_search_apps">Search apps</string>
-    <string name="Search">Search</string>
+    <string name="Search">Search apps, bookmarks, web</string>
 </resources>

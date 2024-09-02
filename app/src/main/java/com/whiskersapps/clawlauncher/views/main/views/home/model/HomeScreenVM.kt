@@ -32,7 +32,7 @@ class HomeScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settingsFlow.collect { settings ->
+            settingsRepository.settings.collect { settings ->
                 if (!state.value.showSettingsDialog) {
                     _state.update {
                         it.copy(

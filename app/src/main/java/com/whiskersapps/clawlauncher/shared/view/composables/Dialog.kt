@@ -23,7 +23,8 @@ fun Dialog(
     show: Boolean,
     onDismiss: () -> Unit,
     fullScreen: Boolean = false,
-    content: @Composable ColumnScope.() -> Unit
+    scrollable: Boolean = true,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     if (show) {
         androidx.compose.ui.window.Dialog(
@@ -36,7 +37,7 @@ fun Dialog(
                         this.fillMaxSize()
                     }
                     .modifyWhen(!fullScreen) {
-                        this.widthIn(max = 650.dp)
+                        this.widthIn(max = 900.dp)
                     }
                     .padding(16.dp)
                     .clip(RoundedCornerShape(16.dp))
@@ -45,11 +46,13 @@ fun Dialog(
 
             ) {
                 Column(modifier = Modifier
-                    .modifyWhen(fullScreen){
+                    .modifyWhen(fullScreen) {
                         this.fillMaxSize()
                     }
                     .background(MaterialTheme.colorScheme.background)
-                    .verticalScroll(rememberScrollState())
+                    .modifyWhen(scrollable) {
+                        this.verticalScroll(rememberScrollState())
+                    }
                 ) {
                     content()
                 }

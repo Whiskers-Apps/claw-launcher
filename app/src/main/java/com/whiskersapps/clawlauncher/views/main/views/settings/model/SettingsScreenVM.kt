@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -29,9 +30,7 @@ class SettingsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-
-
-            settingsRepository.settingsFlow.collect { settings ->
+            settingsRepository.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loading = false,
@@ -52,6 +51,7 @@ class SettingsScreenVM @Inject constructor(
             SettingsScreenAction.NavigateToHomeSettings -> {}
             SettingsScreenAction.NavigateToSearchEnginesSettings -> {}
             SettingsScreenAction.NavigateToStyleSettings -> {}
+            SettingsScreenAction.NavigateToSecuritySettings -> {}
             SettingsScreenAction.SetDefaultLauncher -> setDefaultLauncher()
         }
     }

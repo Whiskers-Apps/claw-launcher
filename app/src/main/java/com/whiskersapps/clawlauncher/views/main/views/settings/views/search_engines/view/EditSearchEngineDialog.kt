@@ -41,7 +41,7 @@ fun EditSearchEngineDialog(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = 650.dp)
+                .widthIn(max = 900.dp)
                 .padding(16.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.background)

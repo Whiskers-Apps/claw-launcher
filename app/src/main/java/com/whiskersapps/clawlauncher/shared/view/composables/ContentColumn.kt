@@ -46,7 +46,7 @@ fun ContentColumn(
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = 650.dp)
+                    .widthIn(max = 900.dp)
                     .fillMaxSize()
                     .modifyWhen(scrollable) {
                         this.verticalScroll(rememberScrollState())

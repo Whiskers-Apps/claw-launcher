@@ -1,6 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,12 +26,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
+import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
+import com.whiskersapps.clawlauncher.shared.view.composables.DialogHeader
 import com.whiskersapps.clawlauncher.shared.view.composables.RoundTextField
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.intent.BookmarksScreenAction
@@ -42,39 +43,13 @@ fun AddGroupDialog(
     onAction: (BookmarksScreenAction) -> Unit
 ) {
     Dialog(
-        onDismissRequest = { onAction(BookmarksScreenAction.CloseAddGroupDialog) },
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        show = state.showAddGroupDialog,
+        onDismiss = { onAction(BookmarksScreenAction.CloseAddGroupDialog) },
+        scrollable = false
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp)
-        ) {
-
-            Column {
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        modifier = Modifier.size(32.dp),
-                        painter = painterResource(id = R.drawable.plus),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-
-                    Text(
-                        text = "Add Group",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
+        LazyColumn {
+            item {
+                DialogHeader(icon = R.drawable.plus, title = "Add Group")
 
                 Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
 
@@ -89,69 +64,78 @@ fun AddGroupDialog(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+            }
 
-                LazyColumn {
-                    items(
-                        items = state.addGroupDialog.bookmarks,
-                        key = { it.bookmark._id.toHexString() }
-                    ) { item ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(42.dp)
-                                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                                model = getFaviconUrl(item.bookmark.url),
-                                contentDescription = "${item.bookmark.name} icon"
+            items(
+                items = state.addGroupDialog.bookmarks,
+                key = { it.bookmark._id.toHexString() }
+            ) { item ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onAction(
+                                BookmarksScreenAction.ChangeAddGroupBookmarkSelection(
+                                    item.bookmark._id,
+                                    !item.selected
+                                )
                             )
-
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Column(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f, fill = true)
-                            ) {
-                                Text(
-                                    text = item.bookmark.name,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-
-                                Text(
-                                    text = item.bookmark.url,
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    style = Typography.labelSmall
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Switch(
-                                checked = item.selected,
-                                onCheckedChange = {
-                                    onAction(
-                                        BookmarksScreenAction.ChangeAddGroupBookmarkSelection(
-                                            item.bookmark._id,
-                                            it
-                                        )
-                                    )
-                                })
                         }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(42.dp)
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                        model = getFaviconUrl(item.bookmark.url),
+                        contentDescription = "${item.bookmark.name} icon"
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f, fill = true)
+                    ) {
+                        Text(
+                            text = item.bookmark.name,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+
+                        Text(
+                            text = item.bookmark.url,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = Typography.labelSmall
+                        )
                     }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Switch(
+                        checked = item.selected,
+                        onCheckedChange = {
+                            onAction(
+                                BookmarksScreenAction.ChangeAddGroupBookmarkSelection(
+                                    item.bookmark._id,
+                                    it
+                                )
+                            )
+                        }
+                    )
                 }
             }
 
-            DialogFooter(
-                onDismiss = { onAction(BookmarksScreenAction.CloseAddGroupDialog) },
-                primaryButtonText = "Add",
-                enabled = state.addGroupDialog.name.trim().isNotEmpty(),
-                onPrimaryClick = { onAction(BookmarksScreenAction.AddGroup) }
-            )
+            item {
+                DialogFooter(
+                    onDismiss = { onAction(BookmarksScreenAction.CloseAddGroupDialog) },
+                    primaryButtonText = "Add",
+                    enabled = state.addGroupDialog.name.trim().isNotEmpty(),
+                    onPrimaryClick = { onAction(BookmarksScreenAction.AddGroup) }
+                )
+            }
         }
     }
 }

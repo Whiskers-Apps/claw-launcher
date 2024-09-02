@@ -27,7 +27,9 @@ data class Settings(
     val defaultSearchEngine: String = DEFAULT_DEFAULT_SEARCH_ENGINE,
     val darkMode: String = DEFAULT_DARK_MODE,
     val theme: String = DEFAULT_THEME,
-    val darkTheme: String = DEFAULT_DARK_THEME
+    val darkTheme: String = DEFAULT_DARK_THEME,
+    val hiddenApps: List<String> = emptyList(),
+    val secureApps: List<String> = emptyList()
 ) {
     companion object {
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")

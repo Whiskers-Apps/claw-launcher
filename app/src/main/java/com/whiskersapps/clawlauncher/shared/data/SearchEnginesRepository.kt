@@ -110,7 +110,7 @@ class SearchEnginesRepository(
                 .map { it.list }
                 .collect { searchEngines ->
 
-                    val settings = settingsRepository.settingsFlow.first()
+                    val settings = settingsRepository.settings.first()
 
                     val defaultEngine = if (settings.defaultSearchEngine.isEmpty()) {
                         null

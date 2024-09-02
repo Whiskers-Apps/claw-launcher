@@ -57,7 +57,7 @@ class SearchScreenVM @Inject constructor(
     init {
 
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settingsFlow.collect { settings->
+            settingsRepository.settings.collect { settings->
                 _state.update {
                     it.copy(
                         loading = it.loadingSearchEngines || it.loadingBookmarks,

@@ -19,6 +19,7 @@ object Routes {
             const val APPS = "settings-apps"
             const val BOOKMARKS = "settings-bookmarks"
             const val SEARCH_ENGINES = "settings-search-engines"
+            const val SECURITY = "settings-security"
             const val ABOUT = "settings-about"
         }
     }

@@ -24,7 +24,7 @@ class AppsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settingsFlow.collect { settings ->
+            settingsRepository.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loadingSettings = false,
@@ -45,17 +45,11 @@ class AppsScreenVM @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            appsRepository.apps.collect { apps ->
+            appsRepository.unhiddenApps.collect {
                 _state.update {
                     it.copy(
                         loading = it.loadingSettings,
                         loadingApps = false,
-                        appShortcuts = apps
-                    )
-                }
-
-                _state.update {
-                    it.copy(
                         appShortcuts = appsRepository.getSearchedApps(state.value.searchText)
                     )
                 }

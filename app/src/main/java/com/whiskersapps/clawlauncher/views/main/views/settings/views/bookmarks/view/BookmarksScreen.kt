@@ -221,20 +221,12 @@ fun BookmarksScreen(
             }
         }
 
-        if (state.showAddBookmarkDialog) {
-            AddBookmarkDialog(state = state, onAction = { onAction(it) })
-        }
+        AddBookmarkDialog(state = state, onAction = { onAction(it) })
 
-        if (state.showEditBookmarkDialog) {
-            EditBookmarkDialog(state = state, onAction = { onAction(it) })
-        }
+        EditBookmarkDialog(state = state, onAction = { onAction(it) })
 
-        if (state.showAddGroupDialog) {
-            AddGroupDialog(state = state, onAction = { onAction(it) })
-        }
+        AddGroupDialog(state = state, onAction = { onAction(it) })
 
-        if (state.showEditGroupDialog) {
-            EditGroupDialog(state = state, onAction = { onAction(it) })
-        }
+        EditGroupDialog(state = state, onAction = { onAction(it) })
     }
 }

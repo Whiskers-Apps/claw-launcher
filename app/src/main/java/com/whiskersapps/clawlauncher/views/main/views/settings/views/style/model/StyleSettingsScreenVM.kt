@@ -22,7 +22,7 @@ class StyleSettingsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settingsFlow.collect { settings ->
+            settingsRepository.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loading = false,

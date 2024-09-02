@@ -34,8 +34,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideSettingsRepository(app: Application): SettingsRepository {
-        return SettingsRepository(app)
+    fun provideSettingsRepository(app: Application, realm: Realm): SettingsRepository {
+        return SettingsRepository(app, realm)
     }
 
     @Singleton

@@ -21,10 +21,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.utils.isUrl
+import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
+import com.whiskersapps.clawlauncher.shared.view.composables.DialogHeader
 import com.whiskersapps.clawlauncher.shared.view.composables.RoundTextField
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.intent.BookmarksScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.model.BookmarksScreenState
@@ -36,84 +37,51 @@ fun AddBookmarkDialog(
 ) {
 
     Dialog(
-        onDismissRequest = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) },
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        show = state.showAddBookmarkDialog,
+        onDismiss = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) }
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp)
-        ) {
+        DialogHeader(icon = R.drawable.plus, title = "Add Bookmark")
 
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-            ) {
+        Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
 
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        modifier = Modifier.size(32.dp),
-                        painter = painterResource(id = R.drawable.plus),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
+        RoundTextField(
+            text = state.addBookmarkDialog.name,
+            placeholder = "Notion",
+            onTextChange = { text ->
+                onAction(
+                    BookmarksScreenAction.UpdateAddBookmarkDialogFields(
+                        name = text,
+                        url = state.addBookmarkDialog.url
                     )
-
-                    Text(
-                        text = "Add Bookmark",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
-
-                RoundTextField(
-                    text = state.addBookmarkDialog.name,
-                    placeholder = "Notion",
-                    onTextChange = { text ->
-                        onAction(
-                            BookmarksScreenAction.UpdateAddBookmarkDialogFields(
-                                name = text,
-                                url = state.addBookmarkDialog.url
-                            )
-                        )
-                    }
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(text = "Url", color = MaterialTheme.colorScheme.onBackground)
-
-                RoundTextField(
-                    text = state.addBookmarkDialog.url,
-                    placeholder = "https://notion.so",
-                    onTextChange = { text ->
-                        onAction(
-                            BookmarksScreenAction.UpdateAddBookmarkDialogFields(
-                                name = state.addBookmarkDialog.name,
-                                url = text
-                            )
-                        )
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
             }
+        )
 
-            DialogFooter(
-                onDismiss = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) },
-                primaryButtonText = "Add",
-                enabled = true,
-                onPrimaryClick = { onAction(BookmarksScreenAction.AddBookmark) }
-            )
-        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(text = "Url", color = MaterialTheme.colorScheme.onBackground)
+
+        RoundTextField(
+            text = state.addBookmarkDialog.url,
+            placeholder = "https://notion.so",
+            onTextChange = { text ->
+                onAction(
+                    BookmarksScreenAction.UpdateAddBookmarkDialogFields(
+                        name = state.addBookmarkDialog.name,
+                        url = text
+                    )
+                )
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        DialogFooter(
+            onDismiss = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) },
+            primaryButtonText = "Add",
+            enabled = state.addBookmarkDialog.name.trim().isNotEmpty()
+                    && state.addBookmarkDialog.url.isUrl(),
+            onPrimaryClick = { onAction(BookmarksScreenAction.AddBookmark) }
+        )
     }
 }

@@ -30,6 +30,7 @@ import com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.view.A
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view.BookmarksScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.view.HomeSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.view.SecuritySettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view.StyleSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.search_engines.view.SearchEnginesSetupScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
@@ -43,11 +44,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val settingsScreenVM = hiltViewModel<SettingsScreenVM>()
-            val settingsUiState = settingsScreenVM.state.collectAsState().value
 
-            if (!settingsUiState.loading) {
-                ClawLauncherTheme(settings = settingsUiState.settings) {
+            val mainVM: MainVM = hiltViewModel()
+            val settings = mainVM.settings.collectAsState().value
+
+            if (settings != null) {
+                ClawLauncherTheme(settings = settings) {
 
                     val mainNavController = rememberNavController()
 
@@ -55,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize(),
                         navController = mainNavController,
-                        startDestination = if (settingsUiState.settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
+                        startDestination = if (settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
                     ) {
                         navigation(
                             startDestination = Routes.Setup.WELCOME,
@@ -105,6 +107,10 @@ class MainActivity : ComponentActivity() {
 
                             composable(Routes.Main.Settings.SEARCH_ENGINES) {
                                 SearchEnginesScreenRoot(navController = mainNavController)
+                            }
+
+                            composable(Routes.Main.Settings.SECURITY){
+                                SecuritySettingsScreenRoot(navController = mainNavController)
                             }
 
                             composable(Routes.Main.Settings.ABOUT) {

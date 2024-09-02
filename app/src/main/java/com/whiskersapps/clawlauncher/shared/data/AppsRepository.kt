@@ -28,6 +28,9 @@ class AppsRepository(
     private val _apps = MutableStateFlow<List<AppShortcut>>(ArrayList())
     val apps = _apps.asStateFlow()
 
+    private val _unhiddenApps = MutableStateFlow<List<AppShortcut>>(ArrayList())
+    val unhiddenApps = _unhiddenApps.asStateFlow()
+
     private val packageManager = app.packageManager
 
     init {
@@ -52,7 +55,7 @@ class AppsRepository(
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            settingsRepository.settingsFlow.collect {
+            settingsRepository.settings.collect {
                 updateShortcuts()
             }
         }
@@ -101,7 +104,11 @@ class AppsRepository(
             val shortcuts = asyncShortcuts.await()
             shortcuts.sortBy { it.label.lowercase() }
 
+            val hiddenApps = settingsRepository.settings.value.hiddenApps
+            val newUnhiddenApps = shortcuts.filterNot { hiddenApps.contains(it.packageName) }
+
             _apps.update { shortcuts }
+            _unhiddenApps.update { newUnhiddenApps }
         }
     }
 
@@ -115,7 +122,7 @@ class AppsRepository(
     fun getSearchedApps(text: String): List<AppShortcut> {
         val sniffer = Sniffer()
 
-        return apps.value.filter { sniffer.matches(it.label, text) }
+        return unhiddenApps.value.filter { sniffer.matches(it.label, text) }
     }
 
     fun openAppInfo(packageName: String) {
