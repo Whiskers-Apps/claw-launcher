@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -17,9 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
+import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.PANTHER_THEMES
 import com.whiskersapps.clawlauncher.shared.view.theme.PreviewTheme
 import com.whiskersapps.clawlauncher.shared.view.theme.TIGER_THEMES
@@ -44,7 +50,7 @@ fun ThemeDialog(
         Dialog(
             show = show,
             fullScreen = true,
-            onDismiss = { onDismiss() },
+            onDismiss = { onDismiss() }
         ) {
             NavBar(
                 navigateBack = { onDismiss() },
@@ -55,6 +61,7 @@ fun ThemeDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(16.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(MaterialTheme.colorScheme.surfaceVariant)
                         .clickable {
@@ -64,22 +71,18 @@ fun ThemeDialog(
                                 onAction(StyleSettingsScreenAction.SetTheme("monet"))
                             }
                         }
-                        .padding(8.dp),
+                        .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    RadioButton(
-                        selected = if (showDarkThemes)
-                            state.settings.darkTheme == "monet"
-                        else
-                            state.settings.theme == "monet",
-                        onClick = {
-                            if (showDarkThemes) {
-                                onAction(StyleSettingsScreenAction.SetDarkTheme("monet"))
-                            } else {
-                                onAction(StyleSettingsScreenAction.SetTheme("monet"))
-                            }
-                        }
+
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(R.drawable.palette),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+
+                    Spacer(Modifier.width(16.dp))
 
                     Text(
                         text = "Material You Colors",
@@ -88,10 +91,8 @@ fun ThemeDialog(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             if (showDarkThemes) {
-                LazyRow {
+                LazyRow(modifier = Modifier.padding(16.dp)){
                     items(PANTHER_THEMES, key = { it.id }) { theme ->
                         ThemeCard(
                             name = theme.name,
@@ -105,7 +106,7 @@ fun ThemeDialog(
                     }
                 }
             } else {
-                LazyRow {
+                LazyRow(modifier = Modifier.padding(16.dp)){
                     items(TIGER_THEMES, key = { it.id }) { theme ->
                         ThemeCard(
                             name = theme.name,

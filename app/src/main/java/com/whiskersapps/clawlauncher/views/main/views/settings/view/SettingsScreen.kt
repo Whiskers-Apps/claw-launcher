@@ -117,42 +117,49 @@ fun SettingsScreen(
         }
 
         MainSetting(
+            icon = R.drawable.palette,
             title = "Style",
             description = "Themes",
             onClick = { onAction(SettingsScreenAction.NavigateToStyleSettings) }
         )
 
         MainSetting(
+            icon = R.drawable.home,
             title = "Home",
             description = "Home screen settings",
             onClick = { onAction(SettingsScreenAction.NavigateToHomeSettings) }
         )
 
         MainSetting(
+            icon = R.drawable.apps,
             title = "Apps",
             description = "Apps screen settings",
             onClick = { onAction(SettingsScreenAction.NavigateToAppsSettings) }
         )
 
         MainSetting(
+            icon = R.drawable.bookmark,
             title = "Bookmarks",
             description = "Add website urls to quickly open them",
             onClick = { onAction(SettingsScreenAction.NavigateToBookmarksSettings) }
         )
 
         MainSetting(
+            icon = R.drawable.loupe,
             title = "Search Engines",
             description = "Manage search engines when searching",
             onClick = { onAction(SettingsScreenAction.NavigateToSearchEnginesSettings) }
         )
 
         MainSetting(
+            icon = R.drawable.lock,
             title = "Security",
             description = "Hide or protect apps",
             onClick = { onAction(SettingsScreenAction.NavigateToSecuritySettings) }
         )
 
         MainSetting(
+            icon = R.drawable.info,
             title = "About",
             description = "App info",
             onClick = { onAction(SettingsScreenAction.NavigateToAbout) }

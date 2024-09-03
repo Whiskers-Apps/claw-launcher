@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
+import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.intent.SecuritySettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.model.SecuritySettingsScreenState
 
@@ -52,13 +53,13 @@ fun HiddenAppsDialog(
         }
 
         Text(
+            modifier = Modifier.sidePadding(),
             text = "Select apps to hide.",
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         LazyColumn(
+            modifier = Modifier.sidePadding(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(
@@ -73,14 +74,14 @@ fun HiddenAppsDialog(
                         .clip(CircleShape)
                         .background(if (selected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background)
                         .clickable { onAction(SecuritySettingsScreenAction.ToggleHiddenApp(app.packageName)) }
-                        .padding(start = 8.dp, top = 16.dp, end = 8.dp, bottom = 16.dp),
+                        .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(modifier = Modifier.size(36.dp)) {
                         AppIcon(app = app)
                     }
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     Text(text = app.label)
                 }

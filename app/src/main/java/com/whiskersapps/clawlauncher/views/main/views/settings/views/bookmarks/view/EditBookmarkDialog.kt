@@ -41,50 +41,51 @@ fun EditBookmarkDialog(
         show = state.showEditBookmarkDialog,
         onDismiss = { onAction(BookmarksScreenAction.CloseEditBookmarkDialog) }
     ) {
-        DialogHeader(icon = R.drawable.pencil, title = "Edit Bookmark")
+        Column(modifier = Modifier.padding(16.dp)) {
 
-        Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+            DialogHeader(icon = R.drawable.pencil, title = "Edit Bookmark")
 
-        RoundTextField(
-            text = state.editBookmarkDialog.name,
-            placeholder = "Notion",
-            onTextChange = { text ->
-                onAction(
-                    BookmarksScreenAction.UpdateEditBookmarkDialogFields(
-                        state.editBookmarkDialog.copy(name = text)
+            Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+
+            RoundTextField(
+                text = state.editBookmarkDialog.name,
+                placeholder = "Notion",
+                onTextChange = { text ->
+                    onAction(
+                        BookmarksScreenAction.UpdateEditBookmarkDialogFields(
+                            state.editBookmarkDialog.copy(name = text)
+                        )
                     )
-                )
-            }
-        )
+                }
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Url", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = "Url", color = MaterialTheme.colorScheme.onBackground)
 
-        RoundTextField(
-            text = state.editBookmarkDialog.url,
-            placeholder = "https://notion.so",
-            onTextChange = { text ->
-                onAction(
-                    BookmarksScreenAction.UpdateEditBookmarkDialogFields(
-                        state.editBookmarkDialog.copy(url = text)
+            RoundTextField(
+                text = state.editBookmarkDialog.url,
+                placeholder = "https://notion.so",
+                onTextChange = { text ->
+                    onAction(
+                        BookmarksScreenAction.UpdateEditBookmarkDialogFields(
+                            state.editBookmarkDialog.copy(url = text)
+                        )
                     )
-                )
-            }
-        )
+                }
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        SwipeToDelete { onAction(BookmarksScreenAction.DeleteBookmark) }
+            SwipeToDelete { onAction(BookmarksScreenAction.DeleteBookmark) }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        DialogFooter(
-            onDismiss = { onAction(BookmarksScreenAction.CloseEditBookmarkDialog) },
-            primaryButtonText = "Save",
-            enabled = state.editBookmarkDialog.name.trim().isNotEmpty()
-                    && state.editBookmarkDialog.url.isUrl(),
-            onPrimaryClick = { onAction(BookmarksScreenAction.EditBookmark) }
-        )
+            DialogFooter(
+                onDismiss = { onAction(BookmarksScreenAction.CloseEditBookmarkDialog) },
+                primaryButtonText = "Save",
+                enabled = state.editBookmarkDialog.name.trim().isNotEmpty()
+                        && state.editBookmarkDialog.url.isUrl(),
+                onPrimaryClick = { onAction(BookmarksScreenAction.EditBookmark) }
+            )
+        }
     }
 }

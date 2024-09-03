@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.R
@@ -27,11 +29,14 @@ fun NavBar(
     useCloseIcon: Boolean = false,
     endContent: @Composable RowScope.() -> Unit = {}
 ) {
-    Column {
+    Column(
+        Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
+    ){
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(32.dp)
+                    .clip(CircleShape)
                     .clickable { navigateBack() },
                 painter = if(useCloseIcon) painterResource(id = R.drawable.close) else painterResource(id = R.drawable.chevron_left),
                 contentDescription = "back icon",
@@ -44,6 +49,5 @@ fun NavBar(
                 endContent()
             }
         }
-        Spacer(modifier = Modifier.height(32.dp))
     }
 }

@@ -31,8 +31,6 @@ fun HomeSettings(
         }
     )
 
-    Spacer(modifier = Modifier.height(16.dp))
-
     SwitchSetting(
         title = "Placeholder",
         description = "Shows a placeholder",
@@ -42,8 +40,6 @@ fun HomeSettings(
         }
     )
 
-    Spacer(modifier = Modifier.height(16.dp))
-
     SwitchSetting(
         title = "Settings",
         description = "Shows the settings icon on the search bar",
@@ -52,8 +48,6 @@ fun HomeSettings(
             onAction(HomeSettingsAction.SetShowSettings(it))
         }
     )
-
-    Spacer(modifier = Modifier.height(16.dp))
 
     SliderSetting(
         title = "Search Bar Radius",

@@ -1,6 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,7 @@ import com.whiskersapps.clawlauncher.shared.view.composables.RoundTextField
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.intent.BookmarksScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.model.BookmarksScreenState
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SwipeToDelete
 
 @Composable
 fun EditGroupDialog(
@@ -41,7 +43,7 @@ fun EditGroupDialog(
         onDismiss = { onAction(BookmarksScreenAction.CloseEditGroupDialog) },
         scrollable = false
     ) {
-        LazyColumn {
+        LazyColumn(modifier = Modifier.padding(16.dp)){
             item {
                 DialogHeader(icon = R.drawable.pencil, title = "Edit Group")
 
@@ -58,6 +60,8 @@ fun EditGroupDialog(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                SwipeToDelete { onAction(BookmarksScreenAction.DeleteGroup) }
             }
 
             items(
@@ -67,7 +71,15 @@ fun EditGroupDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .clickable {
+                            onAction(
+                                BookmarksScreenAction.ChangeEditGroupBookmarkSelection(
+                                    item.bookmark._id,
+                                    !item.selected
+                                )
+                            )
+                        }
+                        .padding(top = 16.dp, bottom = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AsyncImage(
@@ -109,7 +121,8 @@ fun EditGroupDialog(
                                     it
                                 )
                             )
-                        })
+                        }
+                    )
                 }
             }
 

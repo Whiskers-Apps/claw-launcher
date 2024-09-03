@@ -1,26 +1,14 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.isUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
@@ -35,53 +23,55 @@ fun AddBookmarkDialog(
     state: BookmarksScreenState,
     onAction: (BookmarksScreenAction) -> Unit
 ) {
-
     Dialog(
         show = state.showAddBookmarkDialog,
         onDismiss = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) }
     ) {
-        DialogHeader(icon = R.drawable.plus, title = "Add Bookmark")
+        Column(modifier = Modifier.padding(16.dp)){
 
-        Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+            DialogHeader(icon = R.drawable.plus, title = "Add Bookmark")
 
-        RoundTextField(
-            text = state.addBookmarkDialog.name,
-            placeholder = "Notion",
-            onTextChange = { text ->
-                onAction(
-                    BookmarksScreenAction.UpdateAddBookmarkDialogFields(
-                        name = text,
-                        url = state.addBookmarkDialog.url
+            Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+
+            RoundTextField(
+                text = state.addBookmarkDialog.name,
+                placeholder = "Notion",
+                onTextChange = { text ->
+                    onAction(
+                        BookmarksScreenAction.UpdateAddBookmarkDialogFields(
+                            name = text,
+                            url = state.addBookmarkDialog.url
+                        )
                     )
-                )
-            }
-        )
+                }
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Url", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = "Url", color = MaterialTheme.colorScheme.onBackground)
 
-        RoundTextField(
-            text = state.addBookmarkDialog.url,
-            placeholder = "https://notion.so",
-            onTextChange = { text ->
-                onAction(
-                    BookmarksScreenAction.UpdateAddBookmarkDialogFields(
-                        name = state.addBookmarkDialog.name,
-                        url = text
+            RoundTextField(
+                text = state.addBookmarkDialog.url,
+                placeholder = "https://notion.so",
+                onTextChange = { text ->
+                    onAction(
+                        BookmarksScreenAction.UpdateAddBookmarkDialogFields(
+                            name = state.addBookmarkDialog.name,
+                            url = text
+                        )
                     )
-                )
-            }
-        )
+                }
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        DialogFooter(
-            onDismiss = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) },
-            primaryButtonText = "Add",
-            enabled = state.addBookmarkDialog.name.trim().isNotEmpty()
-                    && state.addBookmarkDialog.url.isUrl(),
-            onPrimaryClick = { onAction(BookmarksScreenAction.AddBookmark) }
-        )
+            DialogFooter(
+                onDismiss = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) },
+                primaryButtonText = "Add",
+                enabled = state.addBookmarkDialog.name.trim().isNotEmpty()
+                        && state.addBookmarkDialog.url.isUrl(),
+                onPrimaryClick = { onAction(BookmarksScreenAction.AddBookmark) }
+            )
+        }
     }
 }

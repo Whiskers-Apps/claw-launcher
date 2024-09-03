@@ -1,9 +1,11 @@
 package com.whiskersapps.clawlauncher.shared.view.composables
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -22,23 +24,27 @@ fun DialogFooter(
     enabled: Boolean = true,
     onPrimaryClick: () -> Unit = {},
 ) {
-    Row {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            OutlinedButton(
-                modifier = Modifier.modifyWhen(primaryButtonText.isEmpty()){
-                    this.fillMaxWidth()
-                },
-                onClick = { onDismiss() },
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent)
-            ) {
-                Text(text = "Cancel")
-            }
+    Column {
+        Spacer(modifier = Modifier.height(32.dp))
 
-            if (primaryButtonText.isNotEmpty()) {
-                Spacer(modifier = Modifier.width(8.dp))
+        Row {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                OutlinedButton(
+                    modifier = Modifier.modifyWhen(primaryButtonText.isEmpty()) {
+                        this.fillMaxWidth()
+                    },
+                    onClick = { onDismiss() },
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent)
+                ) {
+                    Text(text = "Cancel")
+                }
 
-                Button(onClick = { onPrimaryClick() }, enabled = enabled) {
-                    Text(text = primaryButtonText)
+                if (primaryButtonText.isNotEmpty()) {
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Button(onClick = { onPrimaryClick() }, enabled = enabled) {
+                        Text(text = primaryButtonText)
+                    }
                 }
             }
         }

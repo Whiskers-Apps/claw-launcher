@@ -34,10 +34,9 @@ fun SliderSetting(
     steps: Int,
     value: Float,
     onValueChange: (value: Float) -> Unit,
-    onValueChangeFinished: (Float) -> Unit = {},
-    textIsInt: Boolean = false
+    onValueChangeFinished: (Float) -> Unit = {}
 ) {
-    Column(Modifier.fillMaxWidth()) {
+    Column(Modifier.fillMaxWidth().padding(16.dp)) {
         Text(
             text = title,
             style = Typography.bodyMedium,
@@ -76,9 +75,7 @@ fun SliderSetting(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = if (textIsInt) value.toInt().toString() else DecimalFormat("#.#").format(
-                        value
-                    ),
+                    text = value.toInt().toString(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -96,7 +93,8 @@ fun SwitchSetting(
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable { onValueChange(!value) },
+            .clickable { onValueChange(!value) }
+            .padding(16.dp),
         verticalAlignment = Alignment.Top
     ) {
         Column(
@@ -133,7 +131,7 @@ fun SimpleSetting(
         Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(top = 16.dp, bottom = 16.dp)
+            .padding(16.dp)
     ) {
         Text(
             text = title,

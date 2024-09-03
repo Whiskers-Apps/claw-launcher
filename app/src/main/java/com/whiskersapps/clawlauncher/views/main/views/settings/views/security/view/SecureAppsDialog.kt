@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
+import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.intent.SecuritySettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.model.SecuritySettingsScreenState
 
@@ -49,13 +50,13 @@ fun SecureAppsDialog(
         }
 
         Text(
+            modifier = Modifier.sidePadding(),
             text = "Select apps to secure. When opening the app, a fingerprint prompt will be shown",
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         LazyColumn(
+            modifier = Modifier.sidePadding(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(

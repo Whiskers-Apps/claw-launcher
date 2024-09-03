@@ -202,7 +202,7 @@ fun BookmarksScreen(
                                 Icon(
                                     modifier = Modifier
                                         .clip(CircleShape)
-                                        .size(42.dp),
+                                        .size(24.dp),
                                     painter = painterResource(id = R.drawable.folder),
                                     contentDescription = "${group.name} icon",
                                     tint = MaterialTheme.colorScheme.onBackground

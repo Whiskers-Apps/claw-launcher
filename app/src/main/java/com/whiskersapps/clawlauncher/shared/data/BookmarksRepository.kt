@@ -67,8 +67,12 @@ class BookmarksRepository(
         }
     }
 
-    fun deleteBookmarkGroup(group: BookmarkGroup) {
-        realm.writeBlocking { delete(group) }
+    fun deleteBookmarkGroup(id: ObjectId) {
+        realm.writeBlocking {
+            this.query<BookmarkGroup>("_id == $0", id).find().first().also {
+                delete(it)
+            }
+        }
     }
 
     fun getSearchedBookmarks(text: String): List<Bookmark> {

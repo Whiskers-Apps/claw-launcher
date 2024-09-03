@@ -49,4 +49,6 @@ sealed class BookmarksScreenAction {
         BookmarksScreenAction()
 
     data object SaveGroupEdit : BookmarksScreenAction()
+
+    data object DeleteGroup : BookmarksScreenAction()
 }

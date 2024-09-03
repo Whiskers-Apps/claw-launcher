@@ -42,8 +42,6 @@ fun Dialog(
                     .padding(16.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(16.dp)
-
             ) {
                 Column(modifier = Modifier
                     .modifyWhen(fullScreen) {

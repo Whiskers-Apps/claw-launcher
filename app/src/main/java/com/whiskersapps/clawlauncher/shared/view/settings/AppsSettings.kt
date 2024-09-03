@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.whiskersapps.clawlauncher.shared.intent.settings.AppsSettingsAction
 import com.whiskersapps.clawlauncher.shared.view.composables.SliderSetting
 import com.whiskersapps.clawlauncher.shared.view.composables.SwitchSetting
+import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 
 @Composable
@@ -48,114 +49,114 @@ fun AppsSettings(
     onAction: (AppsSettingsAction) -> Unit
 ) {
 
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        text = "View",
-        style = Typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onBackground
-    )
+    Column(modifier = Modifier.sidePadding()) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "View",
+            style = Typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Column(
+        Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .clickable {
-                    onAction(AppsSettingsAction.SetViewType("grid"))
-                }
-                .padding(8.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Column {
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable {
+                        onAction(AppsSettingsAction.SetViewType("grid"))
+                    }
+                    .padding(8.dp)
+            ) {
+                Column {
 
-                LazyVerticalGrid(
+                    LazyVerticalGrid(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.background),
+                        columns = GridCells.Fixed(4),
+                        userScrollEnabled = false
+                    ) {
+                        items(items = arrayOfNulls<Int>(20)) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(1f)
+                                    .padding(4.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                            )
+                        }
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = viewType == "grid",
+                            onClick = {
+                                onAction(AppsSettingsAction.SetViewType("grid"))
+                            }
+                        )
+
+                        Text(
+                            text = "Grid",
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable {
+                        onAction(AppsSettingsAction.SetViewType("list"))
+                    }
+                    .padding(8.dp)
+            ) {
+                Column(
                     modifier = Modifier
                         .size(100.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.background),
-                    columns = GridCells.Fixed(4),
-                    userScrollEnabled = false
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(4.dp)
                 ) {
-                    items(items = arrayOfNulls<Int>(20)) {
+                    for (i in 0..4) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .aspectRatio(1f)
-                                .padding(4.dp)
+                                .height(20.dp)
                                 .clip(CircleShape)
                                 .background(MaterialTheme.colorScheme.surfaceVariant)
                         )
+
+                        Spacer(modifier = Modifier.height(4.dp))
                     }
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = viewType == "grid",
+                        selected = viewType == "list",
                         onClick = {
-                            onAction(AppsSettingsAction.SetViewType("grid"))
+                            onAction(AppsSettingsAction.SetViewType("list"))
                         }
                     )
 
                     Text(
-                        text = "Grid",
+                        text = "List",
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 12.sp
                     )
                 }
             }
         }
-
-        Column(
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .clickable {
-                    onAction(AppsSettingsAction.SetViewType("list"))
-                }
-                .padding(8.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(4.dp)
-            ) {
-                for (i in 0..4) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(20.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-            }
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = viewType == "list",
-                    onClick = {
-                        onAction(AppsSettingsAction.SetViewType("list"))
-                    }
-                )
-
-                Text(
-                    text = "List",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 12.sp
-                )
-            }
-        }
     }
-
-    Spacer(modifier = Modifier.height(16.dp))
 
     if (viewType == "grid") {
         Spacer(modifier = Modifier.height(16.dp))
@@ -169,7 +170,6 @@ fun AppsSettings(
             value = phoneCols.toFloat(),
             onValueChange = { onAction(AppsSettingsAction.SetPhoneCols(it)) }
         )
-        Spacer(modifier = Modifier.height(16.dp))
 
         SliderSetting(
             title = "Landscape Columns",
@@ -193,7 +193,6 @@ fun AppsSettings(
                 value = unfoldedCols.toFloat(),
                 onValueChange = { onAction(AppsSettingsAction.SetUnfoldedCols(it)) }
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
             SliderSetting(
                 title = "Unfolded Landscape Columns",
@@ -209,105 +208,111 @@ fun AppsSettings(
         }
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Column(modifier = Modifier.sidePadding()) {
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Column(
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "Search Bar Position",
+            style = Typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .clickable {
-                    onAction(AppsSettingsAction.SetSearchBarPosition("bottom"))
-                }
-                .padding(8.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Column(
                 modifier = Modifier
-                    .size(100.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(4.dp)
-            ) {
-
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f, fill = true)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                )
-            }
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = searchBarPosition == "bottom",
-                    onClick = {
+                    .clickable {
                         onAction(AppsSettingsAction.SetSearchBarPosition("bottom"))
                     }
-                )
+                    .padding(8.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(4.dp)
+                ) {
 
-                Text(
-                    text = "Bottom",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 12.sp
-                )
-            }
-        }
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f, fill = true)
+                    )
 
-        Column(
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .clickable {
-                    onAction(AppsSettingsAction.SetSearchBarPosition("top"))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(20.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                    )
                 }
-                .padding(8.dp)
-        ) {
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = searchBarPosition == "bottom",
+                        onClick = {
+                            onAction(AppsSettingsAction.SetSearchBarPosition("bottom"))
+                        }
+                    )
+
+                    Text(
+                        text = "Bottom",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+
             Column(
                 modifier = Modifier
-                    .size(100.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(4.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                )
-            }
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = searchBarPosition == "top",
-                    onClick = {
+                    .clickable {
                         onAction(AppsSettingsAction.SetSearchBarPosition("top"))
                     }
-                )
+                    .padding(8.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(20.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                    )
+                }
 
-                Text(
-                    text = "Top",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 12.sp
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = searchBarPosition == "top",
+                        onClick = {
+                            onAction(AppsSettingsAction.SetSearchBarPosition("top"))
+                        }
+                    )
+
+                    Text(
+                        text = "Top",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 12.sp
+                    )
+                }
             }
         }
     }
-
-    Spacer(modifier = Modifier.height(16.dp))
 
     SwitchSetting(
         title = "Search Bar",
@@ -318,8 +323,6 @@ fun AppsSettings(
         }
     )
 
-    Spacer(modifier = Modifier.height(16.dp))
-
     SwitchSetting(
         title = "Search Bar Placeholder",
         description = "Shows the search bar placeholder",
@@ -328,8 +331,6 @@ fun AppsSettings(
             onAction(AppsSettingsAction.SetShowSearchBarPlaceholder(it))
         }
     )
-
-    Spacer(modifier = Modifier.height(16.dp))
 
     SwitchSetting(
         title = "Search Bar Settings",

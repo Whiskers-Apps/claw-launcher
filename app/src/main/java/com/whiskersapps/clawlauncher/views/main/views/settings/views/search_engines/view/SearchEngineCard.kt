@@ -36,7 +36,6 @@ fun SearchEngineCard(
 
     Row(modifier = Modifier
         .fillMaxWidth()
-        .clip(RoundedCornerShape(24.dp))
         .background(backgroundColor)
         .clickable { onClick() }
         .padding(padding),
@@ -45,7 +44,7 @@ fun SearchEngineCard(
         AsyncImage(
             modifier = Modifier
                 .clip(CircleShape)
-                .size(42.dp),
+                .size(32.dp),
             model = getFaviconUrl(searchEngine.query),
             contentDescription = "${searchEngine.name} icon"
         )

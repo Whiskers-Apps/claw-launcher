@@ -38,7 +38,6 @@ fun ContentColumn(
             .modifyWhen(useSystemBarsPadding){
                 this.systemBarsPadding()
             }
-            .padding(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),

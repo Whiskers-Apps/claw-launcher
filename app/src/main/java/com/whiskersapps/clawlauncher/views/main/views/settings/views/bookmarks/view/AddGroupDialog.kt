@@ -47,7 +47,7 @@ fun AddGroupDialog(
         onDismiss = { onAction(BookmarksScreenAction.CloseAddGroupDialog) },
         scrollable = false
     ) {
-        LazyColumn {
+        LazyColumn(modifier = Modifier.padding(16.dp)){
             item {
                 DialogHeader(icon = R.drawable.plus, title = "Add Group")
 

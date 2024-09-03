@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
+import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.intent.AboutScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.model.AboutScreenVM
@@ -88,9 +89,9 @@ fun AboutScreen(
             )
         }
 
-        Column{
-
+        Column(modifier = Modifier.sidePadding()){
             Spacer(modifier = Modifier.height(32.dp))
+
             Text(
                 text = "Version",
                 color = MaterialTheme.colorScheme.onBackground,
@@ -133,7 +134,7 @@ fun AboutScreen(
             Modifier
                 .fillMaxWidth()
                 .clickable { onAction(AboutScreenAction.OpenRepoUrl) }
-                .padding(top = 16.dp, bottom = 16.dp)
+                .padding(16.dp)
         ) {
             Text(
                 text = "Source Code",
@@ -142,7 +143,7 @@ fun AboutScreen(
             )
 
             Text(
-                text = "Check out the code and give the project a star ❤\uFE0F",
+                text = "",
                 color = MaterialTheme.colorScheme.onBackground
             )
         }

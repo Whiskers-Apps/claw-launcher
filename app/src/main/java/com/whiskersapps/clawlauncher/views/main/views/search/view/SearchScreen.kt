@@ -35,10 +35,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
@@ -58,6 +60,7 @@ fun SearchScreen(
     closeSheet: () -> Unit
 ) {
 
+    val fragmentActivity = LocalContext.current as FragmentActivity
     val state = vm.state.collectAsState().value
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
@@ -96,7 +99,7 @@ fun SearchScreen(
                     backgroundColor = Color.Transparent,
                     onDone = {
                         scope.launch {
-                            vm.runAction()
+                            vm.runAction(fragmentActivity)
 
                             focusManager.clearFocus()
                             keyboardController?.hide()
@@ -131,7 +134,7 @@ fun SearchScreen(
                                 app = app,
                                 openApp = {
                                     scope.launch {
-                                        vm.openApp(app.packageName)
+                                        vm.openApp(app.packageName, fragmentActivity)
 
                                         focusManager.clearFocus()
                                         keyboardController?.hide()

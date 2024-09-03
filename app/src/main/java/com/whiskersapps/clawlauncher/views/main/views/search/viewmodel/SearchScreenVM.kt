@@ -3,6 +3,7 @@ package com.whiskersapps.clawlauncher.views.main.views.search.viewmodel
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.AppsRepository
@@ -13,6 +14,7 @@ import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
 import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
+import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -37,6 +39,7 @@ class SearchScreenVM @Inject constructor(
             val loadingSettings: Boolean = true,
             val loadingBookmarks: Boolean = true,
             val loadingSearchEngines: Boolean = true,
+            val securedApps: List<String> = emptyList(),
             val layout: String = "",
             val searchText: String = "",
             val appShortcuts: List<AppShortcut> = emptyList(),
@@ -57,11 +60,12 @@ class SearchScreenVM @Inject constructor(
     init {
 
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings->
+            settingsRepository.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loading = it.loadingSearchEngines || it.loadingBookmarks,
                         loadingSettings = false,
+                        securedApps = settings.secureApps,
                         cols = settings.portraitCols,
                         landscapeCols = settings.landscapeCols,
                         unfoldedCols = settings.unfoldedPortraitCols,
@@ -126,8 +130,20 @@ class SearchScreenVM @Inject constructor(
         }
     }
 
-    fun openApp(packageName: String) {
-        appsRepository.openApp(packageName)
+    fun openApp(packageName: String, fragmentActivity: FragmentActivity) {
+        if (state.value.securedApps.contains(packageName)) {
+            requestFingerprint(
+                fragmentActivity = fragmentActivity,
+                title = "Open App",
+                message = "Unlock to open the app",
+                onSuccess = {
+                    appsRepository.openApp(packageName)
+                }
+            )
+        } else {
+            appsRepository.openApp(packageName)
+        }
+
         clearSearch()
     }
 
@@ -152,10 +168,9 @@ class SearchScreenVM @Inject constructor(
             "$query${state.value.searchText}"
     }
 
-    fun runAction() {
-
+    fun runAction(fragmentActivity: FragmentActivity) {
         if (state.value.appShortcuts.isNotEmpty()) {
-            openApp(state.value.appShortcuts[0].packageName)
+            openApp(state.value.appShortcuts[0].packageName, fragmentActivity)
         } else if (state.value.bookmarks.isNotEmpty()) {
             openUrl(state.value.bookmarks[0].url)
         } else if (state.value.searchEngine != null) {

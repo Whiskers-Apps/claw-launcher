@@ -1,8 +1,10 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -13,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
@@ -30,57 +33,60 @@ fun DarkModeDialog(
 
     Dialog(onDismiss = { onDismiss() }, show = show) {
 
-        DialogHeader(icon = R.drawable.moon, title = "Dark Mode")
+        Column(modifier = Modifier.padding(16.dp)) {
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { darkMode = "system" },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RadioButton(
-                selected = darkMode == "system",
-                onClick = { darkMode = "system" }
+            DialogHeader(icon = R.drawable.moon, title = "Dark Mode")
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { darkMode = "system" },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = darkMode == "system",
+                    onClick = { darkMode = "system" }
+                )
+
+                Text(text = "System", color = MaterialTheme.colorScheme.onBackground)
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { darkMode = "light" },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = darkMode == "light",
+                    onClick = { darkMode = "light" }
+                )
+
+                Text(text = "Light", color = MaterialTheme.colorScheme.onBackground)
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { darkMode = "dark" },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = darkMode == "dark",
+                    onClick = { darkMode = "dark" }
+                )
+
+                Text(text = "Dark", color = MaterialTheme.colorScheme.onBackground)
+            }
+
+            DialogFooter(
+                onDismiss = {
+                    darkMode = defaultValue
+                    onDismiss()
+                },
+                primaryButtonText = "Save",
+                onPrimaryClick = { save(darkMode) }
             )
-
-            Text(text = "System", color = MaterialTheme.colorScheme.onBackground)
         }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { darkMode = "light" },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RadioButton(
-                selected = darkMode == "light",
-                onClick = { darkMode = "light" }
-            )
-
-            Text(text = "Light", color = MaterialTheme.colorScheme.onBackground)
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { darkMode = "dark" },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RadioButton(
-                selected = darkMode == "dark",
-                onClick = { darkMode = "dark" }
-            )
-
-            Text(text = "Dark", color = MaterialTheme.colorScheme.onBackground)
-        }
-
-        DialogFooter(
-            onDismiss = {
-                darkMode = defaultValue
-                onDismiss()
-            },
-            primaryButtonText = "Save",
-            onPrimaryClick = { save(darkMode) }
-        )
     }
 }

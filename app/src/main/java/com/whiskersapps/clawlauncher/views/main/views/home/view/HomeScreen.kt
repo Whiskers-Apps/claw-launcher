@@ -188,7 +188,7 @@ fun HomeScreen(
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .clip(RoundedCornerShape(28.dp))
+                                            .clip(CircleShape)
                                             .background(MaterialTheme.colorScheme.background),
                                         horizontalArrangement = Arrangement.SpaceEvenly,
                                         verticalAlignment = Alignment.CenterVertically

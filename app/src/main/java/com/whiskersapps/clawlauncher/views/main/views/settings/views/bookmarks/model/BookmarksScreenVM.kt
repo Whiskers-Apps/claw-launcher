@@ -77,6 +77,8 @@ class BookmarksScreenVM @Inject constructor(
             BookmarksScreenAction.SaveGroupEdit -> saveGroupEdit()
 
             is BookmarksScreenAction.UpdateEditGroupDialogFields -> editGroupDialogFields(action.name)
+
+            BookmarksScreenAction.DeleteGroup -> deleteGroup()
         }
     }
 
@@ -248,6 +250,11 @@ class BookmarksScreenVM @Inject constructor(
 
         bookmarksRepository.addBookmark(bookmark)
         closeAddBookmarkDialog()
+    }
+
+    private fun deleteGroup(){
+        bookmarksRepository.deleteBookmarkGroup(state.value.editGroupDialog.id)
+        closeEditGroupDialog()
     }
 
     init {
