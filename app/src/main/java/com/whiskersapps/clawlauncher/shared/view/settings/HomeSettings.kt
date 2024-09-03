@@ -35,7 +35,7 @@ fun HomeSettings(
 
     SwitchSetting(
         title = "Placeholder",
-        description = "Shows the placeholder on the search bar",
+        description = "Shows a placeholder",
         value = showPlaceholder,
         onValueChange = {
             onAction(HomeSettingsAction.SetShowSearchBarPlaceholder(it))

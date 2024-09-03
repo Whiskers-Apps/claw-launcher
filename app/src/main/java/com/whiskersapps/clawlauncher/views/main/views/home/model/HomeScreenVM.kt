@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
-import com.whiskersapps.clawlauncher.shared.intent.settings.HomeSettingsAction
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -33,16 +31,14 @@ class HomeScreenVM @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.settings.collect { settings ->
-                if (!state.value.showSettingsDialog) {
-                    _state.update {
-                        it.copy(
-                            loading = false,
-                            showSearchBar = settings.showHomeSearchBar,
-                            showSearchBarPlaceholder = settings.showHomeSearchBarPlaceholder,
-                            showSearchBarSettings = settings.showHomeSearchBarSettings,
-                            searchBarRadius = settings.homeSearchBarRadius.toFloat()
-                        )
-                    }
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        showSearchBar = settings.showHomeSearchBar,
+                        showPlaceholder = settings.showHomeSearchBarPlaceholder,
+                        showSearchBarSettings = settings.showHomeSearchBarSettings,
+                        searchBarRadius = settings.homeSearchBarRadius.toFloat()
+                    )
                 }
             }
         }
@@ -141,26 +137,30 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun setShowSearchBar(show: Boolean) {
-        _state.update { it.copy(showSearchBar = show) }
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.setShowHomeSearchBar(show)
+        }
     }
 
     private fun setSearchBarRadius(radius: Float) {
-        _state.update { it.copy(searchBarRadius = radius) }
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.setHomeSearchBarRadius(radius.toInt())
+        }
     }
 
     private fun setShowSearchBarSettings(show: Boolean) {
-        _state.update { it.copy(showSearchBarSettings = show) }
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.setShowHomeSearchBarSettings(show)
+        }
     }
 
     private fun saveSearchBarRadius(radius: Int) {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.setHomeSearchBarRadius(radius)
         }
     }
 
     private fun setShowPlaceholder(show: Boolean) {
-        _state.update { it.copy(showSearchBarPlaceholder = show) }
-
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.setShowHomeSearchBarPlaceholder(show)
         }

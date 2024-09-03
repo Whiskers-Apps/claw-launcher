@@ -100,6 +100,9 @@ dependencies {
 
     // Sniffer (Fuzzy String Matching)
     implementation (libs.sniffer.kt)
+
+    // Fingerprint
+    implementation(libs.androidx.biometric)
 }
 
 kapt {

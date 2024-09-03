@@ -7,7 +7,7 @@ data class HomeScreenState(
     val showSettingsDialog: Boolean = false,
     val showMenuDialog: Boolean = false,
     val showSearchBar: Boolean = true,
-    val showSearchBarPlaceholder: Boolean = true,
+    val showPlaceholder: Boolean = true,
     val showSearchBarSettings: Boolean = true,
     val searchBarRadius: Float = 50f
 )

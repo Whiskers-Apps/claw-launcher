@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.apps.model.AppsScreenState
@@ -17,6 +19,9 @@ fun AppsScreenSearchBar(
     onAction: (AppsScreenAction) -> Unit,
     state: AppsScreenState
 ) {
+    val context = LocalContext.current
+    val fragmentActivity = context as FragmentActivity
+
     Box(modifier = Modifier.padding(8.dp)) {
         SearchBar(
             text = state.searchText,
@@ -32,7 +37,7 @@ fun AppsScreenSearchBar(
             backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
             onDone = {
                 if (state.searchText.isNotEmpty()) {
-                    onAction(AppsScreenAction.OpenFirstApp)
+                    onAction(AppsScreenAction.OpenFirstApp(fragmentActivity = fragmentActivity ))
                     onAction(AppsScreenAction.CloseKeyboard)
                     onAction(AppsScreenAction.NavigateToHome)
                 }else{

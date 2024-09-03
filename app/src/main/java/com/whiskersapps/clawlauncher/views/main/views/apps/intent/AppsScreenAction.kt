@@ -1,10 +1,12 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.intent
 
+import androidx.fragment.app.FragmentActivity
+
 sealed class AppsScreenAction {
     data object NavigateToHome : AppsScreenAction()
     data class SetSearchText(val text: String) : AppsScreenAction()
-    data object OpenFirstApp : AppsScreenAction()
-    data class OpenApp(val packageName: String) : AppsScreenAction()
+    data class OpenFirstApp(val fragmentActivity: FragmentActivity) : AppsScreenAction()
+    data class OpenApp(val packageName: String, val fragmentActivity: FragmentActivity) : AppsScreenAction()
     data class OpenAppInfo(val packageName: String) : AppsScreenAction()
     data class RequestUninstall(val packageName: String) : AppsScreenAction()
     data object OpenSettingsDialog : AppsScreenAction()

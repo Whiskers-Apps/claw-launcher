@@ -128,6 +128,7 @@ class SettingsRepository(
     }
 
     suspend fun setShowHomeSearchBar(show: Boolean) {
+        println("Show home search bar: $show")
         dataStore.edit { it[Settings.SHOW_HOME_SEARCH_BAR] = show }
     }
 
@@ -205,5 +206,23 @@ class SettingsRepository(
 
     private fun getSecureApps(): List<String> {
         return realm.query<SecuritySettings>().first().find()?.secureApps ?: emptyList()
+    }
+
+    fun setSecureApps(apps: List<String>) {
+        realm.writeBlocking {
+            val securitySettings = query<SecuritySettings>().find().firstOrNull()
+
+            if (securitySettings == null) {
+                val settings = SecuritySettings().apply {
+                    secureApps = apps.toRealmList()
+                }
+
+                copyToRealm(settings)
+            } else {
+                securitySettings.secureApps = apps.toRealmList()
+            }
+        }
+
+        _settings.update { it.copy(secureApps = apps) }
     }
 }

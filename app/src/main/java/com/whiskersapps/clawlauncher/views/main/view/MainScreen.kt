@@ -40,7 +40,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreenRoot(
     navController: NavController,
-    //vm: MainScreenVM = hiltViewModel()
 ) {
     MainScreen(
         onAction = { action ->
@@ -54,8 +53,7 @@ fun MainScreenRoot(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    onAction: (MainScreenAction) -> Unit,
-    //vm: MainScreenVM = hiltViewModel(),
+    onAction: (MainScreenAction) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
     val sheetState = rememberModalBottomSheetState()
@@ -68,7 +66,7 @@ fun MainScreen(
             scope.launch { pagerState.animateScrollToPage(0) }
         }
 
-        if (sheetState.isVisible) {
+        if (sheetState.hasExpandedState) {
             scope.launch { sheetState.hide() }
         }
     }

@@ -24,7 +24,7 @@ fun HomeSettingsDialog(
 
         HomeSettings(
             showSearchBar = state.showSearchBar,
-            showPlaceholder = state.showSearchBarPlaceholder,
+            showPlaceholder = state.showPlaceholder,
             showSettings = state.showSearchBarSettings,
             searchBarRadius = state.searchBarRadius,
             onAction = { action ->

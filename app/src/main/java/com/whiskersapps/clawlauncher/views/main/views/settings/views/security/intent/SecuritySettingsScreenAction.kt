@@ -7,5 +7,7 @@ sealed class SecuritySettingsScreenAction{
     data object OpenSecureAppsDialog: SecuritySettingsScreenAction()
     data object CloseSecureAppsDialog: SecuritySettingsScreenAction()
     data class ToggleHiddenApp(val packageName: String): SecuritySettingsScreenAction()
+    data class ToggleSecureApp(val packageName: String): SecuritySettingsScreenAction()
     data object SaveHiddenApps: SecuritySettingsScreenAction()
+    data object SaveSecureApps: SecuritySettingsScreenAction()
 }

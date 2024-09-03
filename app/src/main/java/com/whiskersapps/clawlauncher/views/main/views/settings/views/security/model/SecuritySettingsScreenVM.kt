@@ -46,7 +46,9 @@ class SecuritySettingsScreenVM @Inject constructor(
             SecuritySettingsScreenAction.OpenSecureAppsDialog -> showSecureAppsDialog()
             SecuritySettingsScreenAction.CloseSecureAppsDialog -> closeSecureAppsDialog()
             is SecuritySettingsScreenAction.ToggleHiddenApp -> toggleHiddenApp(action.packageName)
+            is SecuritySettingsScreenAction.ToggleSecureApp -> toggleSecureApp(action.packageName)
             SecuritySettingsScreenAction.SaveHiddenApps -> saveHiddenApps()
+            SecuritySettingsScreenAction.SaveSecureApps -> saveSecureApps()
         }
     }
 
@@ -86,6 +88,25 @@ class SecuritySettingsScreenVM @Inject constructor(
 
     private fun showSecureAppsDialog() {
         _state.update { it.copy(secureAppsDialog = it.secureAppsDialog.copy(show = true)) }
+    }
+
+    private fun toggleSecureApp(packageName: String) {
+        val newSelectedApps = ArrayList(state.value.secureAppsDialog.selectedApps)
+
+        if (newSelectedApps.contains(packageName)) {
+            newSelectedApps.removeIf { it == packageName }
+        } else {
+            newSelectedApps.add(packageName)
+        }
+
+        _state.update { it.copy(secureAppsDialog = it.secureAppsDialog.copy(selectedApps = newSelectedApps)) }
+    }
+
+    private fun saveSecureApps() {
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.setSecureApps(state.value.secureAppsDialog.selectedApps)
+            closeSecureAppsDialog()
+        }
     }
 
     private fun closeSecureAppsDialog() {

@@ -1,9 +1,12 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.model
 
+import android.app.Application
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.AppsRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppsScreenVM @Inject constructor(
+    private val context: Application,
     private val settingsRepository: SettingsRepository,
     private val appsRepository: AppsRepository
 ) : ViewModel() {
@@ -29,6 +33,7 @@ class AppsScreenVM @Inject constructor(
                     it.copy(
                         loadingSettings = false,
                         loading = it.loadingApps,
+                        securedApps = settings.secureApps,
                         viewType = settings.appsViewType,
                         cols = settings.portraitCols,
                         landscapeCols = settings.landscapeCols,
@@ -63,9 +68,9 @@ class AppsScreenVM @Inject constructor(
 
             is AppsScreenAction.SetSearchText -> setSearchText(action.text)
 
-            AppsScreenAction.OpenFirstApp -> openFirstApp()
+            is AppsScreenAction.OpenFirstApp -> openFirstApp(action.fragmentActivity)
 
-            is AppsScreenAction.OpenApp -> openApp(action.packageName)
+            is AppsScreenAction.OpenApp -> openApp(action.packageName, action.fragmentActivity)
 
             is AppsScreenAction.OpenAppInfo -> openAppInfo(action.packageName)
 
@@ -113,8 +118,20 @@ class AppsScreenVM @Inject constructor(
         }
     }
 
-    private fun openApp(packageName: String) {
-        appsRepository.openApp(packageName)
+    private fun openApp(packageName: String, fragmentActivity: FragmentActivity) {
+
+        if (state.value.securedApps.contains(packageName)) {
+            requestFingerprint(
+                fragmentActivity = fragmentActivity,
+                title = "Open App",
+                message = "Unlock to open the app",
+                onSuccess = {
+                    appsRepository.openApp(packageName)
+                }
+            )
+        } else {
+            appsRepository.openApp(packageName)
+        }
 
         _state.update {
             it.copy(
@@ -124,9 +141,9 @@ class AppsScreenVM @Inject constructor(
         }
     }
 
-    private fun openFirstApp() {
+    private fun openFirstApp(fragmentActivity: FragmentActivity) {
         if (state.value.appShortcuts.isNotEmpty()) {
-            openApp(state.value.appShortcuts[0].packageName)
+            openApp(state.value.appShortcuts[0].packageName, fragmentActivity)
         }
     }
 

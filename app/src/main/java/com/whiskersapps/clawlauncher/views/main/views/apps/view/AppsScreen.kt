@@ -36,9 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.whiskersapps.clawlauncher.shared.utils.getColsCount
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
@@ -81,6 +83,7 @@ fun AppsScreen(
     vm: AppsScreenVM,
 ) {
 
+    val fragmentActivity = LocalContext.current as FragmentActivity
     val state = vm.state.collectAsState().value
     val colsCount = getColsCount(
         cols = state.cols,
@@ -135,7 +138,7 @@ fun AppsScreen(
                                         .background(if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background)
                                         .combinedClickable(
                                             onClick = {
-                                                onAction(AppsScreenAction.OpenApp(app.packageName))
+                                                onAction(AppsScreenAction.OpenApp(app.packageName, fragmentActivity))
                                                 onAction(AppsScreenAction.CloseKeyboard)
                                                 onAction(AppsScreenAction.NavigateToHome)
                                             },
@@ -189,7 +192,7 @@ fun AppsScreen(
                                 GridAppShortcut(
                                     app = app,
                                     openApp = {
-                                        onAction(AppsScreenAction.OpenApp(app.packageName))
+                                        onAction(AppsScreenAction.OpenApp(app.packageName, fragmentActivity))
                                         onAction(AppsScreenAction.CloseKeyboard)
                                         onAction(AppsScreenAction.NavigateToHome)
                                     },
