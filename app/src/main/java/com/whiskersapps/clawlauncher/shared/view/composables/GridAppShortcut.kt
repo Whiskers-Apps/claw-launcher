@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -37,9 +36,10 @@ fun GridAppShortcut(
     openApp: () -> Unit,
     openInfo: () -> Unit,
     requestUninstall: () -> Unit,
+    openShortcut: (AppShortcut.Shortcut) -> Unit
 ) {
 
-    var showMenu by remember { mutableStateOf(false) }
+    var showPopup by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -48,7 +48,7 @@ fun GridAppShortcut(
             .background(backgroundColor)
             .combinedClickable(
                 onClick = { openApp() },
-                onLongClick = { showMenu = true },
+                onLongClick = { showPopup = true },
             )
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -66,16 +66,21 @@ fun GridAppShortcut(
             overflow = TextOverflow.Ellipsis
         )
 
-        if (showMenu) {
+        if (showPopup) {
             AppPopup(
-                onDismiss = { showMenu = false },
+                app = app,
+                onDismiss = { showPopup = false },
                 onInfoClick = {
                     openInfo()
-                    showMenu = false
+                    showPopup = false
                 },
                 onUninstallClick = {
                     requestUninstall()
-                    showMenu = false
+                    showPopup = false
+                },
+                onOpenShortcut = { shortcut ->
+                    openShortcut(shortcut)
+                    showPopup = false
                 }
             )
         }

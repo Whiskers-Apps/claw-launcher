@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.AppsRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -103,6 +104,8 @@ class AppsScreenVM @Inject constructor(
             is AppsScreenAction.SetShowSearchBarSettings -> setShowSearchBarSettings(action.show)
 
             is AppsScreenAction.SetSearchBarRadius -> setSearchBarRadius(action.radius.toInt())
+
+            is AppsScreenAction.OpenShortcut -> openShortcut(action.packageName, action.shortcut)
         }
     }
 
@@ -138,6 +141,12 @@ class AppsScreenVM @Inject constructor(
                 searchText = "",
                 appShortcuts = appsRepository.apps.value
             )
+        }
+    }
+
+    private fun openShortcut(packageName: String, shortcut: AppShortcut.Shortcut){
+        viewModelScope.launch(Dispatchers.IO){
+            appsRepository.openShortcut(packageName, shortcut)
         }
     }
 

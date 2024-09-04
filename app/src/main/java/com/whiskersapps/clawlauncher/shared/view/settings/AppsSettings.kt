@@ -206,6 +206,8 @@ fun AppsSettings(
                 }
             )
         }
+    }else{
+        Spacer(modifier = Modifier.height(16.dp))
     }
 
     Column(modifier = Modifier.sidePadding()) {

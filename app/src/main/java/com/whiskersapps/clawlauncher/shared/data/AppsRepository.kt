@@ -1,12 +1,20 @@
 package com.whiskersapps.clawlauncher.shared.data
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.content.pm.LauncherApps
+import android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC
+import android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST
+import android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED
+import android.content.pm.ShortcutManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.net.Uri
+import android.os.Process
 import android.provider.Settings
+import android.util.DisplayMetrics
 import androidx.core.graphics.drawable.toBitmap
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import com.whiskersapps.lib.Sniffer
@@ -32,6 +40,8 @@ class AppsRepository(
     val unhiddenApps = _unhiddenApps.asStateFlow()
 
     private val packageManager = app.packageManager
+
+    private val launcherApps = app.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
 
     init {
 
@@ -68,11 +78,13 @@ class AppsRepository(
         * */
         withContext(Dispatchers.Main) {
 
-            val asyncShortcuts = async(Dispatchers.IO){
+            val asyncShortcuts = async(Dispatchers.IO) {
+
                 val newAppShortcuts = ArrayList<AppShortcut>()
                 val intent = Intent(Intent.ACTION_MAIN, null).apply {
                     addCategory(Intent.CATEGORY_LAUNCHER)
                 }
+
 
                 packageManager.queryIntentActivities(intent, 0).forEach { appIntent ->
                     if (appIntent.activityInfo.packageName != "com.whiskersapps.clawlauncher") {
@@ -84,6 +96,27 @@ class AppsRepository(
                         val stream = ByteArrayOutputStream()
                         iconDrawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 10, stream)
 
+                        val shortcutQuery = LauncherApps.ShortcutQuery().apply {
+                            setQueryFlags(FLAG_MATCH_DYNAMIC or FLAG_MATCH_MANIFEST or FLAG_MATCH_PINNED)
+                            setPackage(info.packageName)
+                        }
+
+                        val shortcuts: List<AppShortcut.Shortcut> = try {
+                            launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle())
+                                ?.map { shortcut ->
+
+                                    val icon  = launcherApps.getShortcutIconDrawable(shortcut, DisplayMetrics.DENSITY_LOW)
+
+                                    AppShortcut.Shortcut(
+                                        id = shortcut.id,
+                                        label = shortcut.shortLabel.toString(),
+                                        icon = icon?.toBitmap()
+                                    )
+                                } ?: emptyList()
+                        } catch (e: Exception) {
+                            emptyList()
+                        }
+
                         newAppShortcuts.add(
                             AppShortcut(
                                 label = info.loadLabel(packageManager).toString(),
@@ -92,7 +125,8 @@ class AppsRepository(
                                     stream.toByteArray(),
                                     0,
                                     stream.toByteArray().size
-                                )
+                                ),
+                                shortcuts = shortcuts
                             )
                         )
                     }
@@ -117,6 +151,16 @@ class AppsRepository(
         intent?.let {
             app.startActivity(it)
         }
+    }
+
+    fun openShortcut(packageName: String, shortcut: AppShortcut.Shortcut){
+        launcherApps.startShortcut(
+            packageName,
+            shortcut.id,
+            null,
+            null,
+            Process.myUserHandle()
+        )
     }
 
     fun getSearchedApps(text: String): List<AppShortcut> {

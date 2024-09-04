@@ -147,6 +147,12 @@ class SearchScreenVM @Inject constructor(
         clearSearch()
     }
 
+    fun openShortcut(packageName: String, shortcut: AppShortcut.Shortcut){
+        viewModelScope.launch(Dispatchers.IO){
+            appsRepository.openShortcut(packageName, shortcut)
+        }
+    }
+
     fun openUrl(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK

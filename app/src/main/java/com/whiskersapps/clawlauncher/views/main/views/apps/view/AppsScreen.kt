@@ -161,6 +161,7 @@ fun AppsScreen(
                                 }
                                 if (showMenu) {
                                     AppPopup(
+                                        app = app,
                                         onDismiss = { showMenu = false },
                                         onInfoClick = {
                                             onAction(AppsScreenAction.OpenAppInfo(app.packageName))
@@ -168,6 +169,10 @@ fun AppsScreen(
                                         },
                                         onUninstallClick = {
                                             onAction(AppsScreenAction.RequestUninstall(app.packageName))
+                                            showMenu = false
+                                        },
+                                        onOpenShortcut = { shortcut ->
+                                            onAction(AppsScreenAction.OpenShortcut(app.packageName, shortcut))
                                             showMenu = false
                                         }
                                     )
@@ -201,6 +206,9 @@ fun AppsScreen(
                                     },
                                     requestUninstall = {
                                         onAction(AppsScreenAction.RequestUninstall(app.packageName))
+                                    },
+                                    openShortcut = { shortcut ->
+                                        onAction(AppsScreenAction.OpenShortcut(app.packageName, shortcut))
                                     },
                                     backgroundColor = if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background
                                 )
