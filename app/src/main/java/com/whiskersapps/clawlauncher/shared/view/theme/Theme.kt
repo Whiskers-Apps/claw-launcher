@@ -1,5 +1,6 @@
 package com.whiskersapps.clawlauncher.shared.view.theme
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -9,7 +10,10 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import com.whiskersapps.clawlauncher.shared.model.Settings
 import com.whiskersapps.clawlauncher.shared.utils.isAtLeastAndroid12
 
@@ -31,6 +35,12 @@ fun ClawLauncherTheme(
     val useMonet = settings.theme == "monet"
     val useDarkMonet = settings.darkTheme == "monet"
     val useDarkTheme = useDarkTheme(darkMode = settings.darkMode)
+    val view = LocalView.current
+
+    SideEffect {
+        val window = (view.context as Activity).window
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !useDarkTheme
+    }
 
     MaterialTheme(
         colorScheme = if (useMonet && isAtLeastAndroid12() && !useDarkTheme) {

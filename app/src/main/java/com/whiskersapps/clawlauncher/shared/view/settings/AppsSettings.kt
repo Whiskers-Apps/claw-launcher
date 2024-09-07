@@ -165,8 +165,8 @@ fun AppsSettings(
             title = "Columns",
             description = "The amount of columns to show when in Portrait",
             min = 3f,
-            max = 8f,
-            steps = 6,
+            max = 10f,
+            steps = 8,
             value = phoneCols.toFloat(),
             onValueChange = { onAction(AppsSettingsAction.SetPhoneCols(it)) }
         )
@@ -175,8 +175,8 @@ fun AppsSettings(
             title = "Landscape Columns",
             description = "The amount of columns to show when in Landscape",
             min = 3f,
-            max = 8f,
-            steps = 6,
+            max = 10f,
+            steps = 8,
             value = phoneLandscapeCols.toFloat(),
             onValueChange = {
                 onAction(AppsSettingsAction.SetPhoneLandscapeCols(it))
@@ -188,8 +188,8 @@ fun AppsSettings(
                 title = "Unfolded Columns",
                 description = "The amount of columns to show when in Portrait and the device is unfolded",
                 min = 3f,
-                max = 8f,
-                steps = 6,
+                max = 10f,
+                steps = 8,
                 value = unfoldedCols.toFloat(),
                 onValueChange = { onAction(AppsSettingsAction.SetUnfoldedCols(it)) }
             )
@@ -198,8 +198,8 @@ fun AppsSettings(
                 title = "Unfolded Landscape Columns",
                 description = "The amount of columns to show when in Landscape and the device is unfolded",
                 min = 3f,
-                max = 8f,
-                steps = 6,
+                max = 10f,
+                steps = 8,
                 value = unfoldedLandscapeCols.toFloat(),
                 onValueChange = {
                     onAction(AppsSettingsAction.SetUnfoldedLandscapeCols(it))

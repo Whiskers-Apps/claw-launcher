@@ -27,6 +27,7 @@ import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
+import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.intent.SettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.model.SettingsScreenVM
@@ -76,6 +77,7 @@ fun SettingsScreen(
         if (!state.isDefaultLauncher) {
             Row(
                 modifier = Modifier
+                    .sidePadding()
                     .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .clickable { onAction(SettingsScreenAction.SetDefaultLauncher) }

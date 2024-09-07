@@ -38,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -48,11 +49,12 @@ class MainActivity : FragmentActivity() {
             val settings = mainVM.settings.collectAsState().value
 
             if (settings != null) {
-                ClawLauncherTheme(settings = settings) {
-
+                ClawLauncherTheme(
+                    settings = settings
+                ) {
                     val mainNavController = rememberNavController()
                     val backgroundColor = MaterialTheme.colorScheme.background
-                    var background by remember{ mutableStateOf(if(settings.setupCompleted) Color.Transparent else backgroundColor) }
+                    var background by remember { mutableStateOf(if (settings.setupCompleted) Color.Transparent else backgroundColor) }
 
                     mainNavController.addOnDestinationChangedListener { _, destination, _ ->
 
@@ -120,7 +122,7 @@ class MainActivity : FragmentActivity() {
                                 SearchEnginesScreenRoot(navController = mainNavController)
                             }
 
-                            composable(Routes.Main.Settings.SECURITY){
+                            composable(Routes.Main.Settings.SECURITY) {
                                 SecuritySettingsScreenRoot(navController = mainNavController)
                             }
 
