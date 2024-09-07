@@ -7,10 +7,8 @@ import android.content.pm.LauncherApps
 import android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC
 import android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST
 import android.content.pm.LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED
-import android.content.pm.ShortcutManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.AdaptiveIconDrawable
 import android.net.Uri
 import android.os.Process
 import android.provider.Settings
@@ -126,7 +124,7 @@ class AppsRepository(
                                     0,
                                     stream.toByteArray().size
                                 ),
-                                shortcuts = shortcuts
+                                shortcuts = if(shortcuts.size > 4) shortcuts.subList(0, 4) else shortcuts
                             )
                         )
                     }

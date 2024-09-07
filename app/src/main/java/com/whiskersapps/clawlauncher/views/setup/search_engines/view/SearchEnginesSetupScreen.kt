@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +25,7 @@ import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
+import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEngineCard
 import com.whiskersapps.clawlauncher.views.setup.search_engines.intent.SearchEnginesSetupScreenAction
 import com.whiskersapps.clawlauncher.views.setup.search_engines.model.SearchEnginesSetupScreenVM
@@ -75,6 +77,7 @@ fun SearchEnginesSetupScreen(
 
             item {
                 Text(
+                    modifier = Modifier.sidePadding(),
                     text = "Select your favourite search engine. You can change this later in the settings.",
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -97,7 +100,7 @@ fun SearchEnginesSetupScreen(
         }
 
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.End) {
             Button(onClick = { onAction(SearchEnginesSetupScreenAction.NavigateBack) }) {
                 Text(
                     text = stringResource(id = R.string.SetupScreen_previous),
