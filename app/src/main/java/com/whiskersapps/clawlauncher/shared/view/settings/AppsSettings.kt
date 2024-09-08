@@ -25,8 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.intent.settings.AppsSettingsAction
 import com.whiskersapps.clawlauncher.shared.view.composables.SliderSetting
 import com.whiskersapps.clawlauncher.shared.view.composables.SwitchSetting
@@ -52,7 +54,7 @@ fun AppsSettings(
     Column(modifier = Modifier.sidePadding()) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "View",
+            text = stringResource(R.string.AppsSettings_view),
             style = Typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -104,7 +106,7 @@ fun AppsSettings(
                         )
 
                         Text(
-                            text = "Grid",
+                            text = stringResource(R.string.AppsSettings_grid),
                             color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 12.sp
                         )
@@ -149,7 +151,7 @@ fun AppsSettings(
                     )
 
                     Text(
-                        text = "List",
+                        text = stringResource(R.string.AppsSettings_list),
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 12.sp
                     )
@@ -162,8 +164,8 @@ fun AppsSettings(
         Spacer(modifier = Modifier.height(16.dp))
 
         SliderSetting(
-            title = "Columns",
-            description = "The amount of columns to show when in Portrait",
+            title = stringResource(R.string.AppsSettings_columns),
+            description = stringResource(R.string.AppsSettings_columns_description),
             min = 3f,
             max = 10f,
             steps = 8,
@@ -172,8 +174,8 @@ fun AppsSettings(
         )
 
         SliderSetting(
-            title = "Landscape Columns",
-            description = "The amount of columns to show when in Landscape",
+            title = stringResource(R.string.AppsSettings_landscape_columns),
+            description = stringResource(R.string.AppsSettings_landscape_columns_description),
             min = 3f,
             max = 10f,
             steps = 8,
@@ -185,8 +187,8 @@ fun AppsSettings(
 
         if (isFoldable) {
             SliderSetting(
-                title = "Unfolded Columns",
-                description = "The amount of columns to show when in Portrait and the device is unfolded",
+                title = stringResource(R.string.AppsSettings_unfolded_columns),
+                description = stringResource(R.string.AppsSettings_columns_description),
                 min = 3f,
                 max = 10f,
                 steps = 8,
@@ -195,8 +197,8 @@ fun AppsSettings(
             )
 
             SliderSetting(
-                title = "Unfolded Landscape Columns",
-                description = "The amount of columns to show when in Landscape and the device is unfolded",
+                title = stringResource(R.string.AppsSettings_unfolded_landscape_columns),
+                description = stringResource(R.string.AppsSettings_landscape_columns_description),
                 min = 3f,
                 max = 10f,
                 steps = 8,
@@ -214,7 +216,7 @@ fun AppsSettings(
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Search Bar Position",
+            text = stringResource(R.string.AppsSettings_search_bar_position),
             style = Typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -267,7 +269,7 @@ fun AppsSettings(
                     )
 
                     Text(
-                        text = "Bottom",
+                        text = stringResource(R.string.AppsSettings_bottom),
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 12.sp
                     )
@@ -307,7 +309,7 @@ fun AppsSettings(
                     )
 
                     Text(
-                        text = "Top",
+                        text = stringResource(R.string.AppsSettings_top),
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 12.sp
                     )
@@ -317,8 +319,8 @@ fun AppsSettings(
     }
 
     SwitchSetting(
-        title = "Search Bar",
-        description = "Shows the search bar",
+        title = stringResource(R.string.AppsSettings_search_bar),
+        description = stringResource(R.string.AppsSettings_search_bar_description),
         value = showSearchBar,
         onValueChange = {
             onAction(AppsSettingsAction.SetShowSearchBar(it))
@@ -326,30 +328,33 @@ fun AppsSettings(
     )
 
     SwitchSetting(
-        title = "Search Bar Placeholder",
-        description = "Shows the search bar placeholder",
+        title = stringResource(R.string.AppsSettings_search_bar_placeholder),
+        description = stringResource(R.string.AppsSettings_search_bar_placeholder_description),
         value = showSearchBarPlaceholder,
+        enabled = showSearchBar,
         onValueChange = {
             onAction(AppsSettingsAction.SetShowSearchBarPlaceholder(it))
         }
     )
 
     SwitchSetting(
-        title = "Search Bar Settings",
-        description = "Shows the search bar settings icon",
+        title = stringResource(R.string.AppsSettings_search_bar_settings),
+        description = stringResource(R.string.AppsSettings_search_bar_settings_description),
         value = showSearchBarSettings,
+        enabled = showSearchBar,
         onValueChange = {
             onAction(AppsSettingsAction.SetShowSearchBarSettings(it))
         }
     )
 
     SliderSetting(
-        title = "Search Bar Radius",
-        description = "The search bar roundness.",
+        title = stringResource(R.string.AppsSettings_search_bar_radius),
+        description = stringResource(R.string.AppsSettings_search_bar_radius_description),
         min = 0f,
         max = 50f,
         steps = 50,
         value = searchBarRadius.toFloat(),
+        enabled = showSearchBar,
         onValueChange = {
             onAction(AppsSettingsAction.SetSearchBarRadius(it))
         }

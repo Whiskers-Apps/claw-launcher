@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
@@ -35,7 +36,7 @@ fun DarkModeDialog(
 
         Column(modifier = Modifier.padding(16.dp)) {
 
-            DialogHeader(icon = R.drawable.moon, title = "Dark Mode")
+            DialogHeader(icon = R.drawable.moon, title = stringResource(R.string.StyleSettings_dark_mode))
 
             Row(
                 modifier = Modifier
@@ -48,7 +49,10 @@ fun DarkModeDialog(
                     onClick = { darkMode = "system" }
                 )
 
-                Text(text = "System", color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = stringResource(R.string.StyleSettings_system),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 
             Row(
@@ -62,7 +66,10 @@ fun DarkModeDialog(
                     onClick = { darkMode = "light" }
                 )
 
-                Text(text = "Light", color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = stringResource(R.string.StyleSettings_light),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 
             Row(
@@ -76,7 +83,10 @@ fun DarkModeDialog(
                     onClick = { darkMode = "dark" }
                 )
 
-                Text(text = "Dark", color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = stringResource(R.string.StyleSettings_dark),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 
             DialogFooter(
@@ -84,7 +94,7 @@ fun DarkModeDialog(
                     darkMode = defaultValue
                     onDismiss()
                 },
-                primaryButtonText = "Save",
+                primaryButtonText = stringResource(R.string.Save),
                 onPrimaryClick = { save(darkMode) }
             )
         }

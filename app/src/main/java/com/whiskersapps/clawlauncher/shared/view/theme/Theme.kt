@@ -125,3 +125,21 @@ fun getLightColorScheme(id: String): ColorScheme {
         )
     }
 }
+
+fun getThemeDisplayName(id: String): String{
+    return when(id){
+        "tiger-banana" -> "Tiger Banana"
+        "tiger-blueberry" -> "Tiger Blueberry"
+        "tiger-cherry" -> "Tiger Cherry"
+        "tiger-grape" -> "Tiger Grape"
+        "tiger-kiwi" -> "Tiger Kiwi"
+        "tiger-tangerine" -> "Tiger Tangerine"
+        "panther-banana" -> "Panther Banana"
+        "panther-blueberry" -> "Panther Blueberry"
+        "panther-cherry" -> "Panther Cherry"
+        "panther-grape" -> "Panther Grape"
+        "panther-kiwi" -> "Panther Kiwi"
+        "panther-tangerine" -> "Panther Tangerine"
+        else -> "Material You"
+    }
+}

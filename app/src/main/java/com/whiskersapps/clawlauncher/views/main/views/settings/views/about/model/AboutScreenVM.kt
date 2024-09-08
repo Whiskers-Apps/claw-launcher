@@ -13,10 +13,11 @@ class AboutScreenVM @Inject constructor(
     private val app: Application
 ) : ViewModel() {
 
-    fun onAction(action: com.whiskersapps.clawlauncher.views.main.views.settings.views.about.intent.AboutScreenAction){
+    fun onAction(action: AboutScreenAction){
         when(action){
-            com.whiskersapps.clawlauncher.views.main.views.settings.views.about.intent.AboutScreenAction.NavigateBack -> {}
-            com.whiskersapps.clawlauncher.views.main.views.settings.views.about.intent.AboutScreenAction.OpenRepoUrl -> openRepoUrl()
+            AboutScreenAction.NavigateBack -> {}
+            AboutScreenAction.OpenRepoUrl -> openRepoUrl()
+            AboutScreenAction.OpenDonateLink -> openDonateLink()
         }
     }
 
@@ -30,6 +31,19 @@ class AboutScreenVM @Inject constructor(
             app.startActivity(intent)
         } catch (e: Exception) {
             println("Error opening repo. $e")
+        }
+    }
+
+    private fun openDonateLink() {
+        try {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://buymeacoffee.com/lighttigerxiv")
+            ).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+
+            app.startActivity(intent)
+        } catch (e: Exception) {
+            println("Error opening donate link. $e")
         }
     }
 }

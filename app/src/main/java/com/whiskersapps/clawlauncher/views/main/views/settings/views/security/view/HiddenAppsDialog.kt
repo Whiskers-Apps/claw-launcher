@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,13 +17,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
@@ -48,15 +46,12 @@ fun HiddenAppsDialog(
             useCloseIcon = true
         ) {
             Button(onClick = { onAction(SecuritySettingsScreenAction.SaveHiddenApps) }) {
-                Text(text = "Save", color = MaterialTheme.colorScheme.onPrimary)
+                Text(
+                    text = stringResource(R.string.Save),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
-
-        Text(
-            modifier = Modifier.sidePadding(),
-            text = "Select apps to hide.",
-            color = MaterialTheme.colorScheme.onBackground
-        )
 
         LazyColumn(
             modifier = Modifier.sidePadding(),

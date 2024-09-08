@@ -3,6 +3,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,12 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
@@ -85,7 +88,7 @@ fun BookmarksScreen(
                         modifier = Modifier.clickable {
                             onAction(BookmarksScreenAction.OpenAddDialog(pagerState.currentPage))
                         },
-                        text = "Add",
+                        text = stringResource(R.string.Add),
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
@@ -97,24 +100,15 @@ fun BookmarksScreen(
     ) {
         TabRow(
             selectedTabIndex = pagerState.currentPage,
-            indicator = {},
             containerColor = Color.Transparent,
         ) {
             Tab(
                 selected = pagerState.currentPage == 0,
                 onClick = { selectTab(0) },
                 text = {
-                    Row {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(id = R.drawable.bookmark),
-                            contentDescription = "Bookmarks Icon"
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text("Bookmarks")
-                    }
+                    Text(
+                        stringResource(R.string.BookmarksScreen_bookmarks),
+                    )
                 },
                 unselectedContentColor = MaterialTheme.colorScheme.onBackground,
             )
@@ -123,17 +117,11 @@ fun BookmarksScreen(
                 selected = pagerState.currentPage == 1,
                 onClick = { selectTab(1) },
                 text = {
-                    Row {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(id = R.drawable.folder),
-                            contentDescription = "Groups Icon"
-                        )
 
-                        Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        stringResource(R.string.BookmarksScreen_groups),
+                    )
 
-                        Text("Groups")
-                    }
                 },
                 unselectedContentColor = MaterialTheme.colorScheme.onBackground
             )
@@ -142,42 +130,62 @@ fun BookmarksScreen(
         HorizontalPager(modifier = Modifier.fillMaxSize(), state = pagerState) { pageIndex ->
             when (pageIndex) {
                 0 -> {
-                    LazyColumn(Modifier.fillMaxSize()) {
-                        items(state.bookmarks, key = { it.url }) { bookmark ->
-                            Row(modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onAction(
-                                        BookmarksScreenAction.OpenEditBookmarkDialog(
-                                            bookmark
+                    if (state.bookmarks.isEmpty()) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(48.dp),
+                                painter = painterResource(R.drawable.bookmark),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+
+                            Text(
+                                text = stringResource(R.string.BookmarksScreen_no_bookmarks),
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    } else {
+                        LazyColumn(Modifier.fillMaxSize()) {
+                            items(state.bookmarks, key = { it.url }) { bookmark ->
+                                Row(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onAction(
+                                            BookmarksScreenAction.OpenEditBookmarkDialog(
+                                                bookmark
+                                            )
                                         )
-                                    )
-                                }
-                                .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                AsyncImage(
-                                    modifier = Modifier
-                                        .clip(CircleShape)
-                                        .size(42.dp)
-                                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                                    model = getFaviconUrl(bookmark.url),
-                                    contentDescription = "${bookmark.name} icon"
-                                )
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Column {
-                                    Text(
-                                        text = bookmark.name,
-                                        color = MaterialTheme.colorScheme.onBackground
+                                    }
+                                    .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    AsyncImage(
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .size(42.dp)
+                                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                                        model = getCachedImageRequest(getFaviconUrl(bookmark.url)),
+                                        contentDescription = "${bookmark.name} icon"
                                     )
 
-                                    Text(
-                                        text = bookmark.url,
-                                        color = MaterialTheme.colorScheme.onBackground,
-                                        style = Typography.labelSmall
-                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Column {
+                                        Text(
+                                            text = bookmark.name,
+                                            color = MaterialTheme.colorScheme.onBackground
+                                        )
+
+                                        Text(
+                                            text = bookmark.url,
+                                            color = MaterialTheme.colorScheme.onBackground,
+                                            style = Typography.labelSmall
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -185,35 +193,55 @@ fun BookmarksScreen(
                 }
 
                 1 -> {
-                    LazyColumn(Modifier.fillMaxSize()) {
-                        items(state.groups, key = { it._id.toHexString() }) { group ->
-                            Row(modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onAction(
-                                        BookmarksScreenAction.OpenEditGroupDialog(
-                                            group
+                    if (state.groups.isEmpty()) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(48.dp),
+                                painter = painterResource(R.drawable.folder),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+
+                            Text(
+                                text = stringResource(R.string.BookmarksScreen_no_groups),
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    } else {
+                        LazyColumn(Modifier.fillMaxSize()) {
+                            items(state.groups, key = { it._id.toHexString() }) { group ->
+                                Row(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onAction(
+                                            BookmarksScreenAction.OpenEditGroupDialog(
+                                                group
+                                            )
                                         )
+                                    }
+                                    .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .size(24.dp),
+                                        painter = painterResource(id = R.drawable.folder),
+                                        contentDescription = "${group.name} icon",
+                                        tint = MaterialTheme.colorScheme.onBackground
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Text(
+                                        text = group.name,
+                                        color = MaterialTheme.colorScheme.onBackground
                                     )
                                 }
-                                .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .clip(CircleShape)
-                                        .size(24.dp),
-                                    painter = painterResource(id = R.drawable.folder),
-                                    contentDescription = "${group.name} icon",
-                                    tint = MaterialTheme.colorScheme.onBackground
-                                )
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    text = group.name,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
                             }
                         }
                     }

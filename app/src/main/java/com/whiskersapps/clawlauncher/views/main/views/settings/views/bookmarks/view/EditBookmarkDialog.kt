@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,9 +44,15 @@ fun EditBookmarkDialog(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            DialogHeader(icon = R.drawable.pencil, title = "Edit Bookmark")
+            DialogHeader(
+                icon = R.drawable.pencil,
+                title = stringResource(R.string.BookmarksScreen_edit_bookmark)
+            )
 
-            Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                text = stringResource(R.string.Name),
+                color = MaterialTheme.colorScheme.onBackground
+            )
 
             RoundTextField(
                 text = state.editBookmarkDialog.name,
@@ -81,7 +88,7 @@ fun EditBookmarkDialog(
 
             DialogFooter(
                 onDismiss = { onAction(BookmarksScreenAction.CloseEditBookmarkDialog) },
-                primaryButtonText = "Save",
+                primaryButtonText = stringResource(R.string.Save),
                 enabled = state.editBookmarkDialog.name.trim().isNotEmpty()
                         && state.editBookmarkDialog.url.isUrl(),
                 onPrimaryClick = { onAction(BookmarksScreenAction.EditBookmark) }

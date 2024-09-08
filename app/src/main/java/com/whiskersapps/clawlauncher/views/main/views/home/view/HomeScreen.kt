@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -147,7 +148,7 @@ fun HomeScreen(
                             if (state.showSearchBar) {
                                 SearchBar(
                                     enabled = false,
-                                    placeholder = if (state.showPlaceholder) stringResource(R.string.Search) else "",
+                                    placeholder = if (state.showPlaceholder) stringResource(R.string.HomeScreen_search_placeholder) else "",
                                     showMenu = state.showSearchBarSettings,
                                     onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
                                     borderRadius = state.searchBarRadius.toInt(),
@@ -157,11 +158,12 @@ fun HomeScreen(
                                 if (state.showPlaceholder) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
-                                        text = "Swipe up to search",
+                                        text = stringResource(R.string.HomeScreen_placeholder),
                                         color = Color.White,
                                         fontSize = 18.sp,
                                         style = TextStyle(shadow = textShadow),
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Center,
+                                        fontWeight = FontWeight.Medium
                                     )
                                 }
                             }
@@ -172,7 +174,7 @@ fun HomeScreen(
                                 onDismissRequest = { onAction(HomeScreenAction.CloseMenuDialog) },
                                 properties = DialogProperties(usePlatformDefaultWidth = false)
                             ) {
-                                Box(
+                                Column(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .clickable(
@@ -180,80 +182,89 @@ fun HomeScreen(
                                             indication = null
                                         ) {
                                             onAction(HomeScreenAction.CloseMenuDialog)
-                                        }
-                                        .padding(16.dp)
-                                        .padding(bottom = 128.dp),
-                                    contentAlignment = Alignment.BottomCenter
+                                        },
+                                    verticalArrangement = Arrangement.Bottom,
+                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Row(
+                                    Column(
                                         modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(CircleShape)
-                                            .background(MaterialTheme.colorScheme.background),
-                                        horizontalArrangement = Arrangement.SpaceEvenly,
-                                        verticalAlignment = Alignment.CenterVertically
+                                            .widthIn(max = 900.dp)
+                                            .padding(16.dp)
+                                            .padding(bottom = 128.dp),
+                                        verticalArrangement = Arrangement.Bottom,
+                                        horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
-
-                                        Column(
+                                        Row(
                                             modifier = Modifier
+                                                .widthIn(900.dp)
                                                 .fillMaxWidth()
-                                                .weight(1f, fill = true)
-                                                .clickable {
-                                                    onAction(HomeScreenAction.CloseMenuDialog)
-                                                    onAction(HomeScreenAction.ChangeWallpaper)
-                                                }
-                                                .padding(16.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.Center
+                                                .clip(CircleShape)
+                                                .background(MaterialTheme.colorScheme.background),
+                                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                            verticalAlignment = Alignment.CenterVertically
                                         ) {
 
-                                            Icon(
-                                                modifier = Modifier.size(42.dp),
-                                                painter = painterResource(id = R.drawable.landscape),
-                                                contentDescription = "landscape icon",
-                                                tint = MaterialTheme.colorScheme.onBackground
-                                            )
-
-                                            Spacer(modifier = Modifier.height(8.dp))
-
-                                            Text(
-                                                text = "Change Wallpaper",
-                                                color = MaterialTheme.colorScheme.onBackground,
-                                                style = Typography.labelSmall,
-                                                textAlign = TextAlign.Center
-                                            )
-                                        }
-
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .weight(1f, fill = true)
-                                                .clickable {
-                                                    scope.launch {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .weight(1f, fill = true)
+                                                    .clickable {
                                                         onAction(HomeScreenAction.CloseMenuDialog)
-                                                        onAction(HomeScreenAction.NavigateToSettings)
+                                                        onAction(HomeScreenAction.ChangeWallpaper)
                                                     }
-                                                }
-                                                .padding(16.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.Center
-                                        ) {
+                                                    .padding(16.dp),
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.Center
+                                            ) {
 
-                                            Icon(
-                                                modifier = Modifier.size(42.dp),
-                                                painter = painterResource(id = R.drawable.settings),
-                                                contentDescription = "settings icon",
-                                                tint = MaterialTheme.colorScheme.onBackground
-                                            )
+                                                Icon(
+                                                    modifier = Modifier.size(42.dp),
+                                                    painter = painterResource(id = R.drawable.landscape),
+                                                    contentDescription = "landscape icon",
+                                                    tint = MaterialTheme.colorScheme.onBackground
+                                                )
 
-                                            Spacer(modifier = Modifier.height(8.dp))
+                                                Spacer(modifier = Modifier.height(8.dp))
 
-                                            Text(
-                                                text = "Settings",
-                                                color = MaterialTheme.colorScheme.onBackground,
-                                                style = Typography.labelSmall,
-                                                textAlign = TextAlign.Center
-                                            )
+                                                Text(
+                                                    text = stringResource(R.string.HomeScreen_change_wallpaper),
+                                                    color = MaterialTheme.colorScheme.onBackground,
+                                                    style = Typography.labelSmall,
+                                                    textAlign = TextAlign.Center
+                                                )
+                                            }
+
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .weight(1f, fill = true)
+                                                    .clickable {
+                                                        scope.launch {
+                                                            onAction(HomeScreenAction.CloseMenuDialog)
+                                                            onAction(HomeScreenAction.NavigateToSettings)
+                                                        }
+                                                    }
+                                                    .padding(16.dp),
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.Center
+                                            ) {
+
+                                                Icon(
+                                                    modifier = Modifier.size(42.dp),
+                                                    painter = painterResource(id = R.drawable.settings),
+                                                    contentDescription = "settings icon",
+                                                    tint = MaterialTheme.colorScheme.onBackground
+                                                )
+
+                                                Spacer(modifier = Modifier.height(8.dp))
+
+                                                Text(
+                                                    text = stringResource(R.string.HomeScreen_settings),
+                                                    color = MaterialTheme.colorScheme.onBackground,
+                                                    style = Typography.labelSmall,
+                                                    textAlign = TextAlign.Center
+                                                )
+                                            }
                                         }
                                     }
                                 }

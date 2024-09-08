@@ -2,6 +2,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -92,7 +93,10 @@ fun ThemeDialog(
             }
 
             if (showDarkThemes) {
-                LazyRow(modifier = Modifier.padding(16.dp)){
+                LazyRow(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     items(PANTHER_THEMES, key = { it.id }) { theme ->
                         ThemeCard(
                             name = theme.name,
@@ -106,7 +110,10 @@ fun ThemeDialog(
                     }
                 }
             } else {
-                LazyRow(modifier = Modifier.padding(16.dp)){
+                LazyRow(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     items(TIGER_THEMES, key = { it.id }) { theme ->
                         ThemeCard(
                             name = theme.name,

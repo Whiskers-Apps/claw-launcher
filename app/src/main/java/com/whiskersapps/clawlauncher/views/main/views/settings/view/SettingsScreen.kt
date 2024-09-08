@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -100,7 +101,7 @@ fun SettingsScreen(
                         .weight(1f, fill = true)
                 ) {
                     Text(
-                        text = "Default Launcher",
+                        text = stringResource(R.string.SettingsScreen_default_launcher),
                         style = Typography.titleSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         maxLines = 2,
@@ -108,7 +109,7 @@ fun SettingsScreen(
                     )
 
                     Text(
-                        text = "Click to set as default launcher",
+                        text = stringResource(R.string.SettingsScreen_default_launcher_description),
                         style = Typography.labelMedium,
                         color = MaterialTheme.colorScheme.onBackground,
                         maxLines = 2,
@@ -120,50 +121,50 @@ fun SettingsScreen(
 
         MainSetting(
             icon = R.drawable.palette,
-            title = "Style",
-            description = "Themes",
+            title = stringResource(R.string.SettingsScreen_style),
+            description = stringResource(R.string.SettingsScreen_style_description),
             onClick = { onAction(SettingsScreenAction.NavigateToStyleSettings) }
         )
 
         MainSetting(
             icon = R.drawable.home,
-            title = "Home",
-            description = "Home screen settings",
+            title = stringResource(R.string.SettingsScreen_home),
+            description = stringResource(R.string.SettingsScreen_home_description),
             onClick = { onAction(SettingsScreenAction.NavigateToHomeSettings) }
         )
 
         MainSetting(
             icon = R.drawable.apps,
-            title = "Apps",
-            description = "Apps screen settings",
+            title = stringResource(R.string.SettingsScreen_apps),
+            description = stringResource(R.string.SettingsScreen_apps_description),
             onClick = { onAction(SettingsScreenAction.NavigateToAppsSettings) }
         )
 
         MainSetting(
             icon = R.drawable.bookmark,
-            title = "Bookmarks",
-            description = "Add website urls to quickly open them",
+            title = stringResource(R.string.SettingsScreen_bookmarks),
+            description = stringResource(R.string.SettingsScreen_bookmarks_description),
             onClick = { onAction(SettingsScreenAction.NavigateToBookmarksSettings) }
         )
 
         MainSetting(
             icon = R.drawable.loupe,
-            title = "Search Engines",
-            description = "Manage search engines when searching",
+            title = stringResource(R.string.SettingsScreen_search_engines),
+            description = stringResource(R.string.SettingsScreen_search_engines_description),
             onClick = { onAction(SettingsScreenAction.NavigateToSearchEnginesSettings) }
         )
 
         MainSetting(
             icon = R.drawable.lock,
-            title = "Security",
-            description = "Hide or protect apps",
+            title = stringResource(R.string.SettingsScreen_security),
+            description = stringResource(R.string.SettingsScreen_security_description),
             onClick = { onAction(SettingsScreenAction.NavigateToSecuritySettings) }
         )
 
         MainSetting(
             icon = R.drawable.info,
-            title = "About",
-            description = "App info",
+            title = stringResource(R.string.SettingsScreen_about),
+            description = stringResource(R.string.SettingsScreen_about_description),
             onClick = { onAction(SettingsScreenAction.NavigateToAbout) }
         )
     }

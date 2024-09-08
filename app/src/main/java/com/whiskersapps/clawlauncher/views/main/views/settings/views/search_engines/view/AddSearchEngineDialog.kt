@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,7 +68,7 @@ fun AddSearchEngineDialog(
                     )
 
                     Text(
-                        text = "Add Search Engine",
+                        text = stringResource(R.string.SearchEnginesScreen_add_search_engine),
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold
@@ -76,7 +77,10 @@ fun AddSearchEngineDialog(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = stringResource(R.string.Name),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
                 RoundTextField(
                     text = name,
@@ -93,7 +97,10 @@ fun AddSearchEngineDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(text = "Query", color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = stringResource(R.string.SearchEnginesScreen_query),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
                 RoundTextField(
                     text = query,
@@ -112,7 +119,7 @@ fun AddSearchEngineDialog(
 
             DialogFooter(
                 onDismiss = { onAction(SearchEnginesScreenAction.CloseAddEngineDialog) },
-                primaryButtonText = "Add",
+                primaryButtonText = stringResource(R.string.Add),
                 enabled = name.trim().isNotEmpty() && query.trim().isNotEmpty() && query.isUrl(),
                 onPrimaryClick = { onAction(SearchEnginesScreenAction.AddEngine) }
             )

@@ -1,8 +1,10 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -19,14 +22,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.lighttigerxiv.whiskers_palette_kt.WhiskersColor
+import com.lighttigerxiv.whiskers_palette_kt.getColor
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
@@ -45,7 +52,7 @@ fun AboutScreenRoot(
         onAction = { action ->
             when (action) {
                 AboutScreenAction.NavigateBack -> navController.navigateUp()
-                AboutScreenAction.OpenRepoUrl -> vm.onAction(action)
+                else -> vm.onAction(action)
             }
         }
     )
@@ -89,11 +96,11 @@ fun AboutScreen(
             )
         }
 
-        Column(modifier = Modifier.sidePadding()){
+        Column(modifier = Modifier.sidePadding()) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Version",
+                text = stringResource(R.string.AboutScreen_version),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = Typography.titleSmall
             )
@@ -103,23 +110,10 @@ fun AboutScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Developer",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = Typography.titleSmall
-            )
-
-            Text(
-                text = "Whiskers Apps",
-                color = MaterialTheme.colorScheme.onBackground
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "License",
+                text = stringResource(R.string.AboutScreen_license),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = Typography.titleSmall
             )
@@ -128,6 +122,8 @@ fun AboutScreen(
                 text = "MIT",
                 color = MaterialTheme.colorScheme.onBackground
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
         Column(
@@ -137,15 +133,38 @@ fun AboutScreen(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Source Code",
+                text = stringResource(R.string.AboutScreen_source_code),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = Typography.titleSmall
             )
 
             Text(
-                text = "",
-                color = MaterialTheme.colorScheme.onBackground
+                text = "https://github.com/Whiskers-Apps/claw-launcher",
+                color = MaterialTheme.colorScheme.onBackground,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onAction(AboutScreenAction.OpenDonateLink) }
+                .padding(16.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.AboutScreen_donate),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = Typography.titleSmall
+            )
+
+            Image(
+                modifier = Modifier.width(140.dp),
+                painter = painterResource(R.drawable.bmc),
+                contentDescription = null
+            )
+        }
+
     }
 }

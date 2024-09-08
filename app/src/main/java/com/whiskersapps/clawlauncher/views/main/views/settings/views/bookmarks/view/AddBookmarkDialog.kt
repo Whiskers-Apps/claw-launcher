@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.isUrl
@@ -29,9 +30,9 @@ fun AddBookmarkDialog(
     ) {
         Column(modifier = Modifier.padding(16.dp)){
 
-            DialogHeader(icon = R.drawable.plus, title = "Add Bookmark")
+            DialogHeader(icon = R.drawable.plus, title = stringResource(R.string.BookmarksScreen_add_bookmark))
 
-            Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.Name), color = MaterialTheme.colorScheme.onBackground)
 
             RoundTextField(
                 text = state.addBookmarkDialog.name,
@@ -67,7 +68,7 @@ fun AddBookmarkDialog(
 
             DialogFooter(
                 onDismiss = { onAction(BookmarksScreenAction.CloseAddBookmarkDialog) },
-                primaryButtonText = "Add",
+                primaryButtonText = stringResource(R.string.Add),
                 enabled = state.addBookmarkDialog.name.trim().isNotEmpty()
                         && state.addBookmarkDialog.url.isUrl(),
                 onPrimaryClick = { onAction(BookmarksScreenAction.AddBookmark) }

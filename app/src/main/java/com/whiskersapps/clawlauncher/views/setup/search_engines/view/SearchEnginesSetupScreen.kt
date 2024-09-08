@@ -78,7 +78,7 @@ fun SearchEnginesSetupScreen(
             item {
                 Text(
                     modifier = Modifier.sidePadding(),
-                    text = "Select your favourite search engine. You can change this later in the settings.",
+                    text = stringResource(R.string.SearchEnginesSetupScreen_description),
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
@@ -100,7 +100,7 @@ fun SearchEnginesSetupScreen(
         }
 
 
-        Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.End) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             Button(onClick = { onAction(SearchEnginesSetupScreenAction.NavigateBack) }) {
                 Text(
                     text = stringResource(id = R.string.SetupScreen_previous),

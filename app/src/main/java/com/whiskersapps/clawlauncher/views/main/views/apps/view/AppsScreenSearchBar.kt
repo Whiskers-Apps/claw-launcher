@@ -25,7 +25,7 @@ fun AppsScreenSearchBar(
     Box(modifier = Modifier.padding(8.dp)) {
         SearchBar(
             text = state.searchText,
-            placeholder = if (state.showSearchBarPlaceholder) stringResource(id = R.string.Apps_search_apps) else "",
+            placeholder = if (state.showSearchBarPlaceholder) stringResource(id = R.string.AppsScreen_search_placeholder) else "",
             onChange = {
                 onAction(AppsScreenAction.SetSearchText(it))
             },

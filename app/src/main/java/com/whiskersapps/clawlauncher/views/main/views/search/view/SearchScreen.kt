@@ -39,11 +39,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
 import com.whiskersapps.clawlauncher.shared.utils.getColsCount
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
@@ -94,7 +96,7 @@ fun SearchScreen(
                 SearchBar(
                     text = state.searchText,
                     onChange = { vm.updateSearchText(it) },
-                    placeholder = "Search",
+                    placeholder = stringResource(R.string.SearchScreen_search_placeholder),
                     focus = state.focusSearchBar,
                     onFocused = { vm.updateFocusSearchBar(false) },
                     backgroundColor = Color.Transparent,
@@ -116,7 +118,7 @@ fun SearchScreen(
 
                     Column(modifier = Modifier.sidePadding()) {
                         Text(
-                            text = "Apps",
+                            text = stringResource(R.string.SearchScreen_apps),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = Typography.titleSmall
                         )
@@ -165,7 +167,7 @@ fun SearchScreen(
 
                         Column(modifier = Modifier.sidePadding()) {
                             Text(
-                                text = "Bookmarks",
+                                text = stringResource(R.string.SearchScreen_bookmarks),
                                 color = MaterialTheme.colorScheme.onBackground,
                                 style = Typography.titleSmall
                             )
@@ -222,7 +224,7 @@ fun SearchScreen(
                                                 .clip(CircleShape)
                                                 .size(42.dp)
                                                 .background(MaterialTheme.colorScheme.surfaceVariant),
-                                            model = getFaviconUrl(bookmark.url),
+                                            model = getCachedImageRequest(getFaviconUrl(bookmark.url)),
                                             contentDescription = "${bookmark.name} icon"
                                         )
 
@@ -251,7 +253,7 @@ fun SearchScreen(
                     state.searchEngine?.let {
                         Column(modifier = Modifier.sidePadding()) {
                             Text(
-                                text = "Web",
+                                text = stringResource(R.string.SearchScreen_web),
                                 color = MaterialTheme.colorScheme.onBackground,
                                 style = Typography.titleSmall
                             )
@@ -272,14 +274,17 @@ fun SearchScreen(
                                     modifier = Modifier
                                         .clip(CircleShape)
                                         .size(42.dp),
-                                    model = getFaviconUrl(state.searchEngine.query),
+                                    model = getCachedImageRequest(getFaviconUrl(state.searchEngine.query)),
                                     contentDescription = "${state.searchEngine.name} icon"
                                 )
 
                                 Spacer(modifier = Modifier.width(16.dp))
 
                                 Text(
-                                    text = "Search on ${state.searchEngine.name} for ${state.searchText}",
+                                    text = stringResource(R.string.SearchScreen_search_on_for).replace(
+                                        "{engine}",
+                                        state.searchEngine.name
+                                    ).replace("{search}", state.searchText),
                                     color = MaterialTheme.colorScheme.onBackground,
                                     maxLines = 2
                                 )

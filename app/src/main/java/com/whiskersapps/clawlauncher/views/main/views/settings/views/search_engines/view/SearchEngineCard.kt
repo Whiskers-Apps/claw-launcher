@@ -18,10 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
+import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 
@@ -45,7 +49,7 @@ fun SearchEngineCard(
             modifier = Modifier
                 .clip(CircleShape)
                 .size(32.dp),
-            model = getFaviconUrl(searchEngine.query),
+            model = getCachedImageRequest(getFaviconUrl(searchEngine.query)),
             contentDescription = "${searchEngine.name} icon"
         )
 

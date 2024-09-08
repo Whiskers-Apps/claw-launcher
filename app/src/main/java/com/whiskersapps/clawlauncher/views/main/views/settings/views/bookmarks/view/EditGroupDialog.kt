@@ -20,9 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
@@ -43,15 +45,21 @@ fun EditGroupDialog(
         onDismiss = { onAction(BookmarksScreenAction.CloseEditGroupDialog) },
         scrollable = false
     ) {
-        LazyColumn(modifier = Modifier.padding(16.dp)){
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
             item {
-                DialogHeader(icon = R.drawable.pencil, title = "Edit Group")
+                DialogHeader(
+                    icon = R.drawable.pencil,
+                    title = stringResource(R.string.BookmarksScreen_edit_group)
+                )
 
-                Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = stringResource(R.string.Name),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
                 RoundTextField(
                     text = state.editGroupDialog.name,
-                    placeholder = "Notion",
+                    placeholder = stringResource(R.string.BookmarksScreen_news),
                     onTextChange = { text ->
                         onAction(
                             BookmarksScreenAction.UpdateEditGroupDialogFields(name = text)
@@ -87,7 +95,7 @@ fun EditGroupDialog(
                             .clip(CircleShape)
                             .size(42.dp)
                             .background(MaterialTheme.colorScheme.surfaceVariant),
-                        model = getFaviconUrl(item.bookmark.url),
+                        model = getCachedImageRequest(getFaviconUrl(item.bookmark.url)),
                         contentDescription = "${item.bookmark.name} icon"
                     )
 
@@ -129,7 +137,7 @@ fun EditGroupDialog(
             item {
                 DialogFooter(
                     onDismiss = { onAction(BookmarksScreenAction.CloseEditGroupDialog) },
-                    primaryButtonText = "Save",
+                    primaryButtonText = stringResource(R.string.Save),
                     enabled = state.editGroupDialog.name.trim().isNotEmpty(),
                     onPrimaryClick = { onAction(BookmarksScreenAction.SaveGroupEdit) }
                 )

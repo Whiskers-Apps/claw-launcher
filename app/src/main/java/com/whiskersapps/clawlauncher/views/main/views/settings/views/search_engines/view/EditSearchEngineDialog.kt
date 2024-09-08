@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,91 +49,97 @@ fun EditSearchEngineDialog(
                 .padding(16.dp)
         ) {
 
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        modifier = Modifier.size(32.dp),
-                        painter = painterResource(id = R.drawable.pencil),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    modifier = Modifier.size(32.dp),
+                    painter = painterResource(id = R.drawable.pencil),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
 
-                    Text(
-                        text = "Edit Search Engine",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                Text(
+                    text = stringResource(R.string.SearchEnginesScreen_edit_search_engine),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+
+
+            Text(
+                text = stringResource(R.string.Name),
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            RoundTextField(
+                text = name,
+                placeholder = "DuckDuckGo",
+                onTextChange = { text ->
+                    onAction(
+                        SearchEnginesScreenAction.UpdateEditEngineDialogFields(
+                            name = text,
+                            query = query,
+                            default = default
+                        )
+                    )
                 }
+            )
 
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                text = stringResource(R.string.SearchEnginesScreen_query),
+                color = MaterialTheme.colorScheme.onBackground
+            )
 
-                RoundTextField(
-                    text = name,
-                    placeholder = "DuckDuckGo",
-                    onTextChange = { text ->
-                        onAction(
-                            SearchEnginesScreenAction.UpdateEditEngineDialogFields(
-                                name = text,
-                                query = query,
-                                default = default
-                            )
+            RoundTextField(
+                text = query,
+                placeholder = "https://duckduckgo.com/?q=%s",
+                onTextChange = { text ->
+                    onAction(
+                        SearchEnginesScreenAction.UpdateEditEngineDialogFields(
+                            name = name,
+                            query = text,
+                            default = default
                         )
-                    }
-                )
+                    )
+                }
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Text(text = "Query", color = MaterialTheme.colorScheme.onBackground)
-
-                RoundTextField(
-                    text = query,
-                    placeholder = "https://duckduckgo.com/?q=%s",
-                    onTextChange = { text ->
-                        onAction(
-                            SearchEnginesScreenAction.UpdateEditEngineDialogFields(
-                                name = name,
-                                query = text,
-                                default = default
-                            )
+            SwitchSetting(
+                title = stringResource(R.string.SearchEnginesScreen_default),
+                description = stringResource(R.string.SearchEnginesScreen_default_description),
+                value = default,
+                onValueChange = { selected ->
+                    onAction(
+                        SearchEnginesScreenAction.UpdateEditEngineDialogFields(
+                            name = name,
+                            query = query,
+                            default = selected
                         )
-                    }
-                )
+                    )
+                }
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                SwitchSetting(
-                    title = "Default",
-                    description = "Make it the default search engine",
-                    value = default,
-                    onValueChange = { selected ->
-                        onAction(
-                            SearchEnginesScreenAction.UpdateEditEngineDialogFields(
-                                name = name,
-                                query = query,
-                                default = selected
-                            )
-                        )
-                    }
-                )
+            SwipeToDelete { onAction(SearchEnginesScreenAction.DeleteEngine) }
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                SwipeToDelete { onAction(SearchEnginesScreenAction.DeleteEngine) }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                DialogFooter(
-                    onDismiss = { onAction(SearchEnginesScreenAction.CloseEditEngineDialog) },
-                    primaryButtonText = "Save",
-                    enabled = name.trim().isNotEmpty() && query.trim().isNotEmpty(),
-                    onPrimaryClick = { onAction(SearchEnginesScreenAction.SaveEditEngine) }
-                )
+            DialogFooter(
+                onDismiss = { onAction(SearchEnginesScreenAction.CloseEditEngineDialog) },
+                primaryButtonText = stringResource(R.string.Save),
+                enabled = name.trim().isNotEmpty() && query.trim().isNotEmpty(),
+                onPrimaryClick = { onAction(SearchEnginesScreenAction.SaveEditEngine) }
+            )
 
         }
     }

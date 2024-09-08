@@ -14,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
 @Composable
@@ -36,7 +38,7 @@ fun DialogFooter(
                     onClick = { onDismiss() },
                     colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent)
                 ) {
-                    Text(text = "Cancel")
+                    Text(text = stringResource(R.string.Cancel))
                 }
 
                 if (primaryButtonText.isNotEmpty()) {

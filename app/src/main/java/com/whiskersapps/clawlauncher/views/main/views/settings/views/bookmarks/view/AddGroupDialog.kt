@@ -23,11 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
@@ -47,15 +49,21 @@ fun AddGroupDialog(
         onDismiss = { onAction(BookmarksScreenAction.CloseAddGroupDialog) },
         scrollable = false
     ) {
-        LazyColumn(modifier = Modifier.padding(16.dp)){
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
             item {
-                DialogHeader(icon = R.drawable.plus, title = "Add Group")
+                DialogHeader(
+                    icon = R.drawable.plus,
+                    title = stringResource(R.string.BookmarksScreen_add_group)
+                )
 
-                Text(text = "Name", color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = stringResource(R.string.Name),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
                 RoundTextField(
                     text = state.addGroupDialog.name,
-                    placeholder = "Notion",
+                    placeholder = stringResource(R.string.BookmarksScreen_news),
                     onTextChange = { text ->
                         onAction(
                             BookmarksScreenAction.UpdateAddGroupDialogFields(name = text)
@@ -89,7 +97,7 @@ fun AddGroupDialog(
                             .clip(CircleShape)
                             .size(42.dp)
                             .background(MaterialTheme.colorScheme.surfaceVariant),
-                        model = getFaviconUrl(item.bookmark.url),
+                        model = getCachedImageRequest(getFaviconUrl(item.bookmark.url)),
                         contentDescription = "${item.bookmark.name} icon"
                     )
 
@@ -131,7 +139,7 @@ fun AddGroupDialog(
             item {
                 DialogFooter(
                     onDismiss = { onAction(BookmarksScreenAction.CloseAddGroupDialog) },
-                    primaryButtonText = "Add",
+                    primaryButtonText = stringResource(R.string.Add),
                     enabled = state.addGroupDialog.name.trim().isNotEmpty(),
                     onPrimaryClick = { onAction(BookmarksScreenAction.AddGroup) }
                 )

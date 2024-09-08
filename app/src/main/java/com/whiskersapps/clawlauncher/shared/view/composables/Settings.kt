@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import java.text.DecimalFormat
 
@@ -33,10 +34,14 @@ fun SliderSetting(
     max: Float,
     steps: Int,
     value: Float,
+    enabled: Boolean = true,
     onValueChange: (value: Float) -> Unit,
     onValueChangeFinished: (Float) -> Unit = {}
 ) {
-    Column(Modifier.fillMaxWidth().padding(16.dp)) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(16.dp)) {
         Text(
             text = title,
             style = Typography.bodyMedium,
@@ -62,7 +67,8 @@ fun SliderSetting(
                 colors = SliderDefaults.colors(
                     inactiveTickColor = Color.Transparent,
                     activeTickColor = Color.Transparent
-                )
+                ),
+                enabled = enabled
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -88,12 +94,15 @@ fun SwitchSetting(
     title: String,
     description: String,
     value: Boolean,
+    enabled: Boolean = true,
     onValueChange: (value: Boolean) -> Unit
 ) {
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable { onValueChange(!value) }
+            .modifyWhen(enabled) {
+                this.clickable { onValueChange(!value) }
+            }
             .padding(16.dp),
         verticalAlignment = Alignment.Top
     ) {
@@ -117,7 +126,7 @@ fun SwitchSetting(
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Switch(checked = value, onCheckedChange = { onValueChange(it) })
+        Switch(checked = value, onCheckedChange = { onValueChange(it) }, enabled = enabled)
     }
 }
 

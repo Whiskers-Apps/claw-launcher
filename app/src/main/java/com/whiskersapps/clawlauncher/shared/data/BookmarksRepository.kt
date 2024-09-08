@@ -77,7 +77,7 @@ class BookmarksRepository(
 
     fun getSearchedBookmarks(text: String): List<Bookmark> {
         val sniffer = Sniffer()
-        return data.value.bookmarks.filter {sniffer.matches(it.name, text)}
+        return data.value.bookmarks.filter { sniffer.matches(it.name, text) }
     }
 
     fun getSearchedGroups(text: String): List<BookmarkGroup> {
@@ -90,7 +90,7 @@ class BookmarksRepository(
             realm.query<Bookmark>().asFlow()
                 .map { it.list }
                 .collect { bookmarks ->
-                    _data.update { it.copy(bookmarks = bookmarks) }
+                    _data.update { it.copy(bookmarks = bookmarks.sortedBy { bookmark -> bookmark.name.lowercase() }) }
                 }
         }
 
@@ -98,7 +98,7 @@ class BookmarksRepository(
             realm.query<BookmarkGroup>().asFlow()
                 .map { it.list }
                 .collect { groups ->
-                    _data.update { it.copy(groups = groups) }
+                    _data.update { it.copy(groups = groups.sortedBy { group -> group.name.lowercase() }) }
                 }
         }
     }

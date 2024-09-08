@@ -9,7 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.intent.settings.HomeSettingsAction
 import com.whiskersapps.clawlauncher.shared.view.composables.SliderSetting
 import com.whiskersapps.clawlauncher.shared.view.composables.SwitchSetting
@@ -23,8 +25,8 @@ fun HomeSettings(
     onAction: (HomeSettingsAction) -> Unit,
 ) {
     SwitchSetting(
-        title = "Search Bar",
-        description = "Show the search bar",
+        title = stringResource(R.string.HomeSettings_search_bar),
+        description = stringResource(R.string.HomeSettings_search_bar_description),
         value = showSearchBar,
         onValueChange = {
             onAction(HomeSettingsAction.SetShowSearchBar(it))
@@ -32,8 +34,8 @@ fun HomeSettings(
     )
 
     SwitchSetting(
-        title = "Placeholder",
-        description = "Shows a placeholder",
+        title = stringResource(R.string.HomeSettings_placeholder),
+        description = stringResource(R.string.HomeSettings_placeholder_description),
         value = showPlaceholder,
         onValueChange = {
             onAction(HomeSettingsAction.SetShowSearchBarPlaceholder(it))
@@ -41,21 +43,23 @@ fun HomeSettings(
     )
 
     SwitchSetting(
-        title = "Settings",
-        description = "Shows the settings icon on the search bar",
+        title = stringResource(R.string.HomeSettings_settings),
+        description = stringResource(R.string.HomeSettings_settings_description),
         value = showSettings,
+        enabled = showSearchBar,
         onValueChange = {
             onAction(HomeSettingsAction.SetShowSettings(it))
         }
     )
 
     SliderSetting(
-        title = "Search Bar Radius",
-        description = "The search bar roundness",
+        title = stringResource(R.string.HomeSettings_search_bar_radius),
+        description = stringResource(R.string.HomeSettings_search_bar_radius_description),
         min = 0f,
         max = 50f,
         steps = 50,
         value = searchBarRadius,
+        enabled = showSearchBar,
         onValueChange = {
             onAction(HomeSettingsAction.SetSearchBarRadius(it))
         },

@@ -1,19 +1,130 @@
 <resources>
 
-    <string name="app_name">Claw Launcher</string>
+    <string translatable="false" name="app_name">Claw Launcher</string>
 
     <!-- Setup Screens -->
     <string name="SetupScreen_next">Next</string>
     <string name="SetupScreen_finish">Finish</string>
-    <string name="LayoutScreen_minimal">Minimal</string>
     <string name="SetupScreen_previous">Previous</string>
-    <string name="LayoutScreen_bubbly">Bubbly</string>
-    <string name="LayoutScreen_style">Style</string>
-    <string name="PermissionsScreen_permissions">Permissions</string>
-    <string name="PermissionsScreen_read_media_explain">Due to Android limitations the app needs access to all images to get the wallpaper. You can always verify the source code if you don\'t feel safe</string>
-    <string name="PermissionsScreen_read_all_media">Read All Media</string>
-    <string name="PermissionsScreen_manage_external_storage_explain">Due to the same reason as above it also needs manage files permission 🙄</string>
-    <string name="PermissionsScreen_manage_external_storage">Manage External Storage</string>
-    <string name="Apps_search_apps">Search apps</string>
-    <string name="Search">Search apps, bookmarks, web</string>
+    <string name="SearchEnginesSetupScreen_description">Select your favourite search engine. You can change this later in the settings.</string>
+
+    <!-- General Strings -->
+    <string name="Save">Save</string>
+    <string name="Add">Add</string>
+    <string name="Name">Name</string>
+    <string name="Cancel">Cancel</string>
+    <string name="SwipeToDelete">Swipe To Delete</string>
+
+    <!-- Home Screen -->
+    <string name="HomeScreen_search_placeholder">Search apps, web, bookmarks</string>
+    <string name="HomeScreen_placeholder">Swipe up to search</string>
+    <string name="HomeScreen_change_wallpaper">Change Wallpaper</string>
+    <string name="HomeScreen_settings">Settings</string>
+
+    <!-- Apps Screen -->
+    <string name="AppsScreen_search_placeholder">Search Apps</string>
+
+    <!-- SearchScreen -->
+    <string name="SearchScreen_search_placeholder">Search apps, bookmarks, web</string>
+    <string name="SearchScreen_apps">Apps</string>
+    <string name="SearchScreen_web">Web</string>
+    <string name="SearchScreen_bookmarks">Bookmarks</string>
+    <string name="SearchScreen_search_on_for">Search on {engine} for {search}</string>
+
+    <!-- Style Strings -->
+    <string name="StyleSettings_system">System</string>
+    <string name="StyleSettings_light">Light</string>
+    <string name="StyleSettings_dark">Dark</string>
+    <string name="StyleSettings_dark_mode">System</string>
+    <string name="StyleSettings_light_theme">Light Theme</string>
+    <string name="StyleSettings_dark_theme">Dark Theme</string>
+
+    <!-- Settings Screen -->
+    <string name="SettingsScreen_default_launcher">Default Launcher</string>
+    <string name="SettingsScreen_default_launcher_description">Click to set as default launcher</string>
+    <string name="SettingsScreen_style">Style</string>
+    <string name="SettingsScreen_style_description">Themes</string>
+    <string name="SettingsScreen_home">Home</string>
+    <string name="SettingsScreen_home_description">Home screen settings</string>
+    <string name="SettingsScreen_apps">Apps</string>
+    <string name="SettingsScreen_apps_description">Apps screen settings</string>
+    <string name="SettingsScreen_bookmarks">Bookmarks</string>
+    <string name="SettingsScreen_bookmarks_description">Add websites to search</string>
+    <string name="SettingsScreen_search_engines">Search Engines</string>
+    <string name="SettingsScreen_search_engines_description">Select the default search engine</string>
+    <string name="SettingsScreen_security">Security</string>
+    <string name="SettingsScreen_security_description">Hide, protect apps</string>
+    <string name="SettingsScreen_about">About</string>
+    <string name="SettingsScreen_about_description">App information</string>
+
+    <!-- Home Setting -->
+    <string name="HomeSettings_search_bar">Search Bar</string>
+    <string name="HomeSettings_search_bar_description">Show the search bar</string>
+    <string name="HomeSettings_placeholder">Placeholder</string>
+    <string name="HomeSettings_placeholder_description">Show the placeholder</string>
+    <string name="HomeSettings_settings">Settings</string>
+    <string name="HomeSettings_settings_description">Show the search bar settings icon</string>
+    <string name="HomeSettings_search_bar_radius">Search Bar Radius</string>
+    <string name="HomeSettings_search_bar_radius_description">The search bar roundness</string>
+
+
+    <!-- Apps Settings -->
+    <string name="AppsSettings_view">View</string>
+    <string name="AppsSettings_grid">Grid</string>
+    <string name="AppsSettings_list">List</string>
+    <string name="AppsSettings_columns">Columns</string>
+    <string name="AppsSettings_columns_description">The amount of columns to show when in portrait</string>
+    <string name="AppsSettings_landscape_columns">Landscape Columns</string>
+    <string name="AppsSettings_landscape_columns_description">The amount of columns to show when in landscape</string>
+    <string name="AppsSettings_unfolded_columns">Unfolded Columns</string>
+    <string name="AppsSettings_unfolded_landscape_columns">Unfolded Landscape Columns</string>
+    <string name="AppsSettings_search_bar_position">Search Bar Position</string>
+    <string name="AppsSettings_bottom">Bottom</string>
+    <string name="AppsSettings_top">Top</string>
+    <string name="AppsSettings_search_bar">Search Bar</string>
+    <string name="AppsSettings_search_bar_description">Show the search bar</string>
+    <string name="AppsSettings_search_bar_placeholder">Search Bar Placeholder</string>
+    <string name="AppsSettings_search_bar_placeholder_description">Show the search bar placeholder</string>
+    <string name="AppsSettings_search_bar_settings">Search Bar Settings</string>
+    <string name="AppsSettings_search_bar_settings_description">Show the search bar settings icon</string>
+    <string name="AppsSettings_search_bar_radius">Search Bar Radius</string>
+    <string name="AppsSettings_search_bar_radius_description">The search bar roundness</string>
+
+
+    <!-- Bookmarks Screen -->
+    <string name="BookmarksScreen_bookmarks">Bookmarks</string>
+    <string name="BookmarksScreen_no_bookmarks">No bookmarks. Click on add to add one</string>
+    <string name="BookmarksScreen_groups">Groups</string>
+    <string name="BookmarksScreen_no_groups">No groups. Click on add to add one</string>
+    <string name="BookmarksScreen_add_bookmark">Add Bookmark</string>
+    <string name="BookmarksScreen_url">Url</string>
+    <string name="BookmarksScreen_edit_bookmark">Edit Bookmark</string>
+    <string name="BookmarksScreen_add_group">Add Group</string>
+    <string name="BookmarksScreen_news">News</string>
+    <string name="BookmarksScreen_edit_group">Edit Group</string>
+
+    <!-- Search Engines Screen -->
+    <string name="SearchEnginesScreen_no_search_engines">No search engines. Click on add to add one.</string>
+    <string name="SearchEnginesScreen_default">Default</string>
+    <string name="SearchEnginesScreen_default_description">Make it the default search engine</string>
+    <string name="SearchEnginesScreen_no_default_engine">No default search engine</string>
+    <string name="SearchEnginesScreen_others">Others</string>
+    <string name="SearchEnginesScreen_add_search_engine">Add Search Engine</string>
+    <string name="SearchEnginesScreen_query">Query</string>
+    <string name="SearchEnginesScreen_edit_search_engine">Edit Search Engine</string>
+
+
+    <!-- Security Settings Screen -->
+    <string name="SecuritySettingsScreen_hidden_apps">Hidden Apps</string>
+    <string name="SecuritySettingsScreen_hidden_apps_description">Hide apps in search and apps screen</string>
+    <string name="SecuritySettingsScreen_secure_apps">Secure Apps</string>
+    <string name="SecuritySettingsScreen_secure_apps_description">Make app open with fingerprint</string>
+
+    <!-- About Screen -->
+    <string name="AboutScreen_version">Version</string>
+    <string name="AboutScreen_license">License</string>
+    <string name="AboutScreen_source_code">Source Code</string>
+    <string name="AboutScreen_donate">Donate</string>
+
+
 </resources>

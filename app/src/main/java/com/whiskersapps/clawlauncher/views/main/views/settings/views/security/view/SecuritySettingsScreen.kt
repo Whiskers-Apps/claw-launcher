@@ -2,8 +2,10 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.security.v
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.composables.SimpleSetting
@@ -36,14 +38,14 @@ fun SecuritySettingsScreen(
         NavBar(navigateBack = { onAction(SecuritySettingsScreenAction.NavigateBack) })
 
         SimpleSetting(
-            title = "Hidden Apps",
-            value = "Click to hidde apps",
+            title = stringResource(R.string.SecuritySettingsScreen_hidden_apps),
+            value = stringResource(R.string.SecuritySettingsScreen_hidden_apps_description),
             onClick = { onAction(SecuritySettingsScreenAction.OpenHiddenAppsDialog) }
         )
 
         SimpleSetting(
-            title = "Secure Apps",
-            value = "Click to secure apps",
+            title = stringResource(R.string.SecuritySettingsScreen_secure_apps),
+            value = stringResource(R.string.SecuritySettingsScreen_secure_apps_description),
             onClick = { onAction(SecuritySettingsScreenAction.OpenSecureAppsDialog) }
         )
 

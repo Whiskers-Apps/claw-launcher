@@ -1,12 +1,16 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.composables.SimpleSetting
+import com.whiskersapps.clawlauncher.shared.view.theme.getThemeDisplayName
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.intent.StyleSettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.model.StyleSettingsScreenVM
 
@@ -43,20 +47,20 @@ fun StyleSettingsScreen(
     ) {
 
         SimpleSetting(
-            title = "Dark Mode",
-            value = state.settings.darkMode,
+            title = stringResource(R.string.StyleSettings_dark_mode),
+            value = getDarkModeDisplayName(state.settings.darkMode),
             onClick = { onAction(StyleSettingsScreenAction.OpenDarkModeDialog) }
         )
 
         SimpleSetting(
-            title = "Light Theme",
-            value = state.settings.theme,
+            title = stringResource(R.string.StyleSettings_light_theme),
+            value = getThemeDisplayName(state.settings.theme),
             onClick = { onAction(StyleSettingsScreenAction.OpenThemeDialog) }
         )
 
         SimpleSetting(
-            title = "Dark Theme",
-            value = state.settings.darkTheme,
+            title = stringResource(R.string.StyleSettings_dark_theme),
+            value = getThemeDisplayName(state.settings.darkTheme),
             onClick = { onAction(StyleSettingsScreenAction.OpenDarkThemeDialog) }
         )
 
@@ -81,5 +85,14 @@ fun StyleSettingsScreen(
             state = state,
             onAction = { onAction(it) }
         )
+    }
+}
+
+@Composable
+fun getDarkModeDisplayName(theme: String): String{
+    return when(theme){
+        "system" -> stringResource(R.string.StyleSettings_system)
+        "light" -> stringResource(R.string.StyleSettings_light)
+        else -> stringResource(R.string.StyleSettings_dark)
     }
 }

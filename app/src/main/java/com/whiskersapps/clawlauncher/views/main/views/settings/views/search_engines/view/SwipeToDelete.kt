@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.R
 
@@ -51,7 +52,7 @@ fun SwipeToDelete(
             .clip(CircleShape)
             .border(1.dp, MaterialTheme.colorScheme.error, CircleShape)
     ) {
-        Text(text = "Swipe to delete", color = MaterialTheme.colorScheme.error)
+        Text(text = stringResource(R.string.SwipeToDelete), color = MaterialTheme.colorScheme.error)
 
         Box(contentAlignment = Alignment.CenterStart) {
 

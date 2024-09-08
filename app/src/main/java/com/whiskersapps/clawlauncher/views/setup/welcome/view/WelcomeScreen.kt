@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
+import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.views.setup.welcome.intent.WelcomeScreenAction
 import com.whiskersapps.clawlauncher.views.setup.welcome.model.WelcomeScreenVM
 
@@ -48,16 +49,11 @@ fun WelcomeScreenRoot(
 fun WelcomeScreen(
     onAction: (WelcomeScreenAction) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize()
-            .systemBarsPadding()
-            .padding(16.dp)
-    ) {
+    ContentColumn(useSystemBarsPadding = true) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(16.dp)
                 .weight(1f, fill = false),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
