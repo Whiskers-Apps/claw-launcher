@@ -9,6 +9,9 @@ It focus on being simple. There are no widgets or fancy things. Just a clock, a 
 The app also support hiding apps and secure others with fingerprint. 
 
 # Previews
+<details>
+  <summary>Click here to see screenshots</summary>
+
 <img src="./assets/home_clean.webp" width="400">
 <img src="./assets/home_searchbar.webp" width="400">
 <img src="./assets/search.webp" width="400">
@@ -17,6 +20,8 @@ The app also support hiding apps and secure others with fingerprint.
 <img src="./assets/apps_list.webp" width="400">
 <img src="./assets/search_engines.webp" width="400">
 <img src="./assets/bookmarks.webp" width="400">
+  
+</details>
 
 # Install
 To instal the app you can use one of the following methods.
