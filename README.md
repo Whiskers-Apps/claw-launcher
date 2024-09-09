@@ -29,12 +29,6 @@ To instal the app you can use one of the following methods.
 <a href="https://github.com/Whiskers-Apps/claw-launcher/releases">
 <img alt="github releases download" src="./assets/github-releases.svg" width="200">
 </a>
-<a>
-<img alt="play store download" src="./assets/play-store.svg" width="200">
-</a>
-<a>
-<img alt="f-droid download" src="./assets/f-droid.svg" width="200">
-</a>
 
 # Contributors
 The people that are helping the project with minor or big changes.
