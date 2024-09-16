@@ -32,7 +32,7 @@ To instal the app you can use one of the following methods.
 <img alt="github releases download" src="./assets/github-releases.svg" width="200">
 </a>
 
-<br>
+<br><br>
 
 <a href="https://play.google.com/store/apps/details?id=com.whiskersapps.clawlauncher">
 <img alt="github releases download" src="./assets/play-store.svg" width="200">
