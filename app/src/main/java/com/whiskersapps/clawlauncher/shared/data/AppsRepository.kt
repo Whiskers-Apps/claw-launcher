@@ -163,7 +163,6 @@ class AppsRepository(
 
     fun getSearchedApps(text: String): List<AppShortcut> {
         val sniffer = Sniffer()
-
         return unhiddenApps.value.filter { sniffer.matches(it.label, text) }
     }
 
