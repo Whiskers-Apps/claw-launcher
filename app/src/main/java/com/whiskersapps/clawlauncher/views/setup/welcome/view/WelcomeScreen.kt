@@ -50,10 +50,10 @@ fun WelcomeScreen(
     onAction: (WelcomeScreenAction) -> Unit
 ) {
     ContentColumn(useSystemBarsPadding = true) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
                 .weight(1f, fill = false),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -74,7 +74,7 @@ fun WelcomeScreen(
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.End) {
             Button(onClick = { onAction(WelcomeScreenAction.NavigateNext) }) {
                 Text(
                     text = stringResource(id = R.string.SetupScreen_next),
