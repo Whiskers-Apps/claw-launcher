@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -116,7 +117,9 @@ fun HomeScreen(
                             .pointerInput(Unit) {
                                 detectVerticalDragGestures { _, dragAmount ->
                                     if (dragAmount < 0) {
-                                        onAction(HomeScreenAction.OpenSearchSheet)
+                                        if (vm.state.value.swipeUpToSearch) {
+                                            onAction(HomeScreenAction.OpenSearchSheet)
+                                        }
                                     } else {
                                         onAction(HomeScreenAction.OpenNotificationPanel)
                                     }
@@ -158,7 +161,7 @@ fun HomeScreen(
                                 if (state.showPlaceholder) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
-                                        text = stringResource(R.string.HomeScreen_placeholder),
+                                        text = if(state.swipeUpToSearch) stringResource(R.string.HomeScreen_placeholder) else stringResource(R.string.HomeScreen_click_here_to_search),
                                         color = Color.White,
                                         fontSize = 18.sp,
                                         style = TextStyle(shadow = textShadow),

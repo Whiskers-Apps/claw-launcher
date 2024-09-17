@@ -41,6 +41,8 @@
     <string name="SettingsScreen_security_description">Esconder, proteger aplicações</string>
     <string name="SettingsScreen_about">Sobre</string>
     <string name="SettingsScreen_about_description">Informação sobre a aplicação</string>
+    <string name="HomeSettings_swipe_to_search">Deslizar Para Pesquisar</string>
+    <string name="HomeSettings_swipe_to_search_description">Abir a página de pesquisa ao deslizar para cima</string>
     <string name="HomeSettings_search_bar">Barra de pesquisa</string>
     <string name="HomeSettings_search_bar_description">Mostrar barra de pesquisa</string>
     <string name="HomeSettings_placeholder">Placeholder</string>
@@ -92,8 +94,9 @@
     <string name="SecuritySettingsScreen_secure_apps">Aplicações Seguras</string>
     <string name="SecuritySettingsScreen_secure_apps_description">Abrir aplicação com impressão digital</string>
     <string name="AboutScreen_version">Versão</string>
-    <string name="AboutScreen_license">Licensa</string>
+    <string name="AboutScreen_license">Licença</string>
     <string name="AboutScreen_source_code">Código Fonte</string>
     <string name="AboutScreen_donate">Doar</string>
     <string name="SearchEnginesSetupScreen_description">Selecione o seu motor de busca favorito. Pode mudar mais tarde nas definições</string>
+    <string name="HomeScreen_click_here_to_search">Clique aqui para pesquisar</string>
 </resources>

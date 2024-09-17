@@ -44,6 +44,7 @@ fun HomeSettingsScreen(
     ) {
 
         HomeSettings(
+            swipeUpToSearch = state.settings.swipeUpToSearch,
             showSearchBar = state.settings.showHomeSearchBar,
             showPlaceholder = state.settings.showHomeSearchBarPlaceholder,
             showSettings = state.settings.showHomeSearchBarSettings,
@@ -69,6 +70,10 @@ fun HomeSettingsScreen(
 
                     is HomeSettingsAction.SaveSearchBarRadius -> onAction(
                         HomeSettingsScreenAction.SaveSearchBarRadius(action.radius)
+                    )
+
+                    is HomeSettingsAction.SetSwipeUpToSearch -> onAction(
+                        HomeSettingsScreenAction.SetSwipeUpToSearch(action.swipeUp)
                     )
                 }
             }

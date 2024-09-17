@@ -2,7 +2,6 @@ package com.whiskersapps.clawlauncher.shared.data
 
 import android.app.Application
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.whiskersapps.clawlauncher.shared.model.SecuritySettings
@@ -10,15 +9,12 @@ import com.whiskersapps.clawlauncher.shared.model.Settings
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.toRealmList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 private val Context.dataStore by preferencesDataStore("settings")
 
@@ -94,7 +90,10 @@ class SettingsRepository(
 
                 hiddenApps = getHiddenApps(),
 
-                secureApps = getSecureApps()
+                secureApps = getSecureApps(),
+
+                swipeUpToSearch = preferences[Settings.SWIPE_UP_TO_SEARCH]
+                    ?: Settings.DEFAULT_SWIPE_UP_TO_SEARCH
             )
 
             _settings.update { newSettings }
@@ -224,5 +223,9 @@ class SettingsRepository(
         }
 
         _settings.update { it.copy(secureApps = apps) }
+    }
+
+    suspend fun setSwipeUpToSearch(swipeUp: Boolean){
+        dataStore.edit { it[Settings.SWIPE_UP_TO_SEARCH] = swipeUp }
     }
 }

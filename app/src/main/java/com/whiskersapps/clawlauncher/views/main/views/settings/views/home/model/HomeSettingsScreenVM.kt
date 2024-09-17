@@ -50,7 +50,13 @@ class HomeSettingsScreenVM @Inject constructor(
 
                 HomeSettingsScreenAction.NavigateBack -> {}
 
-                is HomeSettingsScreenAction.SaveSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(action.radius.toInt())
+                is HomeSettingsScreenAction.SaveSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(
+                    action.radius.toInt()
+                )
+
+                is HomeSettingsScreenAction.SetSwipeUpToSearch -> settingsRepository.setSwipeUpToSearch(
+                    action.swipeUp
+                )
             }
         }
     }

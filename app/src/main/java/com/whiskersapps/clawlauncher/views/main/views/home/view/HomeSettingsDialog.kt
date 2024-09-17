@@ -1,6 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.view
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import com.whiskersapps.clawlauncher.shared.intent.settings.HomeSettingsAction
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
@@ -13,6 +14,7 @@ fun HomeSettingsDialog(
     onAction: (HomeScreenAction) -> Unit,
     state: HomeScreenState
 ) {
+
     Dialog(
         show = state.showSettingsDialog,
         onDismiss = { onAction(HomeScreenAction.CloseSettingsDialog) }
@@ -23,6 +25,7 @@ fun HomeSettingsDialog(
         )
 
         HomeSettings(
+            swipeUpToSearch = state.swipeUpToSearch,
             showSearchBar = state.showSearchBar,
             showPlaceholder = state.showPlaceholder,
             showSettings = state.showSearchBarSettings,
@@ -49,6 +52,12 @@ fun HomeSettingsDialog(
                     is HomeSettingsAction.SetShowSettings -> onAction(
                         HomeScreenAction.SetShowSettings(action.show)
                     )
+
+                    is HomeSettingsAction.SetSwipeUpToSearch -> {
+                        onAction(
+                            HomeScreenAction.SetSwipeUpToSearch(action.swipeUp)
+                        )
+                    }
                 }
             }
         )
