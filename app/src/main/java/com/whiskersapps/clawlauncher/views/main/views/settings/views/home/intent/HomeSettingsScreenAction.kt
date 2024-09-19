@@ -7,4 +7,5 @@ sealed class HomeSettingsScreenAction {
     data class SetShowSettings(val show: Boolean) : HomeSettingsScreenAction()
     data class SetSearchBarRadius(val radius: Float) : HomeSettingsScreenAction()
     data class SaveSearchBarRadius(val radius: Float) : HomeSettingsScreenAction()
+    data class SetSwipeUpToSearch(val swipeUp: Boolean) : HomeSettingsScreenAction()
 }

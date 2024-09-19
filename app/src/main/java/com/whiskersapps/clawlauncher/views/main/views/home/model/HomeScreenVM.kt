@@ -37,7 +37,8 @@ class HomeScreenVM @Inject constructor(
                         showSearchBar = settings.showHomeSearchBar,
                         showPlaceholder = settings.showHomeSearchBarPlaceholder,
                         showSearchBarSettings = settings.showHomeSearchBarSettings,
-                        searchBarRadius = settings.homeSearchBarRadius.toFloat()
+                        searchBarRadius = settings.homeSearchBarRadius.toFloat(),
+                        swipeUpToSearch = settings.swipeUpToSearch
                     )
                 }
             }
@@ -105,6 +106,8 @@ class HomeScreenVM @Inject constructor(
             is HomeScreenAction.SetShowSearchBarPlaceholder -> setShowPlaceholder(action.show)
 
             is HomeScreenAction.SetShowSettings -> setShowSearchBarSettings(action.show)
+
+            is HomeScreenAction.SetSwipeUpToSearch -> setSwipeUpToSearch(action.swipeUp)
         }
     }
 
@@ -163,6 +166,12 @@ class HomeScreenVM @Inject constructor(
     private fun setShowPlaceholder(show: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.setShowHomeSearchBarPlaceholder(show)
+        }
+    }
+
+    private fun setSwipeUpToSearch(swipeUp: Boolean) {
+        viewModelScope.launch(Dispatchers.IO){
+            settingsRepository.setSwipeUpToSearch(swipeUp)
         }
     }
 }

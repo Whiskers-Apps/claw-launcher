@@ -29,7 +29,8 @@ data class Settings(
     val theme: String = DEFAULT_THEME,
     val darkTheme: String = DEFAULT_DARK_THEME,
     val hiddenApps: List<String> = emptyList(),
-    val secureApps: List<String> = emptyList()
+    val secureApps: List<String> = emptyList(),
+    val swipeUpToSearch: Boolean = DEFAULT_SWIPE_UP_TO_SEARCH
 ) {
     companion object {
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
@@ -90,5 +91,8 @@ data class Settings(
 
         val DARK_THEME = stringPreferencesKey("dark-theme")
         val DEFAULT_DARK_THEME = if(isAtLeastAndroid12()) "monet" else "panther-banana"
+
+        val SWIPE_UP_TO_SEARCH = booleanPreferencesKey("swipe-up-to-search")
+        const val DEFAULT_SWIPE_UP_TO_SEARCH = true
     }
 }

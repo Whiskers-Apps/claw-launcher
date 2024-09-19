@@ -6,6 +6,7 @@ data class HomeScreenState(
     val date: String = "",
     val showSettingsDialog: Boolean = false,
     val showMenuDialog: Boolean = false,
+    val swipeUpToSearch: Boolean = false,
     val showSearchBar: Boolean = true,
     val showPlaceholder: Boolean = true,
     val showSearchBarSettings: Boolean = true,

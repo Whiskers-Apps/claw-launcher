@@ -53,6 +53,7 @@ import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.search.viewmodel.SearchScreenVM
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,8 +67,6 @@ fun SearchScreen(
     val fragmentActivity = LocalContext.current as FragmentActivity
     val state = vm.state.collectAsState().value
     val scope = rememberCoroutineScope()
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
     val colsCount = getColsCount(
         cols = state.cols,
         landscapeCols = state.landscapeCols,
@@ -80,8 +79,7 @@ fun SearchScreen(
             vm.updateFocusSearchBar(true)
         } else {
             vm.updateSearchText("")
-            focusManager.clearFocus()
-            keyboardController?.hide()
+            closeSheet()
         }
     }
 
@@ -101,12 +99,8 @@ fun SearchScreen(
                     onFocused = { vm.updateFocusSearchBar(false) },
                     backgroundColor = Color.Transparent,
                     onDone = {
-                        scope.launch {
+                        scope.launch(Dispatchers.IO) {
                             vm.runAction(fragmentActivity)
-
-                            focusManager.clearFocus()
-                            keyboardController?.hide()
-
                             closeSheet()
                         }
                     }
@@ -137,12 +131,8 @@ fun SearchScreen(
                                 GridAppShortcut(
                                     app = app,
                                     openApp = {
-                                        scope.launch {
+                                        scope.launch(Dispatchers.IO) {
                                             vm.openApp(app.packageName, fragmentActivity)
-
-                                            focusManager.clearFocus()
-                                            keyboardController?.hide()
-
                                             closeSheet()
                                         }
                                     },
@@ -184,8 +174,10 @@ fun SearchScreen(
                                     Row(modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable {
-                                            vm.openGroup(group)
-                                            closeSheet()
+                                            scope.launch(Dispatchers.IO) {
+                                                vm.openGroup(group)
+                                                closeSheet()
+                                            }
                                         }
                                         .padding(16.dp),
                                         verticalAlignment = Alignment.CenterVertically
@@ -213,8 +205,10 @@ fun SearchScreen(
                                     Row(modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable {
-                                            vm.openUrl(bookmark.url)
-                                            closeSheet()
+                                            scope.launch(Dispatchers.IO) {
+                                                vm.openUrl(bookmark.url)
+                                                closeSheet()
+                                            }
                                         }
                                         .padding(16.dp),
                                         verticalAlignment = Alignment.CenterVertically
@@ -264,8 +258,10 @@ fun SearchScreen(
                                     .clip(RoundedCornerShape(32.dp))
                                     .background(MaterialTheme.colorScheme.surfaceVariant)
                                     .clickable {
-                                        vm.openUrl(vm.getSearchEngineUrl())
-                                        closeSheet()
+                                        scope.launch(Dispatchers.IO) {
+                                            vm.openUrl(vm.getSearchEngineUrl())
+                                            closeSheet()
+                                        }
                                     }
                                     .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically

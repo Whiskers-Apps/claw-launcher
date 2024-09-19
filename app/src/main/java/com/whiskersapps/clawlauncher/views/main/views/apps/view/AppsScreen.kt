@@ -63,7 +63,7 @@ fun AppsScreenRoot(
     AppsScreen(
         onAction = { action ->
             when (action) {
-                AppsScreenAction.NavigateToHome -> scope.launch { pagerState.scrollToPage(0) }
+                AppsScreenAction.NavigateToHome -> scope.launch{ pagerState.scrollToPage(0) }
                 AppsScreenAction.CloseKeyboard -> {
                     keyboardController?.hide()
                     focusManager.clearFocus()

@@ -100,7 +100,7 @@ fun SearchEnginesSetupScreen(
         }
 
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.End) {
             Button(onClick = { onAction(SearchEnginesSetupScreenAction.NavigateBack) }) {
                 Text(
                     text = stringResource(id = R.string.SetupScreen_previous),
