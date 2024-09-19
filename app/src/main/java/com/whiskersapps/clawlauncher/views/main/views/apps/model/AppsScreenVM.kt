@@ -1,6 +1,5 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.model
 
-import android.app.Application
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppsScreenVM @Inject constructor(
-    private val context: Application,
     private val settingsRepository: SettingsRepository,
     private val appsRepository: AppsRepository
 ) : ViewModel() {

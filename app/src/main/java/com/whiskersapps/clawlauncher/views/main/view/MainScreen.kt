@@ -22,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -35,6 +37,7 @@ import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreen
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchScreen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -59,6 +62,8 @@ fun MainScreen(
     val sheetState = rememberModalBottomSheetState()
     val scaffoldState = rememberBottomSheetScaffoldState(sheetState)
     val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
 
     BackHandler {
@@ -74,12 +79,16 @@ fun MainScreen(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
-            
             SearchScreen(
                 sheetState = sheetState,
-                closeSheet = { scope.launch { sheetState.hide() } }
+                closeSheet = {
+                    scope.launch(Dispatchers.IO){
+                        sheetState.hide()
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                    }
+                }
             )
-
         },
         sheetPeekHeight = 0.dp,
         sheetDragHandle = {},
