@@ -166,6 +166,7 @@ fun AppsScreen(
                                         onInfoClick = {
                                             onAction(AppsScreenAction.OpenAppInfo(app.packageName))
                                             showMenu = false
+                                            onAction(AppsScreenAction.NavigateToHome)
                                         },
                                         onUninstallClick = {
                                             onAction(AppsScreenAction.RequestUninstall(app.packageName))
@@ -174,6 +175,7 @@ fun AppsScreen(
                                         onOpenShortcut = { shortcut ->
                                             onAction(AppsScreenAction.OpenShortcut(app.packageName, shortcut))
                                             showMenu = false
+                                            onAction(AppsScreenAction.NavigateToHome)
                                         }
                                     )
                                 }
@@ -203,12 +205,14 @@ fun AppsScreen(
                                     },
                                     openInfo = {
                                         onAction(AppsScreenAction.OpenAppInfo(app.packageName))
+                                        onAction(AppsScreenAction.NavigateToHome)
                                     },
                                     requestUninstall = {
                                         onAction(AppsScreenAction.RequestUninstall(app.packageName))
                                     },
                                     openShortcut = { shortcut ->
                                         onAction(AppsScreenAction.OpenShortcut(app.packageName, shortcut))
+                                        onAction(AppsScreenAction.NavigateToHome)
                                     },
                                     backgroundColor = if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background
                                 )

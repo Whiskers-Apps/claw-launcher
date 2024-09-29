@@ -136,10 +136,16 @@ fun SearchScreen(
                                             closeSheet()
                                         }
                                     },
-                                    openInfo = { vm.openAppInfo(app.packageName) },
-                                    requestUninstall = { vm.requestUninstall(app.packageName) },
+                                    openInfo = {
+                                        vm.openAppInfo(app.packageName)
+                                        closeSheet();
+                                    },
+                                    requestUninstall = {
+                                        vm.requestUninstall(app.packageName)
+                                    },
                                     openShortcut = { shortcut ->
                                         vm.openShortcut(app.packageName, shortcut)
+                                        closeSheet()
                                     },
                                     backgroundColor = if (index == 0) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceVariant,
                                     radius = 24.dp
