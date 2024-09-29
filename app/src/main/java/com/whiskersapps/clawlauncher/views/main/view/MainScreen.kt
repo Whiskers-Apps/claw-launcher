@@ -1,5 +1,6 @@
 package com.whiskersapps.clawlauncher.views.main.view
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -19,15 +20,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.views.main.intent.MainScreenAction
@@ -64,9 +70,10 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-
-    BackHandler {
+    /// Sets the pager page back to 0 and closes the sheet
+    fun initSheetAndPager(){
         if (pagerState.currentPage != 0) {
             scope.launch { pagerState.animateScrollToPage(0) }
         }
@@ -74,6 +81,23 @@ fun MainScreen(
         if (sheetState.hasExpandedState) {
             scope.launch { sheetState.hide() }
         }
+    }
+
+    DisposableEffect(Unit) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) {
+                initSheetAndPager()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+
+    BackHandler {
+        initSheetAndPager()
     }
 
     BottomSheetScaffold(

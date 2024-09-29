@@ -1,5 +1,7 @@
 package com.whiskersapps.clawlauncher.shared.app
 
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
