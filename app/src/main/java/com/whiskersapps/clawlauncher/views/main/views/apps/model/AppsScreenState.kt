@@ -20,5 +20,6 @@ data class AppsScreenState(
     val showSearchBarSettings: Boolean = Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
     val searchBarRadius: Int = Settings.DEFAULT_APPS_SEARCH_BAR_RADIUS,
     val searchText: String = "",
-    val showSettingsDialog: Boolean = false
+    val showSettingsDialog: Boolean = false,
+    val showAppMenu: Boolean = false
 )

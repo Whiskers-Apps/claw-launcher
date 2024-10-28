@@ -1,46 +1,32 @@
 package com.whiskersapps.clawlauncher.views.main.view
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.AbsoluteCutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.model.Routes
+import com.whiskersapps.clawlauncher.shared.utils.OnActivityPaused
 import com.whiskersapps.clawlauncher.views.main.intent.MainScreenAction
-import com.whiskersapps.clawlauncher.views.main.model.MainScreenVM
-import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreen
 import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreen
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchScreen
 import kotlinx.coroutines.Dispatchers
@@ -48,12 +34,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreenRoot(
-    navController: NavController,
+    navController: NavController
 ) {
     MainScreen(
         onAction = { action ->
             when (action) {
-                MainScreenAction.NavigateToSettings -> navController.navigate(Routes.Main.Settings.MAIN)
+                MainScreenAction.OnNavigateToSettings -> navController.navigate(Routes.Main.Settings.MAIN)
             }
         }
     )
@@ -70,10 +56,10 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+
 
     /// Sets the pager page back to 0 and closes the sheet
-    fun initSheetAndPager(){
+    fun resetSheetAndPager() {
         if (pagerState.currentPage != 0) {
             scope.launch { pagerState.animateScrollToPage(0) }
         }
@@ -83,21 +69,12 @@ fun MainScreen(
         }
     }
 
-    DisposableEffect(Unit) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_PAUSE) {
-                initSheetAndPager()
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
+    OnActivityPaused {
+        resetSheetAndPager()
     }
 
-
     BackHandler {
-        initSheetAndPager()
+        resetSheetAndPager()
     }
 
     BottomSheetScaffold(
@@ -106,7 +83,7 @@ fun MainScreen(
             SearchScreen(
                 sheetState = sheetState,
                 closeSheet = {
-                    scope.launch(Dispatchers.IO){
+                    scope.launch(Dispatchers.IO) {
                         sheetState.hide()
                         focusManager.clearFocus()
                         keyboardController?.hide()
@@ -135,13 +112,15 @@ fun MainScreen(
                     if (page == 0) {
 
                         HomeScreenRoot(
-                            navigateToSettings = { onAction(MainScreenAction.NavigateToSettings) },
+                            navigateToSettings = { onAction(MainScreenAction.OnNavigateToSettings) },
                             sheetState = sheetState
                         )
                     }
 
                     if (page == 1) {
-                        AppsScreenRoot(pagerState = pagerState)
+                        AppsScreenRoot(
+                            pagerState = pagerState
+                        )
                     }
                 }
             }

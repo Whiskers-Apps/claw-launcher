@@ -63,7 +63,7 @@ fun AppsScreenRoot(
     AppsScreen(
         onAction = { action ->
             when (action) {
-                AppsScreenAction.NavigateToHome -> scope.launch{ pagerState.scrollToPage(0) }
+                AppsScreenAction.NavigateToHome -> scope.launch { pagerState.scrollToPage(0) }
                 AppsScreenAction.CloseKeyboard -> {
                     keyboardController?.hide()
                     focusManager.clearFocus()
@@ -138,11 +138,18 @@ fun AppsScreen(
                                         .background(if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background)
                                         .combinedClickable(
                                             onClick = {
-                                                onAction(AppsScreenAction.OpenApp(app.packageName, fragmentActivity))
+                                                onAction(
+                                                    AppsScreenAction.OpenApp(
+                                                        app.packageName,
+                                                        fragmentActivity
+                                                    )
+                                                )
                                                 onAction(AppsScreenAction.CloseKeyboard)
                                                 onAction(AppsScreenAction.NavigateToHome)
                                             },
-                                            onLongClick = { showMenu = true }
+                                            onLongClick = {
+                                                showMenu = true
+                                            }
                                         )
                                         .padding(8.dp),
                                     verticalAlignment = Alignment.CenterVertically
@@ -162,7 +169,9 @@ fun AppsScreen(
                                 if (showMenu) {
                                     AppPopup(
                                         app = app,
-                                        onDismiss = { showMenu = false },
+                                        onDismiss = {
+                                            showMenu = false
+                                        },
                                         onInfoClick = {
                                             onAction(AppsScreenAction.OpenAppInfo(app.packageName))
                                             showMenu = false
@@ -173,7 +182,12 @@ fun AppsScreen(
                                             showMenu = false
                                         },
                                         onOpenShortcut = { shortcut ->
-                                            onAction(AppsScreenAction.OpenShortcut(app.packageName, shortcut))
+                                            onAction(
+                                                AppsScreenAction.OpenShortcut(
+                                                    app.packageName,
+                                                    shortcut
+                                                )
+                                            )
                                             showMenu = false
                                             onAction(AppsScreenAction.NavigateToHome)
                                         }
@@ -199,7 +213,12 @@ fun AppsScreen(
                                 GridAppShortcut(
                                     app = app,
                                     openApp = {
-                                        onAction(AppsScreenAction.OpenApp(app.packageName, fragmentActivity))
+                                        onAction(
+                                            AppsScreenAction.OpenApp(
+                                                app.packageName,
+                                                fragmentActivity
+                                            )
+                                        )
                                         onAction(AppsScreenAction.CloseKeyboard)
                                         onAction(AppsScreenAction.NavigateToHome)
                                     },
@@ -211,7 +230,12 @@ fun AppsScreen(
                                         onAction(AppsScreenAction.RequestUninstall(app.packageName))
                                     },
                                     openShortcut = { shortcut ->
-                                        onAction(AppsScreenAction.OpenShortcut(app.packageName, shortcut))
+                                        onAction(
+                                            AppsScreenAction.OpenShortcut(
+                                                app.packageName,
+                                                shortcut
+                                            )
+                                        )
                                         onAction(AppsScreenAction.NavigateToHome)
                                     },
                                     backgroundColor = if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background

@@ -49,7 +49,7 @@ class AppsScreenVM @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            appsRepository.unhiddenApps.collect {
+            appsRepository.apps.collect {
                 _state.update {
                     it.copy(
                         loading = it.loadingSettings,

@@ -13,7 +13,6 @@ import android.net.Uri
 import android.os.Process
 import android.provider.Settings
 import android.util.DisplayMetrics
-import android.util.Log
 import androidx.core.graphics.drawable.toBitmap
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import com.whiskersapps.lib.Sniffer
@@ -35,19 +34,15 @@ class AppsRepository(
     private val _apps = MutableStateFlow<List<AppShortcut>>(ArrayList())
     val apps = _apps.asStateFlow()
 
-    private val _unhiddenApps = MutableStateFlow<List<AppShortcut>>(ArrayList())
-    val unhiddenApps = _unhiddenApps.asStateFlow()
+    var allApps = ArrayList<AppShortcut>()
 
     private val packageManager = app.packageManager
 
     private val launcherApps = app.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
 
     init {
-
         // Listens to package changes and updates the apps list
         CoroutineScope(Dispatchers.IO).launch {
-            updateShortcuts()
-
             var sequenceNumber = 0
 
             while (true) {
@@ -71,7 +66,6 @@ class AppsRepository(
     }
 
     private suspend fun updateShortcuts() {
-
         /* This fetching for the shortcuts requires to be in the Main thread
         so this workaround is needed so the app doesn't lag when changing settings. 😅
         * */
@@ -83,7 +77,6 @@ class AppsRepository(
                 val intent = Intent(Intent.ACTION_MAIN, null).apply {
                     addCategory(Intent.CATEGORY_LAUNCHER)
                 }
-
 
                 packageManager.queryIntentActivities(intent, 0).forEach { appIntent ->
                     if (appIntent.activityInfo.packageName != "com.whiskersapps.clawlauncher") {
@@ -138,10 +131,10 @@ class AppsRepository(
             shortcuts.sortBy { it.label.lowercase() }
 
             val hiddenApps = settingsRepository.settings.value.hiddenApps
-            val newUnhiddenApps = shortcuts.filterNot { hiddenApps.contains(it.packageName) }
+            val newApps = shortcuts.filterNot { hiddenApps.contains(it.packageName) }
 
-            _apps.update { shortcuts }
-            _unhiddenApps.update { newUnhiddenApps }
+            _apps.update { newApps }
+            allApps = shortcuts
         }
     }
 
@@ -164,7 +157,7 @@ class AppsRepository(
 
     fun getSearchedApps(text: String): List<AppShortcut> {
         val sniffer = Sniffer()
-        return unhiddenApps.value.filter { sniffer.matches(it.label, text) }
+        return apps.value.filter { sniffer.matches(it.label, text) }
     }
 
     fun openAppInfo(packageName: String) {
