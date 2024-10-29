@@ -1,9 +1,11 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.security.model
 
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.shared.data.AppsRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.intent.SecuritySettingsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +31,7 @@ class SecuritySettingsScreenVM @Inject constructor(
                     it.copy(
                         loading = false,
                         settings = settings,
-                        apps = appsRepository.apps.value,
+                        apps = appsRepository.allApps,
                         hiddenAppsDialog = it.hiddenAppsDialog.copy(selectedApps = settings.hiddenApps),
                         secureAppsDialog = it.secureAppsDialog.copy(selectedApps = settings.secureApps)
                     )
@@ -43,7 +45,7 @@ class SecuritySettingsScreenVM @Inject constructor(
             SecuritySettingsScreenAction.NavigateBack -> {}
             SecuritySettingsScreenAction.OpenHiddenAppsDialog -> showHiddenAppsDialog()
             SecuritySettingsScreenAction.CloseHiddenAppsDialog -> closeHiddenAppsDialog()
-            SecuritySettingsScreenAction.OpenSecureAppsDialog -> showSecureAppsDialog()
+            is SecuritySettingsScreenAction.OpenSecureAppsDialog -> showSecureAppsDialog(action.fragmentActivity)
             SecuritySettingsScreenAction.CloseSecureAppsDialog -> closeSecureAppsDialog()
             is SecuritySettingsScreenAction.ToggleHiddenApp -> toggleHiddenApp(action.packageName)
             is SecuritySettingsScreenAction.ToggleSecureApp -> toggleSecureApp(action.packageName)
@@ -86,8 +88,15 @@ class SecuritySettingsScreenVM @Inject constructor(
         }
     }
 
-    private fun showSecureAppsDialog() {
-        _state.update { it.copy(secureAppsDialog = it.secureAppsDialog.copy(show = true)) }
+    private fun showSecureAppsDialog(fragmentActivity: FragmentActivity) {
+        requestFingerprint(
+            fragmentActivity = fragmentActivity,
+            title = "Open Secure Apps",
+            message = "Unlock to open the secure apps dialog",
+            onSuccess = {
+                _state.update { it.copy(secureAppsDialog = it.secureAppsDialog.copy(show = true)) }
+            }
+        )
     }
 
     private fun toggleSecureApp(packageName: String) {

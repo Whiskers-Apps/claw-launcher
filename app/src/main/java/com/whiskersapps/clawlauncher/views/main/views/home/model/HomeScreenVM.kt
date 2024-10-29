@@ -108,6 +108,8 @@ class HomeScreenVM @Inject constructor(
             is HomeScreenAction.SetShowSettings -> setShowSearchBarSettings(action.show)
 
             is HomeScreenAction.SetSwipeUpToSearch -> setSwipeUpToSearch(action.swipeUp)
+
+            HomeScreenAction.OnOpenCalendar -> onOpenCalendar()
         }
     }
 
@@ -172,6 +174,21 @@ class HomeScreenVM @Inject constructor(
     private fun setSwipeUpToSearch(swipeUp: Boolean) {
         viewModelScope.launch(Dispatchers.IO){
             settingsRepository.setSwipeUpToSearch(swipeUp)
+        }
+    }
+
+    private fun onOpenCalendar(){
+        try{
+            viewModelScope.launch(Dispatchers.IO){
+                val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CALENDAR)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+                if(intent.resolveActivity(app.packageManager) != null){
+                    app.startActivity(intent)
+                }
+            }
+        }catch (e:Exception){
+            println("Error opening calendar. Exception: ${e.message}")
         }
     }
 }

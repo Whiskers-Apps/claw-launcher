@@ -1,10 +1,6 @@
 package com.whiskersapps.clawlauncher.shared.app
 
-import android.app.Activity
-import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -56,11 +52,11 @@ class MainActivity : FragmentActivity() {
                 ) {
                     val mainNavController = rememberNavController()
                     val backgroundColor = MaterialTheme.colorScheme.background
-                    var background by remember { mutableStateOf(if (settings.setupCompleted) Color.Transparent else backgroundColor) }
+                    var navBackgroundColor by remember { mutableStateOf(if (settings.setupCompleted) Color.Transparent else backgroundColor) }
 
                     mainNavController.addOnDestinationChangedListener { _, destination, _ ->
 
-                        background = if (destination.route == Routes.Main.HOME) {
+                        navBackgroundColor = if (destination.route == Routes.Main.HOME) {
                             Color.Transparent
                         } else {
                             backgroundColor
@@ -70,7 +66,7 @@ class MainActivity : FragmentActivity() {
                     NavHost(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(background),
+                            .background(navBackgroundColor),
                         navController = mainNavController,
                         startDestination = if (settings.setupCompleted) Routes.Main.ROUTE else Routes.Setup.ROUTE
                     ) {

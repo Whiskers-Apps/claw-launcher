@@ -2,7 +2,6 @@ package com.whiskersapps.clawlauncher.views.main.views.search.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -30,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,21 +48,51 @@ import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
-import com.whiskersapps.clawlauncher.views.main.views.search.viewmodel.SearchScreenVM
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnClearSearch
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnCloseSheet
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnOpenApp
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnOpenAppInfo
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnOpenGroup
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnOpenShortcut
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnOpenUrl
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnRequestUninstall
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnRunAction
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnSearchInput
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnSetFocusSearchBar
+import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenVM
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchScreenRoot(
+    sheetState: SheetState,
+    vm: SearchScreenVM = hiltViewModel(),
+    onCloseSheet: () -> Unit
+) {
+    SearchScreen(vm, sheetState) { action ->
+        when (action) {
+            OnCloseSheet -> {
+                onCloseSheet()
+            }
+            else -> {
+                vm.onAction(action)
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    vm: SearchScreenVM = hiltViewModel(),
+    vm: SearchScreenVM,
     sheetState: SheetState,
-    closeSheet: () -> Unit
+    onAction: (SearchScreenAction) -> Unit
 ) {
 
     val fragmentActivity = LocalContext.current as FragmentActivity
     val state = vm.state.collectAsState().value
-    val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val colsCount = getColsCount(
         cols = state.cols,
         landscapeCols = state.landscapeCols,
@@ -74,12 +100,14 @@ fun SearchScreen(
         unfoldedLandscapeCols = state.unfoldedLandscapeCols
     )
 
+
     LaunchedEffect(sheetState.currentValue) {
         if (sheetState.currentValue == SheetValue.Expanded) {
-            vm.updateFocusSearchBar(true)
+            onAction(OnSetFocusSearchBar(true))
         } else {
-            vm.updateSearchText("")
-            closeSheet()
+            onAction(OnClearSearch)
+            focusManager.clearFocus()
+            keyboardController?.hide()
         }
     }
 
@@ -93,16 +121,18 @@ fun SearchScreen(
             ContentColumn(useSystemBarsPadding = true, scrollable = false) {
                 SearchBar(
                     text = state.searchText,
-                    onChange = { vm.updateSearchText(it) },
+                    onChange = { text ->
+                        onAction(OnSearchInput(text))
+                    },
                     placeholder = stringResource(R.string.SearchScreen_search_placeholder),
                     focus = state.focusSearchBar,
-                    onFocused = { vm.updateFocusSearchBar(false) },
+                    onFocused = {
+                        onAction(OnSetFocusSearchBar(false))
+                    },
                     backgroundColor = Color.Transparent,
                     onDone = {
-                        scope.launch(Dispatchers.IO) {
-                            vm.runAction(fragmentActivity)
-                            closeSheet()
-                        }
+                        onAction(OnRunAction(fragmentActivity))
+                        onAction(OnCloseSheet)
                     }
                 )
 
@@ -131,21 +161,20 @@ fun SearchScreen(
                                 GridAppShortcut(
                                     app = app,
                                     openApp = {
-                                        scope.launch(Dispatchers.IO) {
-                                            vm.openApp(app.packageName, fragmentActivity)
-                                            closeSheet()
-                                        }
+                                        onAction(OnOpenApp(app.packageName, fragmentActivity))
+                                        onAction(OnCloseSheet)
                                     },
                                     openInfo = {
-                                        vm.openAppInfo(app.packageName)
-                                        closeSheet();
+                                        onAction(OnOpenAppInfo(app.packageName))
+                                        onAction(OnCloseSheet)
                                     },
                                     requestUninstall = {
-                                        vm.requestUninstall(app.packageName)
+                                        onAction(OnRequestUninstall(app.packageName))
+                                        onAction(OnCloseSheet)
                                     },
                                     openShortcut = { shortcut ->
-                                        vm.openShortcut(app.packageName, shortcut)
-                                        closeSheet()
+                                        onAction(OnOpenShortcut(app.packageName, shortcut))
+                                        onAction(OnCloseSheet)
                                     },
                                     backgroundColor = if (index == 0) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceVariant,
                                     radius = 24.dp
@@ -180,10 +209,8 @@ fun SearchScreen(
                                     Row(modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable {
-                                            scope.launch(Dispatchers.IO) {
-                                                vm.openGroup(group)
-                                                closeSheet()
-                                            }
+                                            onAction(OnOpenGroup(group))
+                                            onAction(OnCloseSheet)
                                         }
                                         .padding(16.dp),
                                         verticalAlignment = Alignment.CenterVertically
@@ -211,10 +238,8 @@ fun SearchScreen(
                                     Row(modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable {
-                                            scope.launch(Dispatchers.IO) {
-                                                vm.openUrl(bookmark.url)
-                                                closeSheet()
-                                            }
+                                            onAction(OnOpenUrl(bookmark.url))
+                                            onAction(OnCloseSheet)
                                         }
                                         .padding(16.dp),
                                         verticalAlignment = Alignment.CenterVertically
@@ -264,10 +289,8 @@ fun SearchScreen(
                                     .clip(RoundedCornerShape(32.dp))
                                     .background(MaterialTheme.colorScheme.surfaceVariant)
                                     .clickable {
-                                        scope.launch(Dispatchers.IO) {
-                                            vm.openUrl(vm.getSearchEngineUrl())
-                                            closeSheet()
-                                        }
+                                        onAction(OnOpenUrl(vm.getSearchEngineUrl()))
+                                        onAction(OnCloseSheet)
                                     }
                                     .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically

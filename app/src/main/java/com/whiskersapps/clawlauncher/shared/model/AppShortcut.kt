@@ -8,9 +8,13 @@ data class AppShortcut(
     val icon: Bitmap,
     val shortcuts: List<Shortcut> = emptyList()
 ){
+    /** An app shortcut like new tab and private tab on firefox. */
     data class Shortcut(
+        /** The shortcut Id.*/
         val id: String = "",
+        /** The shortcut label.*/
         val label: String = "",
+        /** The shortcut icon bitmap.*/
         val icon: Bitmap? = null
     )
 }

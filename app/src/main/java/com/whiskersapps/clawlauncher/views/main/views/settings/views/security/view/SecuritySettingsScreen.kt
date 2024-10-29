@@ -2,7 +2,9 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.security.v
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
@@ -34,6 +36,9 @@ fun SecuritySettingsScreen(
     onAction: (SecuritySettingsScreenAction) -> Unit,
     state: SecuritySettingsScreenState
 ) {
+
+    val fragmentActivity = LocalContext.current as FragmentActivity
+
     ContentColumn(useSystemBarsPadding = true) {
         NavBar(navigateBack = { onAction(SecuritySettingsScreenAction.NavigateBack) })
 
@@ -46,7 +51,7 @@ fun SecuritySettingsScreen(
         SimpleSetting(
             title = stringResource(R.string.SecuritySettingsScreen_secure_apps),
             value = stringResource(R.string.SecuritySettingsScreen_secure_apps_description),
-            onClick = { onAction(SecuritySettingsScreenAction.OpenSecureAppsDialog) }
+            onClick = { onAction(SecuritySettingsScreenAction.OpenSecureAppsDialog(fragmentActivity)) }
         )
 
         HiddenAppsDialog(onAction = {onAction(it)}, state = state)

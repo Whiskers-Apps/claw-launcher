@@ -5,11 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -21,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
@@ -30,7 +26,7 @@ fun AppIcon(
     app: AppShortcut,
     size: Dp? = null
 ) {
-    val stockIcon by remember { derivedStateOf { app.icon.asImageBitmap() } }
+    val icon by remember { derivedStateOf { app.icon.asImageBitmap() } }
 
     Box(
         modifier = Modifier
@@ -46,8 +42,8 @@ fun AppIcon(
                 .fillMaxHeight()
                 .aspectRatio(1f)
                 .scale(1.05f),
-            bitmap = stockIcon,
-            contentDescription = "${app.packageName} icon",
+            bitmap = icon,
+            contentDescription = "${app.label} icon",
             contentScale = ContentScale.FillBounds
         )
     }
