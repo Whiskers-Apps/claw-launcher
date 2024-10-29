@@ -134,17 +134,13 @@ class AppsScreenVM @Inject constructor(
             appsRepository.openApp(packageName)
         }
 
-        _state.update {
-            it.copy(
-                searchText = "",
-                appShortcuts = appsRepository.apps.value
-            )
-        }
+        clearSearch()
     }
 
-    private fun openShortcut(packageName: String, shortcut: AppShortcut.Shortcut){
-        viewModelScope.launch(Dispatchers.IO){
+    private fun openShortcut(packageName: String, shortcut: AppShortcut.Shortcut) {
+        viewModelScope.launch(Dispatchers.IO) {
             appsRepository.openShortcut(packageName, shortcut)
+            clearSearch()
         }
     }
 
@@ -159,11 +155,17 @@ class AppsScreenVM @Inject constructor(
     }
 
     private fun openAppInfo(packageName: String) {
-        appsRepository.openAppInfo(packageName)
+        viewModelScope.launch(Dispatchers.IO) {
+            appsRepository.openAppInfo(packageName)
+            clearSearch()
+        }
     }
 
     private fun requestUninstall(packageName: String) {
-        appsRepository.requestUninstall(packageName)
+        viewModelScope.launch(Dispatchers.IO) {
+            appsRepository.requestUninstall(packageName)
+            clearSearch()
+        }
     }
 
     private fun setViewType(type: String) {
@@ -233,6 +235,15 @@ class AppsScreenVM @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(searchBarRadius = radius) }
             settingsRepository.setAppsSearchBarRadius(radius)
+        }
+    }
+
+    private fun clearSearch() {
+        _state.update {
+            it.copy(
+                searchText = "",
+                appShortcuts = appsRepository.apps.value
+            )
         }
     }
 }
