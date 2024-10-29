@@ -29,6 +29,7 @@ import com.whiskersapps.clawlauncher.views.main.intent.MainScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchScreen
+import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchScreenRoot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -80,9 +81,9 @@ fun MainScreen(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
-            SearchScreen(
+            SearchScreenRoot(
                 sheetState = sheetState,
-                closeSheet = {
+                onCloseSheet = {
                     scope.launch(Dispatchers.IO) {
                         sheetState.hide()
                         focusManager.clearFocus()
