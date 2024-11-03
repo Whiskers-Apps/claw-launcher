@@ -26,6 +26,7 @@ fun AppsSettingsDialog(
 
         AppsSettings(
             isFoldable = isFoldable(context),
+            disableAppsScreen = state.disableAppsScreen,
             viewType = state.viewType,
             phoneCols = state.cols,
             phoneLandscapeCols = state.landscapeCols,
@@ -77,6 +78,10 @@ fun AppsSettingsDialog(
 
                 is AppsSettingsAction.SetViewType -> {
                     onAction(AppsScreenAction.SetViewType(action.type))
+                }
+
+                is AppsSettingsAction.SetDisableAppsScreen -> {
+                    onAction(AppsScreenAction.SetDisableAppsScreen(action.disable))
                 }
             }
         }

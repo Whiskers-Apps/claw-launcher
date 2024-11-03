@@ -49,6 +49,7 @@ fun AppsSettingsScreen(
 
         AppsSettings(
             isFoldable = isFoldable(context),
+            disableAppsScreen = state.settings.disableAppsScreen,
             viewType = state.settings.appsViewType,
             phoneCols = state.settings.portraitCols,
             phoneLandscapeCols = state.settings.landscapeCols,
@@ -117,6 +118,12 @@ fun AppsSettingsScreen(
                 is AppsSettingsAction.SetViewType -> onAction(
                     AppsSettingsScreenAction.SetViewType(
                         action.type
+                    )
+                )
+
+                is AppsSettingsAction.SetDisableAppsScreen -> onAction(
+                    AppsSettingsScreenAction.SetDisableAppsScreen(
+                        action.disable
                     )
                 )
             }

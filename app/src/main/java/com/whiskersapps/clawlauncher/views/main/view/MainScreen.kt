@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.utils.OnActivityPaused
 import com.whiskersapps.clawlauncher.views.main.intent.MainScreenAction
+import com.whiskersapps.clawlauncher.views.main.model.MainScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.home.view.HomeScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchScreen
@@ -35,9 +36,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreenRoot(
-    navController: NavController
+    navController: NavController,
+    vm: MainScreenVM = hiltViewModel()
 ) {
     MainScreen(
+        vm = vm,
         onAction = { action ->
             when (action) {
                 MainScreenAction.OnNavigateToSettings -> navController.navigate(Routes.Main.Settings.MAIN)
@@ -49,79 +52,83 @@ fun MainScreenRoot(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
+    vm: MainScreenVM,
     onAction: (MainScreenAction) -> Unit
 ) {
-    val pagerState = rememberPagerState(pageCount = { 2 })
+    val state = vm.state.collectAsState().value
+    val pagerState = rememberPagerState(pageCount = { if(state.settings.disableAppsScreen) 1 else 2 })
     val sheetState = rememberModalBottomSheetState()
     val scaffoldState = rememberBottomSheetScaffoldState(sheetState)
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    if (!state.loading) {
 
-    /// Sets the pager page back to 0 and closes the sheet
-    fun resetSheetAndPager() {
-        if (pagerState.currentPage != 0) {
-            scope.launch { pagerState.animateScrollToPage(0) }
+        /// Sets the pager page back to 0 and closes the sheet
+        fun resetSheetAndPager() {
+            if (pagerState.currentPage != 0) {
+                scope.launch { pagerState.animateScrollToPage(0) }
+            }
+
+            if (sheetState.hasExpandedState) {
+                scope.launch { sheetState.hide() }
+            }
         }
 
-        if (sheetState.hasExpandedState) {
-            scope.launch { sheetState.hide() }
+        OnActivityPaused {
+            resetSheetAndPager()
         }
-    }
 
-    OnActivityPaused {
-        resetSheetAndPager()
-    }
+        BackHandler {
+            resetSheetAndPager()
+        }
 
-    BackHandler {
-        resetSheetAndPager()
-    }
-
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        sheetContent = {
-            SearchScreenRoot(
-                sheetState = sheetState,
-                onCloseSheet = {
-                    scope.launch(Dispatchers.IO) {
-                        sheetState.hide()
-                        focusManager.clearFocus()
-                        keyboardController?.hide()
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetContent = {
+                SearchScreenRoot(
+                    sheetState = sheetState,
+                    onCloseSheet = {
+                        scope.launch(Dispatchers.IO) {
+                            sheetState.hide()
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        }
                     }
-                }
-            )
-        },
-        sheetPeekHeight = 0.dp,
-        sheetDragHandle = {},
-        sheetShape = RoundedCornerShape(0.dp),
-        sheetMaxWidth = Dp.Unspecified,
-        contentColor = Color.Transparent,
-        containerColor = Color.Transparent,
-        sheetContentColor = Color.Transparent,
-        sheetContainerColor = Color.Transparent,
-        sheetShadowElevation = 0.dp,
-        sheetTonalElevation = 0.dp
-    ) {
-        Box {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
+                )
+            },
+            sheetPeekHeight = 0.dp,
+            sheetDragHandle = {},
+            sheetShape = RoundedCornerShape(0.dp),
+            sheetMaxWidth = Dp.Unspecified,
+            contentColor = Color.Transparent,
+            containerColor = Color.Transparent,
+            sheetContentColor = Color.Transparent,
+            sheetContainerColor = Color.Transparent,
+            sheetShadowElevation = 0.dp,
+            sheetTonalElevation = 0.dp
+        ) {
+            Box {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
 
-                HorizontalPager(modifier = Modifier.fillMaxSize(), state = pagerState) { page ->
-                    if (page == 0) {
+                    HorizontalPager(modifier = Modifier.fillMaxSize(), state = pagerState) { page ->
+                        if (page == 0) {
 
-                        HomeScreenRoot(
-                            navigateToSettings = { onAction(MainScreenAction.OnNavigateToSettings) },
-                            sheetState = sheetState
-                        )
-                    }
+                            HomeScreenRoot(
+                                navigateToSettings = { onAction(MainScreenAction.OnNavigateToSettings) },
+                                sheetState = sheetState
+                            )
+                        }
 
-                    if (page == 1) {
-                        AppsScreenRoot(
-                            pagerState = pagerState
-                        )
+                        if (page == 1) {
+                            AppsScreenRoot(
+                                pagerState = pagerState
+                            )
+                        }
                     }
                 }
             }

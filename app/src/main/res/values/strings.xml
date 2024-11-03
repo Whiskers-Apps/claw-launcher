@@ -72,6 +72,8 @@
 
 
     <!-- Apps Settings -->
+    <string name="AppsSettings_disable_apps_screen">Apps Screen</string>
+    <string name="AppsSettings_disable_apps_screen_description">Disable apps screen</string>
     <string name="AppsSettings_view">View</string>
     <string name="AppsSettings_grid">Grid</string>
     <string name="AppsSettings_list">List</string>

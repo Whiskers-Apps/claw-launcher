@@ -93,7 +93,10 @@ class SettingsRepository(
                 secureApps = getSecureApps(),
 
                 swipeUpToSearch = preferences[Settings.SWIPE_UP_TO_SEARCH]
-                    ?: Settings.DEFAULT_SWIPE_UP_TO_SEARCH
+                    ?: Settings.DEFAULT_SWIPE_UP_TO_SEARCH,
+
+                disableAppsScreen = preferences[Settings.DISABLE_APPS_SCREEN]
+                    ?: Settings.DEFAULT_DISABLE_APPS_SCREEN
             )
 
             _settings.update { newSettings }
@@ -225,7 +228,11 @@ class SettingsRepository(
         _settings.update { it.copy(secureApps = apps) }
     }
 
-    suspend fun setSwipeUpToSearch(swipeUp: Boolean){
+    suspend fun setSwipeUpToSearch(swipeUp: Boolean) {
         dataStore.edit { it[Settings.SWIPE_UP_TO_SEARCH] = swipeUp }
+    }
+
+    suspend fun setDisableAppsScreen(disable: Boolean) {
+        dataStore.edit { it[Settings.DISABLE_APPS_SCREEN] = disable }
     }
 }

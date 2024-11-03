@@ -51,6 +51,7 @@
     <string name="HomeSettings_settings_description">Mostrar o ícone de definições na barra de pesquisa</string>
     <string name="HomeSettings_search_bar_radius">Curvatura da barra de pesquisa</string>
     <string name="HomeSettings_search_bar_radius_description">A curvatura da barra de pesquisa</string>
+    <string name="AppsSettings_disable_apps_screen_description">Desativar a página de aplicações</string>
     <string name="AppsSettings_view">Visualização</string>
     <string name="AppsSettings_grid">Grelha</string>
     <string name="AppsSettings_list">Lista</string>
@@ -99,4 +100,5 @@
     <string name="AboutScreen_donate">Doar</string>
     <string name="SearchEnginesSetupScreen_description">Selecione o seu motor de busca favorito. Pode mudar mais tarde nas definições</string>
     <string name="HomeScreen_click_here_to_search">Clique aqui para pesquisar</string>
+    <string name="AppsSettings_disable_apps_screen">Página de Aplicações</string>
 </resources>

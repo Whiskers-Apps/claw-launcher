@@ -72,6 +72,10 @@ class AppsSettingsScreenVM @Inject constructor(
                 is AppsSettingsScreenAction.SetViewType -> settingsRepository.setAppsViewType(
                     action.type
                 )
+
+                is AppsSettingsScreenAction.SetDisableAppsScreen -> settingsRepository.setDisableAppsScreen(
+                    action.disable
+                )
             }
         }
     }

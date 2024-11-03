@@ -9,6 +9,7 @@ data class AppsScreenState(
     val loadingSettings: Boolean = true,
     val appShortcuts: List<AppShortcut> = emptyList(),
     val securedApps: List<String> = emptyList(),
+    val disableAppsScreen: Boolean = Settings.DEFAULT_DISABLE_APPS_SCREEN,
     val viewType: String = Settings.DEFAULT_APPS_VIEW_TYPE,
     val cols: Int = Settings.DEFAULT_PORTRAIT_COLS,
     val landscapeCols: Int = Settings.DEFAULT_LANDSCAPE_COLS,

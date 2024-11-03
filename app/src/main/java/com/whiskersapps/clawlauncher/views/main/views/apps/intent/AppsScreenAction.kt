@@ -28,4 +28,5 @@ sealed class AppsScreenAction {
     data class SetShowSearchBarPlaceholder(val show: Boolean) : AppsScreenAction()
     data class SetShowSearchBarSettings(val show: Boolean) : AppsScreenAction()
     data class SetSearchBarRadius(val radius: Float) : AppsScreenAction()
+    data class SetDisableAppsScreen(val disable: Boolean) : AppsScreenAction()
 }

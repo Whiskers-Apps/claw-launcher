@@ -38,6 +38,7 @@ import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 @Composable
 fun AppsSettings(
     isFoldable: Boolean,
+    disableAppsScreen: Boolean,
     viewType: String,
     phoneCols: Int,
     phoneLandscapeCols: Int,
@@ -50,6 +51,13 @@ fun AppsSettings(
     searchBarRadius: Int,
     onAction: (AppsSettingsAction) -> Unit
 ) {
+
+    SwitchSetting(
+        title = stringResource(R.string.AppsSettings_disable_apps_screen),
+        description = stringResource(R.string.AppsSettings_disable_apps_screen_description),
+        value = disableAppsScreen,
+        onValueChange = { disable -> onAction(AppsSettingsAction.SetDisableAppsScreen(disable)) }
+    )
 
     Column(modifier = Modifier.sidePadding()) {
         Text(
@@ -208,7 +216,7 @@ fun AppsSettings(
                 }
             )
         }
-    }else{
+    } else {
         Spacer(modifier = Modifier.height(16.dp))
     }
 

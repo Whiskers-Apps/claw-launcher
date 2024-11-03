@@ -104,6 +104,8 @@ class AppsScreenVM @Inject constructor(
             is AppsScreenAction.SetSearchBarRadius -> setSearchBarRadius(action.radius.toInt())
 
             is AppsScreenAction.OpenShortcut -> openShortcut(action.packageName, action.shortcut)
+
+            is AppsScreenAction.SetDisableAppsScreen -> setDisableAppsScreen(action.disable)
         }
     }
 
@@ -244,6 +246,13 @@ class AppsScreenVM @Inject constructor(
                 searchText = "",
                 appShortcuts = appsRepository.apps.value
             )
+        }
+    }
+
+    private fun setDisableAppsScreen(disable: Boolean){
+        viewModelScope.launch(Dispatchers.IO){
+            _state.update { it.copy(disableAppsScreen = disable) }
+            settingsRepository.setDisableAppsScreen(disable)
         }
     }
 }

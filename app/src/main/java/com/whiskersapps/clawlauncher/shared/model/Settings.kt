@@ -30,7 +30,8 @@ data class Settings(
     val darkTheme: String = DEFAULT_DARK_THEME,
     val hiddenApps: List<String> = emptyList(),
     val secureApps: List<String> = emptyList(),
-    val swipeUpToSearch: Boolean = DEFAULT_SWIPE_UP_TO_SEARCH
+    val swipeUpToSearch: Boolean = DEFAULT_SWIPE_UP_TO_SEARCH,
+    val disableAppsScreen: Boolean = DEFAULT_DISABLE_APPS_SCREEN
 ) {
     companion object {
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
@@ -94,5 +95,8 @@ data class Settings(
 
         val SWIPE_UP_TO_SEARCH = booleanPreferencesKey("swipe-up-to-search")
         const val DEFAULT_SWIPE_UP_TO_SEARCH = true
+
+        val DISABLE_APPS_SCREEN = booleanPreferencesKey("disable-apps-screen")
+        const val DEFAULT_DISABLE_APPS_SCREEN = false
     }
 }
