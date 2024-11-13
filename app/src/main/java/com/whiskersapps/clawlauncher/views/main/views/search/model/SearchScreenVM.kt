@@ -10,6 +10,7 @@ import com.whiskersapps.clawlauncher.shared.data.AppsRepository
 import com.whiskersapps.clawlauncher.shared.data.BookmarksRepository
 import com.whiskersapps.clawlauncher.shared.data.SearchEnginesRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.shared.data.SettingsRepository.Companion.GridColsCount
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut.*
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
@@ -52,6 +53,7 @@ class SearchScreenVM @Inject constructor(
             val landscapeCols: Int = 0,
             val unfoldedCols: Int = 0,
             val unfoldedLandscapeCols: Int = 0,
+            val gridColsCount: GridColsCount = GridColsCount()
         )
     }
 
@@ -70,9 +72,16 @@ class SearchScreenVM @Inject constructor(
                         cols = settings.portraitCols,
                         landscapeCols = settings.landscapeCols,
                         unfoldedCols = settings.unfoldedPortraitCols,
-                        unfoldedLandscapeCols = settings.unfoldedLandscapeCols
+                        unfoldedLandscapeCols = settings.unfoldedLandscapeCols,
+                        gridColsCount = settingsRepository.gridColsCount.value
                     )
                 }
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO){
+            settingsRepository.gridColsCount.collect{ gridColsCount ->
+                _state.update { it.copy(gridColsCount = gridColsCount) }
             }
         }
 

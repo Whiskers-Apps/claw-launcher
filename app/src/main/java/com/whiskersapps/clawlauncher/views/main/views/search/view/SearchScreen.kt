@@ -42,8 +42,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
-import com.whiskersapps.clawlauncher.shared.utils.getColsCount
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
+import com.whiskersapps.clawlauncher.shared.utils.inPortrait
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
@@ -93,12 +93,8 @@ fun SearchScreen(
     val state = vm.state.collectAsState().value
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val colsCount = getColsCount(
-        cols = state.cols,
-        landscapeCols = state.landscapeCols,
-        unfoldedCols = state.unfoldedCols,
-        unfoldedLandscapeCols = state.unfoldedLandscapeCols
-    )
+    val colsCount =
+        if (inPortrait()) state.gridColsCount.portrait else state.gridColsCount.landscape
 
 
     LaunchedEffect(sheetState.currentValue) {

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.window.layout.FoldingFeature
 import com.whiskersapps.clawlauncher.shared.model.SecuritySettings
 import com.whiskersapps.clawlauncher.shared.model.Settings
 import io.realm.kotlin.Realm
@@ -22,10 +23,20 @@ class SettingsRepository(
     val app: Application,
     val realm: Realm
 ) {
+
+    companion object {
+        data class GridColsCount(
+            val portrait: Int = Settings.DEFAULT_PORTRAIT_COLS,
+            val landscape: Int = Settings.DEFAULT_LANDSCAPE_COLS
+        )
+    }
+
     private val dataStore = app.dataStore
 
     private val _settings = MutableStateFlow(Settings())
     val settings = _settings.asStateFlow()
+
+    private var useFoldableColumns = false
 
     val settingsFlow: Flow<Settings> = dataStore.data
         .catch {
@@ -105,6 +116,27 @@ class SettingsRepository(
         }
 
 
+    private val _gridColsCount = MutableStateFlow(GridColsCount())
+    val gridColsCount = _gridColsCount.asStateFlow()
+
+    fun setGridColsCount(feature: FoldingFeature?) {
+        useFoldableColumns =
+            feature?.state == FoldingFeature.State.FLAT || feature?.state == FoldingFeature.State.HALF_OPENED
+
+        refreshGridColsCount()
+    }
+
+    private fun refreshGridColsCount(){
+        val settings = settings.value
+
+        _gridColsCount.update {
+            GridColsCount(
+                portrait = if (useFoldableColumns) settings.unfoldedPortraitCols else settings.portraitCols,
+                landscape = if (useFoldableColumns) settings.unfoldedLandscapeCols else settings.landscapeCols
+            )
+        }
+    }
+
     suspend fun setSetupCompleted(setupCompleted: Boolean) {
         dataStore.edit { it[Settings.SETUP_COMPLETED] = setupCompleted }
     }
@@ -115,18 +147,22 @@ class SettingsRepository(
 
     suspend fun setPortraitCols(cols: Int) {
         dataStore.edit { it[Settings.PORTRAIT_COLS] = cols }
+        refreshGridColsCount()
     }
 
     suspend fun setLandscapeCols(cols: Int) {
         dataStore.edit { it[Settings.LANDSCAPE_COLS] = cols }
+        refreshGridColsCount()
     }
 
     suspend fun setUnfoldedCols(cols: Int) {
         dataStore.edit { it[Settings.UNFOLDED_PORTRAIT_COLS] = cols }
+        refreshGridColsCount()
     }
 
     suspend fun setUnfoldedLandscapeCols(cols: Int) {
         dataStore.edit { it[Settings.UNFOLDED_LANDSCAPE_COLS] = cols }
+        refreshGridColsCount()
     }
 
     suspend fun setShowHomeSearchBar(show: Boolean) {

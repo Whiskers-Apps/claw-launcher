@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,9 +43,15 @@ class AppsScreenVM @Inject constructor(
                         searchBarPosition = settings.appsSearchBarPosition,
                         showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
                         showSearchBarSettings = settings.showAppsSearchBarSettings,
-                        searchBarRadius = settings.appsSearchBarRadius,
+                        searchBarRadius = settings.appsSearchBarRadius
                     )
                 }
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO){
+            settingsRepository.gridColsCount.collect{ gridColsCount ->
+                _state.update { it.copy(gridColsCount = gridColsCount) }
             }
         }
 

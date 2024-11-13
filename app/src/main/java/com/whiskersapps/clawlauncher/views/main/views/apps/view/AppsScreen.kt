@@ -42,7 +42,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.whiskersapps.clawlauncher.shared.utils.getColsCount
+import com.whiskersapps.clawlauncher.shared.utils.inPortrait
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
 import com.whiskersapps.clawlauncher.shared.view.composables.AppPopup
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
@@ -68,6 +68,7 @@ fun AppsScreenRoot(
                     keyboardController?.hide()
                     focusManager.clearFocus()
                 }
+
                 AppsScreenAction.CloseKeyboard -> {
                     keyboardController?.hide()
                     focusManager.clearFocus()
@@ -89,12 +90,8 @@ fun AppsScreen(
 
     val fragmentActivity = LocalContext.current as FragmentActivity
     val state = vm.state.collectAsState().value
-    val colsCount = getColsCount(
-        cols = state.cols,
-        landscapeCols = state.landscapeCols,
-        unfoldedCols = state.unfoldedCols,
-        unfoldedLandscapeCols = state.unfoldedLandscapeCols
-    )
+    val colsCount =
+        if (inPortrait()) state.gridColsCount.portrait else state.gridColsCount.landscape
 
     if (!state.loading) {
         Box(contentAlignment = Alignment.Center) {
