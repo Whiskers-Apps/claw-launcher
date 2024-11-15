@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 fun Clock(
     clock: String,
     date: String,
+    tint: Boolean,
     onClick: () -> Unit
 ) {
 
@@ -59,7 +61,7 @@ fun Clock(
         ) {
             Text(
                 text = clock,
-                color = Color.White,
+                color = if(tint) MaterialTheme.colorScheme.primary else Color.White,
                 fontSize = 69.sp,
                 fontWeight = FontWeight.SemiBold,
                 style = TextStyle(shadow = textShadow)
@@ -67,7 +69,7 @@ fun Clock(
 
             Text(
                 text = date,
-                color = Color.White,
+                color = if(tint) MaterialTheme.colorScheme.primary else Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 style = TextStyle(shadow = textShadow)

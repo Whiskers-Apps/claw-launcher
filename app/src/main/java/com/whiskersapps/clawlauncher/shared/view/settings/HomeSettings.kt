@@ -10,6 +10,7 @@ import com.whiskersapps.clawlauncher.shared.view.composables.SwitchSetting
 
 @Composable
 fun HomeSettings(
+    tintClock: Boolean,
     swipeUpToSearch: Boolean,
     showSearchBar: Boolean,
     showPlaceholder: Boolean,
@@ -17,6 +18,16 @@ fun HomeSettings(
     searchBarRadius: Float,
     onAction: (HomeSettingsAction) -> Unit,
 ) {
+
+    SwitchSetting(
+        title = stringResource(R.string.HomeSettings_tint_clock),
+        description = stringResource(R.string.HomeSettings_tint_clock_description),
+        value = tintClock,
+        onValueChange = {
+            onAction(HomeSettingsAction.SetTintIcon(it))
+        }
+    )
+
     SwitchSetting(
         title = stringResource(R.string.HomeSettings_swipe_to_search),
         description = stringResource(R.string.HomeSettings_swipe_to_search_description),

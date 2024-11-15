@@ -14,18 +14,19 @@
     <string name="Name">Name</string>
     <string name="Cancel">Cancel</string>
     <string name="SwipeToDelete">Swipe To Delete</string>
+    <string name="HomeScreen_open_settings">Open Settings</string>
+    <string name="Search">Search</string>
+
 
     <!-- Home Screen -->
-    <string name="HomeScreen_search_placeholder">Search apps, web, bookmarks</string>
     <string name="HomeScreen_placeholder">Swipe up to search</string>
     <string name="HomeScreen_change_wallpaper">Change Wallpaper</string>
     <string name="HomeScreen_settings">Settings</string>
-
-    <!-- Apps Screen -->
-    <string name="AppsScreen_search_placeholder">Search Apps</string>
+    <string name="HomeScreen_click_here_to_search">Click here to search</string>
+    <string name="HomeScreen_lock_screen">Lock Screen</string>
+    <string name="HomeScreen_lock_screen_description">"In order for the lock screen feature to work you need to grant accessibility to the app "</string>
 
     <!-- SearchScreen -->
-    <string name="SearchScreen_search_placeholder">Search apps, bookmarks, web</string>
     <string name="SearchScreen_apps">Apps</string>
     <string name="SearchScreen_web">Web</string>
     <string name="SearchScreen_bookmarks">Bookmarks</string>
@@ -68,8 +69,8 @@
     <string name="HomeSettings_settings_description">Show the search bar settings icon</string>
     <string name="HomeSettings_search_bar_radius">Search Bar Radius</string>
     <string name="HomeSettings_search_bar_radius_description">The search bar roundness</string>
-    <string name="HomeScreen_click_here_to_search">Click here to search</string>
-
+    <string name="HomeSettings_tint_clock">Tint Clock</string>
+    <string name="HomeSettings_tint_clock_description">Use accent color in clock and date</string>
 
     <!-- Apps Settings -->
     <string name="AppsSettings_disable_apps_screen">Apps Screen</string>
@@ -132,4 +133,8 @@
     <string name="AboutScreen_donate">Donate</string>
 
 
+    <!-- Lock Screen Feature -->
+    <string name="lock_receiver_name">Lock Screen</string>
+    <string name="lock_receiver_description">Allow the app to lock the screen</string>
+    <string name="lock_service_description">Lock Screen:\nThis enables double tap to lock</string>
 </resources>

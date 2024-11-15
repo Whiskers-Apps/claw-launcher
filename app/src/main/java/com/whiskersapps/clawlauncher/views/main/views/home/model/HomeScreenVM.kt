@@ -1,10 +1,16 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.model
 
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.provider.Settings
 import android.util.Log
+import android.view.accessibility.AccessibilityManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.whiskersapps.clawlauncher.features.lock_screen.ScreenLockService
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +44,8 @@ class HomeScreenVM @Inject constructor(
                         showPlaceholder = settings.showHomeSearchBarPlaceholder,
                         showSearchBarSettings = settings.showHomeSearchBarSettings,
                         searchBarRadius = settings.homeSearchBarRadius.toFloat(),
-                        swipeUpToSearch = settings.swipeUpToSearch
+                        swipeUpToSearch = settings.swipeUpToSearch,
+                        tintClock = settings.tintClock
                     )
                 }
             }
@@ -110,6 +117,14 @@ class HomeScreenVM @Inject constructor(
             is HomeScreenAction.SetSwipeUpToSearch -> setSwipeUpToSearch(action.swipeUp)
 
             HomeScreenAction.OnOpenCalendar -> onOpenCalendar()
+
+            is HomeScreenAction.SetTintIcon -> setTintIcon(action.tint)
+
+            HomeScreenAction.OnLockScreen -> lockScreen()
+
+            HomeScreenAction.OnCloseLockAccessibilityDialog -> closeLockAccessibilityDialog()
+
+            HomeScreenAction.OnOpenAccessibilitySettings -> openAccessibilitySettings()
         }
     }
 
@@ -172,23 +187,69 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun setSwipeUpToSearch(swipeUp: Boolean) {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.setSwipeUpToSearch(swipeUp)
         }
     }
 
-    private fun onOpenCalendar(){
-        try{
-            viewModelScope.launch(Dispatchers.IO){
+    private fun onOpenCalendar() {
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
                 val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CALENDAR)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-                if(intent.resolveActivity(app.packageManager) != null){
+                if (intent.resolveActivity(app.packageManager) != null) {
                     app.startActivity(intent)
                 }
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             println("Error opening calendar. Exception: ${e.message}")
+        }
+    }
+
+    private fun setTintIcon(tint: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.setTintClock(tint)
+        }
+    }
+
+    private fun lockScreen() {
+        if (!isLockScreenServiceEnabled()) {
+            _state.update {
+                it.copy(showLockAccessibilityDialog = true)
+            }
+            return
+        }
+
+        val intent = Intent("${app.packageName}.LOCK", null, app, ScreenLockService::class.java)
+        app.startService(intent)
+    }
+
+    private fun openAccessibilitySettings(){
+
+        closeLockAccessibilityDialog()
+
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+
+        app.startActivity(intent)
+    }
+
+    @SuppressLint("ServiceCast")
+    private fun isLockScreenServiceEnabled(): Boolean {
+        val accessibilityManager =
+            app.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+
+        return accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+            .any { service ->
+                service.resolveInfo.serviceInfo.packageName == app.packageName
+            }
+    }
+
+    private fun closeLockAccessibilityDialog() {
+        _state.update {
+            it.copy(showLockAccessibilityDialog = false)
         }
     }
 }

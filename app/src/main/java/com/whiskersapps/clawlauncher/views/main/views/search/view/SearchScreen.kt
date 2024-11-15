@@ -120,7 +120,7 @@ fun SearchScreen(
                     onChange = { text ->
                         onAction(OnSearchInput(text))
                     },
-                    placeholder = stringResource(R.string.SearchScreen_search_placeholder),
+                    placeholder = stringResource(R.string.Search),
                     focus = state.focusSearchBar,
                     onFocused = {
                         onAction(OnSetFocusSearchBar(false))

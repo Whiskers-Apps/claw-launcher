@@ -44,6 +44,7 @@ fun HomeSettingsScreen(
     ) {
 
         HomeSettings(
+            tintClock = state.settings.tintClock,
             swipeUpToSearch = state.settings.swipeUpToSearch,
             showSearchBar = state.settings.showHomeSearchBar,
             showPlaceholder = state.settings.showHomeSearchBarPlaceholder,
@@ -74,6 +75,10 @@ fun HomeSettingsScreen(
 
                     is HomeSettingsAction.SetSwipeUpToSearch -> onAction(
                         HomeSettingsScreenAction.SetSwipeUpToSearch(action.swipeUp)
+                    )
+
+                    is HomeSettingsAction.SetTintIcon -> onAction(
+                        HomeSettingsScreenAction.SetTintIcon(action.tint)
                     )
                 }
             }

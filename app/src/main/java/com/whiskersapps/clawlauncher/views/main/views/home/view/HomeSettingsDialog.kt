@@ -25,6 +25,7 @@ fun HomeSettingsDialog(
         )
 
         HomeSettings(
+            tintClock = state.tintClock,
             swipeUpToSearch = state.swipeUpToSearch,
             showSearchBar = state.showSearchBar,
             showPlaceholder = state.showPlaceholder,
@@ -57,6 +58,10 @@ fun HomeSettingsDialog(
                         onAction(
                             HomeScreenAction.SetSwipeUpToSearch(action.swipeUp)
                         )
+                    }
+
+                    is HomeSettingsAction.SetTintIcon -> {
+                        onAction(HomeScreenAction.SetTintIcon(action.tint))
                     }
                 }
             }

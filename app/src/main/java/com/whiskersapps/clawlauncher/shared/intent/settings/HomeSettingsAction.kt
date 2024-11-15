@@ -7,4 +7,5 @@ sealed class HomeSettingsAction {
     data class SetShowSettings(val show: Boolean) : HomeSettingsAction()
     data class SetSearchBarRadius(val radius: Float) : HomeSettingsAction()
     data class SaveSearchBarRadius(val radius: Float) : HomeSettingsAction()
+    data class SetTintIcon(val tint: Boolean) : HomeSettingsAction()
 }

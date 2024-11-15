@@ -7,6 +7,50 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.window.layout.FoldingFeature
 import com.whiskersapps.clawlauncher.shared.model.SecuritySettings
 import com.whiskersapps.clawlauncher.shared.model.Settings
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.APPS_SEARCH_BAR_POSITION
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.APPS_SEARCH_BAR_RADIUS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.APPS_VIEW_TYPE
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DARK_MODE
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DARK_THEME
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_APPS_SEARCH_BAR_POSITION
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_APPS_SEARCH_BAR_RADIUS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_APPS_VIEW_TYPE
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_DARK_MODE
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_DARK_THEME
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_DEFAULT_SEARCH_ENGINE
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_DISABLE_APPS_SCREEN
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_HOME_SEARCH_BAR_RADIUS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_LANDSCAPE_COLS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_PORTRAIT_COLS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SEARCH_ENGINE
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SETUP_COMPLETED
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_APPS_SEARCH_BAR
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_HOME_SEARCH_BAR
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SWIPE_UP_TO_SEARCH
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_THEME
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_TINT_CLOCK
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_UNFOLDED_LANDSCAPE_COLS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_UNFOLDED_PORTRAIT_COLS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DISABLE_APPS_SCREEN
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.HOME_SEARCH_BAR_RADIUS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.LANDSCAPE_COLS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.PORTRAIT_COLS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SETUP_COMPLETED
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_APPS_SEARCH_BAR
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_APPS_SEARCH_BAR_PLACEHOLDER
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_APPS_SEARCH_BAR_SETTINGS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_HOME_SEARCH_BAR
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_HOME_SEARCH_BAR_PLACEHOLDER
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_HOME_SEARCH_BAR_SETTINGS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SWIPE_UP_TO_SEARCH
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.THEME
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.TINT_CLOCK
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.UNFOLDED_LANDSCAPE_COLS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.UNFOLDED_PORTRAIT_COLS
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.toRealmList
@@ -26,8 +70,8 @@ class SettingsRepository(
 
     companion object {
         data class GridColsCount(
-            val portrait: Int = Settings.DEFAULT_PORTRAIT_COLS,
-            val landscape: Int = Settings.DEFAULT_LANDSCAPE_COLS
+            val portrait: Int = DEFAULT_PORTRAIT_COLS,
+            val landscape: Int = DEFAULT_LANDSCAPE_COLS
         )
     }
 
@@ -45,69 +89,71 @@ class SettingsRepository(
         }
         .map { preferences ->
             val newSettings = Settings(
-                setupCompleted = preferences[Settings.SETUP_COMPLETED]
-                    ?: Settings.DEFAULT_SETUP_COMPLETED,
+                setupCompleted = preferences[SETUP_COMPLETED]
+                    ?: DEFAULT_SETUP_COMPLETED,
 
-                appsViewType = preferences[Settings.APPS_VIEW_TYPE]
-                    ?: Settings.DEFAULT_APPS_VIEW_TYPE,
+                appsViewType = preferences[APPS_VIEW_TYPE]
+                    ?: DEFAULT_APPS_VIEW_TYPE,
 
-                portraitCols = preferences[Settings.PORTRAIT_COLS]
-                    ?: Settings.DEFAULT_PORTRAIT_COLS,
+                portraitCols = preferences[PORTRAIT_COLS]
+                    ?: DEFAULT_PORTRAIT_COLS,
 
-                landscapeCols = preferences[Settings.LANDSCAPE_COLS]
-                    ?: Settings.DEFAULT_LANDSCAPE_COLS,
+                landscapeCols = preferences[LANDSCAPE_COLS]
+                    ?: DEFAULT_LANDSCAPE_COLS,
 
-                unfoldedPortraitCols = preferences[Settings.UNFOLDED_PORTRAIT_COLS]
-                    ?: Settings.DEFAULT_UNFOLDED_PORTRAIT_COLS,
+                unfoldedPortraitCols = preferences[UNFOLDED_PORTRAIT_COLS]
+                    ?: DEFAULT_UNFOLDED_PORTRAIT_COLS,
 
-                unfoldedLandscapeCols = preferences[Settings.UNFOLDED_LANDSCAPE_COLS]
-                    ?: Settings.DEFAULT_UNFOLDED_LANDSCAPE_COLS,
+                unfoldedLandscapeCols = preferences[UNFOLDED_LANDSCAPE_COLS]
+                    ?: DEFAULT_UNFOLDED_LANDSCAPE_COLS,
 
-                showHomeSearchBar = preferences[Settings.SHOW_HOME_SEARCH_BAR]
-                    ?: Settings.DEFAULT_SHOW_HOME_SEARCH_BAR,
+                showHomeSearchBar = preferences[SHOW_HOME_SEARCH_BAR]
+                    ?: DEFAULT_SHOW_HOME_SEARCH_BAR,
 
-                showHomeSearchBarPlaceholder = preferences[Settings.SHOW_HOME_SEARCH_BAR_PLACEHOLDER]
-                    ?: Settings.DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER,
+                showHomeSearchBarPlaceholder = preferences[SHOW_HOME_SEARCH_BAR_PLACEHOLDER]
+                    ?: DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER,
 
-                showHomeSearchBarSettings = preferences[Settings.SHOW_HOME_SEARCH_BAR_SETTINGS]
-                    ?: Settings.DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS,
+                showHomeSearchBarSettings = preferences[SHOW_HOME_SEARCH_BAR_SETTINGS]
+                    ?: DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS,
 
-                homeSearchBarRadius = preferences[Settings.HOME_SEARCH_BAR_RADIUS]
-                    ?: Settings.DEFAULT_HOME_SEARCH_BAR_RADIUS,
+                homeSearchBarRadius = preferences[HOME_SEARCH_BAR_RADIUS]
+                    ?: DEFAULT_HOME_SEARCH_BAR_RADIUS,
 
-                showAppsSearchBar = preferences[Settings.SHOW_APPS_SEARCH_BAR]
-                    ?: Settings.DEFAULT_SHOW_APPS_SEARCH_BAR,
+                showAppsSearchBar = preferences[SHOW_APPS_SEARCH_BAR]
+                    ?: DEFAULT_SHOW_APPS_SEARCH_BAR,
 
-                appsSearchBarPosition = preferences[Settings.APPS_SEARCH_BAR_POSITION]
-                    ?: Settings.DEFAULT_APPS_SEARCH_BAR_POSITION,
+                appsSearchBarPosition = preferences[APPS_SEARCH_BAR_POSITION]
+                    ?: DEFAULT_APPS_SEARCH_BAR_POSITION,
 
-                showAppsSearchBarPlaceholder = preferences[Settings.SHOW_APPS_SEARCH_BAR_PLACEHOLDER]
-                    ?: Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER,
+                showAppsSearchBarPlaceholder = preferences[SHOW_APPS_SEARCH_BAR_PLACEHOLDER]
+                    ?: DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER,
 
-                showAppsSearchBarSettings = preferences[Settings.SHOW_APPS_SEARCH_BAR_SETTINGS]
-                    ?: Settings.DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
+                showAppsSearchBarSettings = preferences[SHOW_APPS_SEARCH_BAR_SETTINGS]
+                    ?: DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
 
-                appsSearchBarRadius = preferences[Settings.APPS_SEARCH_BAR_RADIUS]
-                    ?: Settings.DEFAULT_APPS_SEARCH_BAR_RADIUS,
+                appsSearchBarRadius = preferences[APPS_SEARCH_BAR_RADIUS]
+                    ?: DEFAULT_APPS_SEARCH_BAR_RADIUS,
 
-                defaultSearchEngine = preferences[Settings.DEFAULT_SEARCH_ENGINE]
-                    ?: Settings.DEFAULT_DEFAULT_SEARCH_ENGINE,
+                defaultSearchEngine = preferences[DEFAULT_SEARCH_ENGINE]
+                    ?: DEFAULT_DEFAULT_SEARCH_ENGINE,
 
-                darkMode = preferences[Settings.DARK_MODE] ?: Settings.DEFAULT_DARK_MODE,
+                darkMode = preferences[DARK_MODE] ?: DEFAULT_DARK_MODE,
 
-                theme = preferences[Settings.THEME] ?: Settings.DEFAULT_THEME,
+                theme = preferences[THEME] ?: DEFAULT_THEME,
 
-                darkTheme = preferences[Settings.DARK_THEME] ?: Settings.DEFAULT_DARK_THEME,
+                darkTheme = preferences[DARK_THEME] ?: DEFAULT_DARK_THEME,
 
                 hiddenApps = getHiddenApps(),
 
                 secureApps = getSecureApps(),
 
-                swipeUpToSearch = preferences[Settings.SWIPE_UP_TO_SEARCH]
-                    ?: Settings.DEFAULT_SWIPE_UP_TO_SEARCH,
+                swipeUpToSearch = preferences[SWIPE_UP_TO_SEARCH]
+                    ?: DEFAULT_SWIPE_UP_TO_SEARCH,
 
-                disableAppsScreen = preferences[Settings.DISABLE_APPS_SCREEN]
-                    ?: Settings.DEFAULT_DISABLE_APPS_SCREEN
+                disableAppsScreen = preferences[DISABLE_APPS_SCREEN]
+                    ?: DEFAULT_DISABLE_APPS_SCREEN,
+
+                tintClock = preferences[TINT_CLOCK] ?: DEFAULT_TINT_CLOCK
             )
 
             _settings.update { newSettings }
@@ -138,86 +184,86 @@ class SettingsRepository(
     }
 
     suspend fun setSetupCompleted(setupCompleted: Boolean) {
-        dataStore.edit { it[Settings.SETUP_COMPLETED] = setupCompleted }
+        dataStore.edit { it[SETUP_COMPLETED] = setupCompleted }
     }
 
     suspend fun setAppsViewType(appsViewType: String) {
-        dataStore.edit { it[Settings.APPS_VIEW_TYPE] = appsViewType }
+        dataStore.edit { it[APPS_VIEW_TYPE] = appsViewType }
     }
 
     suspend fun setPortraitCols(cols: Int) {
-        dataStore.edit { it[Settings.PORTRAIT_COLS] = cols }
+        dataStore.edit { it[PORTRAIT_COLS] = cols }
         refreshGridColsCount()
     }
 
     suspend fun setLandscapeCols(cols: Int) {
-        dataStore.edit { it[Settings.LANDSCAPE_COLS] = cols }
+        dataStore.edit { it[LANDSCAPE_COLS] = cols }
         refreshGridColsCount()
     }
 
     suspend fun setUnfoldedCols(cols: Int) {
-        dataStore.edit { it[Settings.UNFOLDED_PORTRAIT_COLS] = cols }
+        dataStore.edit { it[UNFOLDED_PORTRAIT_COLS] = cols }
         refreshGridColsCount()
     }
 
     suspend fun setUnfoldedLandscapeCols(cols: Int) {
-        dataStore.edit { it[Settings.UNFOLDED_LANDSCAPE_COLS] = cols }
+        dataStore.edit { it[UNFOLDED_LANDSCAPE_COLS] = cols }
         refreshGridColsCount()
     }
 
     suspend fun setShowHomeSearchBar(show: Boolean) {
         println("Show home search bar: $show")
-        dataStore.edit { it[Settings.SHOW_HOME_SEARCH_BAR] = show }
+        dataStore.edit { it[SHOW_HOME_SEARCH_BAR] = show }
     }
 
     suspend fun setShowHomeSearchBarPlaceholder(show: Boolean) {
         dataStore.edit {
-            it[Settings.SHOW_HOME_SEARCH_BAR_PLACEHOLDER] = show
+            it[SHOW_HOME_SEARCH_BAR_PLACEHOLDER] = show
         }
     }
 
     suspend fun setShowHomeSearchBarSettings(showHomeSearchBarSettings: Boolean) {
-        dataStore.edit { it[Settings.SHOW_HOME_SEARCH_BAR_SETTINGS] = showHomeSearchBarSettings }
+        dataStore.edit { it[SHOW_HOME_SEARCH_BAR_SETTINGS] = showHomeSearchBarSettings }
     }
 
     suspend fun setHomeSearchBarRadius(radius: Int) {
-        dataStore.edit { it[Settings.HOME_SEARCH_BAR_RADIUS] = radius }
+        dataStore.edit { it[HOME_SEARCH_BAR_RADIUS] = radius }
     }
 
     suspend fun setShowAppsSearchBar(showAppsSearchBar: Boolean) {
-        dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR] = showAppsSearchBar }
+        dataStore.edit { it[SHOW_APPS_SEARCH_BAR] = showAppsSearchBar }
     }
 
     suspend fun setAppsSearchBarPosition(appsSearchBarPosition: String) {
-        dataStore.edit { it[Settings.APPS_SEARCH_BAR_POSITION] = appsSearchBarPosition }
+        dataStore.edit { it[APPS_SEARCH_BAR_POSITION] = appsSearchBarPosition }
     }
 
     suspend fun updateDefaultSearchEngine(id: String) {
-        dataStore.edit { it[Settings.DEFAULT_SEARCH_ENGINE] = id }
+        dataStore.edit { it[DEFAULT_SEARCH_ENGINE] = id }
     }
 
     suspend fun setShowAppsSearchBarPlaceholder(show: Boolean) {
-        dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR_PLACEHOLDER] = show }
+        dataStore.edit { it[SHOW_APPS_SEARCH_BAR_PLACEHOLDER] = show }
     }
 
     suspend fun setShowAppsSearchBarSettings(show: Boolean) {
-        dataStore.edit { it[Settings.SHOW_APPS_SEARCH_BAR_SETTINGS] = show }
+        dataStore.edit { it[SHOW_APPS_SEARCH_BAR_SETTINGS] = show }
     }
 
     suspend fun setAppsSearchBarRadius(radius: Int) {
-        dataStore.edit { it[Settings.APPS_SEARCH_BAR_RADIUS] = radius }
+        dataStore.edit { it[APPS_SEARCH_BAR_RADIUS] = radius }
     }
 
     suspend fun setDarkMode(darkMode: String) {
-        dataStore.edit { it[Settings.DARK_MODE] = darkMode }
+        dataStore.edit { it[DARK_MODE] = darkMode }
     }
 
     suspend fun setTheme(theme: String) {
-        dataStore.edit { it[Settings.THEME] = theme }
+        dataStore.edit { it[THEME] = theme }
     }
 
     suspend fun setDarkTheme(theme: String) {
-        dataStore.edit { it[Settings.DARK_THEME] = theme }
+        dataStore.edit { it[DARK_THEME] = theme }
     }
 
     private fun getHiddenApps(): List<String> {
@@ -265,10 +311,14 @@ class SettingsRepository(
     }
 
     suspend fun setSwipeUpToSearch(swipeUp: Boolean) {
-        dataStore.edit { it[Settings.SWIPE_UP_TO_SEARCH] = swipeUp }
+        dataStore.edit { it[SWIPE_UP_TO_SEARCH] = swipeUp }
     }
 
     suspend fun setDisableAppsScreen(disable: Boolean) {
-        dataStore.edit { it[Settings.DISABLE_APPS_SCREEN] = disable }
+        dataStore.edit { it[DISABLE_APPS_SCREEN] = disable }
+    }
+
+    suspend fun setTintClock(tint: Boolean){
+        dataStore.edit { it[TINT_CLOCK] = tint }
     }
 }

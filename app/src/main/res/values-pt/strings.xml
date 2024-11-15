@@ -9,12 +9,12 @@
     <string name="Name">Nome</string>
     <string name="Cancel">Cancelar</string>
     <string name="SwipeToDelete">Deslizar Para Eliminar</string>
-    <string name="HomeScreen_search_placeholder">Procurar apps, web, marcadores</string>
+    <string name="HomeScreen_open_settings">Abrir Definições</string>
+    <string name="Search">Procurar</string>
     <string name="HomeScreen_placeholder">Deslize para pesquisar</string>
     <string name="HomeScreen_change_wallpaper">Mudar Wallpaper</string>
     <string name="HomeScreen_settings">Definições</string>
-    <string name="AppsScreen_search_placeholder">Procurar Apps</string>
-    <string name="SearchScreen_search_placeholder">Procurar apps, web, marcadores</string>
+    <string name="HomeScreen_lock_screen_description">De forma a esta funcionalidade funcionar é necessário dar permissões de acessebilidade à aplicação</string>
     <string name="SearchScreen_apps">Aplicações</string>
     <string name="SearchScreen_web">Web</string>
     <string name="SearchScreen_bookmarks">Marcadores</string>
@@ -100,5 +100,11 @@
     <string name="AboutScreen_donate">Doar</string>
     <string name="SearchEnginesSetupScreen_description">Selecione o seu motor de busca favorito. Pode mudar mais tarde nas definições</string>
     <string name="HomeScreen_click_here_to_search">Clique aqui para pesquisar</string>
+    <string name="HomeSettings_tint_clock_description">Usar a cor primária no relógio e na data</string>
     <string name="AppsSettings_disable_apps_screen">Página de Aplicações</string>
+    <string name="lock_receiver_name">Bloquear Ecrã</string>
+    <string name="lock_receiver_description">Permitir à aplicação bloquear o ecrã</string>
+    <string name="HomeScreen_lock_screen">Bloquear Ecrã</string>
+    <string name="HomeSettings_tint_clock">Tonalidade Do Relógio</string>
+    <string name="lock_service_description">Bloquear Ecrã: Isto ativa o duplo toque para bloquear o ecrã</string>
 </resources>

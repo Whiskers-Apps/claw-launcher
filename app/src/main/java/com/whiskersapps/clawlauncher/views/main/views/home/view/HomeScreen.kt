@@ -125,13 +125,19 @@ fun HomeScreen(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
                                 onClick = { },
-                                onLongClick = { onAction(HomeScreenAction.OpenMenuDialog) },
+                                onLongClick = {
+                                    onAction(HomeScreenAction.OpenMenuDialog)
+                                },
+                                onDoubleClick = {
+                                    onAction(HomeScreenAction.OnLockScreen)
+                                }
                             )
                     ) {
 
                         Clock(
                             clock = state.clock,
                             date = state.date,
+                            tint = state.tintClock,
                             onClick = {
                                 onAction(HomeScreenAction.OnOpenCalendar)
                             }
@@ -150,7 +156,7 @@ fun HomeScreen(
                             if (state.showSearchBar) {
                                 SearchBar(
                                     enabled = false,
-                                    placeholder = if (state.showPlaceholder) stringResource(R.string.HomeScreen_search_placeholder) else "",
+                                    placeholder = if (state.showPlaceholder) stringResource(R.string.Search) else "",
                                     showMenu = state.showSearchBarSettings,
                                     onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
                                     borderRadius = state.searchBarRadius.toInt(),
@@ -160,7 +166,9 @@ fun HomeScreen(
                                 if (state.showPlaceholder) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
-                                        text = if(state.swipeUpToSearch) stringResource(R.string.HomeScreen_placeholder) else stringResource(R.string.HomeScreen_click_here_to_search),
+                                        text = if (state.swipeUpToSearch) stringResource(R.string.HomeScreen_placeholder) else stringResource(
+                                            R.string.HomeScreen_click_here_to_search
+                                        ),
                                         color = Color.White,
                                         fontSize = 18.sp,
                                         style = TextStyle(shadow = textShadow),
@@ -272,6 +280,16 @@ fun HomeScreen(
                                 }
                             }
                         }
+
+                        LockAccessibilityDialog(
+                            show = state.showLockAccessibilityDialog,
+                            onDismiss = {
+                                onAction(HomeScreenAction.OnCloseLockAccessibilityDialog)
+                            },
+                            onOpenAccessibilitySettings = {
+                                onAction(HomeScreenAction.OnOpenAccessibilitySettings)
+                            }
+                        )
 
                         HomeSettingsDialog(onAction = { onAction(it) }, state = state)
                     }

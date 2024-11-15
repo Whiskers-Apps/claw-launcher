@@ -31,7 +31,8 @@ data class Settings(
     val hiddenApps: List<String> = emptyList(),
     val secureApps: List<String> = emptyList(),
     val swipeUpToSearch: Boolean = DEFAULT_SWIPE_UP_TO_SEARCH,
-    val disableAppsScreen: Boolean = DEFAULT_DISABLE_APPS_SCREEN
+    val disableAppsScreen: Boolean = DEFAULT_DISABLE_APPS_SCREEN,
+    val tintClock: Boolean = DEFAULT_TINT_CLOCK
 ) {
     companion object {
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
@@ -98,5 +99,8 @@ data class Settings(
 
         val DISABLE_APPS_SCREEN = booleanPreferencesKey("disable-apps-screen")
         const val DEFAULT_DISABLE_APPS_SCREEN = false
+
+        val TINT_CLOCK = booleanPreferencesKey("tint-clock")
+        const val DEFAULT_TINT_CLOCK = false
     }
 }

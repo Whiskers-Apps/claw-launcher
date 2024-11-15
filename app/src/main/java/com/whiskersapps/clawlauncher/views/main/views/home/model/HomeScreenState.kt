@@ -1,5 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.model
 
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_TINT_CLOCK
+
 data class HomeScreenState(
     val loading: Boolean = true,
     val clock: String = "",
@@ -10,5 +12,7 @@ data class HomeScreenState(
     val showSearchBar: Boolean = true,
     val showPlaceholder: Boolean = true,
     val showSearchBarSettings: Boolean = true,
-    val searchBarRadius: Float = 50f
+    val searchBarRadius: Float = 50f,
+    val tintClock: Boolean = DEFAULT_TINT_CLOCK,
+    val showLockAccessibilityDialog: Boolean = false
 )

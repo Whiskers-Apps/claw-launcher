@@ -16,4 +16,8 @@ sealed class HomeScreenAction{
     data class SaveSearchBarRadius(val radius: Float): HomeScreenAction()
     data class SetSwipeUpToSearch(val swipeUp: Boolean): HomeScreenAction()
     data object OnOpenCalendar: HomeScreenAction()
+    data class SetTintIcon(val tint: Boolean): HomeScreenAction()
+    data object OnLockScreen: HomeScreenAction()
+    data object OnCloseLockAccessibilityDialog: HomeScreenAction()
+    data object OnOpenAccessibilitySettings: HomeScreenAction()
 }

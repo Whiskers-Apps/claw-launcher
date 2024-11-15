@@ -38,7 +38,7 @@ fun SearchBar(
     onChange: (text: String) -> Unit = {},
     onDone: () -> Unit = {},
     enabled: Boolean = true,
-    placeholder: String = stringResource(id = R.string.SearchScreen_search_placeholder),
+    placeholder: String = stringResource(id = R.string.Search),
     borderRadius: Int = 100,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     focus: Boolean = false,
