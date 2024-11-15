@@ -257,6 +257,8 @@ class AppsScreenVM @Inject constructor(
     }
 
     private fun setDisableAppsScreen(disable: Boolean){
+        setShowSettingsDialog(false)
+
         viewModelScope.launch(Dispatchers.IO){
             _state.update { it.copy(disableAppsScreen = disable) }
             settingsRepository.setDisableAppsScreen(disable)
