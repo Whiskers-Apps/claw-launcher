@@ -32,6 +32,7 @@ fun AppsSettingsDialog(
             phoneLandscapeCols = state.landscapeCols,
             unfoldedCols = state.unfoldedCols,
             unfoldedLandscapeCols = state.unfoldedLandscapeCols,
+            splitList = state.splitList,
             searchBarPosition = state.searchBarPosition,
             showSearchBar = state.showSearchBar,
             showSearchBarPlaceholder = state.showSearchBarPlaceholder,
@@ -82,6 +83,10 @@ fun AppsSettingsDialog(
 
                 is AppsSettingsAction.SetDisableAppsScreen -> {
                     onAction(AppsScreenAction.SetDisableAppsScreen(action.disable))
+                }
+
+                is AppsSettingsAction.SetSplitList -> {
+                    onAction(AppsScreenAction.SetSplitList(action.split))
                 }
             }
         }

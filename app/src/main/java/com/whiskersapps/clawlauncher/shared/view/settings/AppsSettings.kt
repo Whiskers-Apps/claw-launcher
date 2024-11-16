@@ -44,6 +44,7 @@ fun AppsSettings(
     phoneLandscapeCols: Int,
     unfoldedCols: Int,
     unfoldedLandscapeCols: Int,
+    splitList: Boolean,
     searchBarPosition: String,
     showSearchBar: Boolean,
     showSearchBarPlaceholder: Boolean,
@@ -218,7 +219,17 @@ fun AppsSettings(
         }
     } else {
         Spacer(modifier = Modifier.height(16.dp))
+
+        SwitchSetting(
+            title = stringResource(R.string.AppsSettings_split_list),
+            description = stringResource(R.string.AppsSettings_split_list_description),
+            value = splitList,
+            onValueChange = {
+                onAction(AppsSettingsAction.SetSplitList(it))
+            }
+        )
     }
+
 
     Column(modifier = Modifier.sidePadding()) {
 

@@ -13,11 +13,12 @@ class ScreenLockService : AccessibilityService() {
     override fun onInterrupt() {}
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val performAction = intent?.action.toString() == "com.whiskersapps.clawlauncher.LOCK"
 
-        Log.d("Accessibility Action", intent?.action.toString())
+        if(performAction){
+            performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
+        }
 
-        performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
-
-        return Service.START_STICKY_COMPATIBILITY
+        return Service.START_STICKY
     }
 }

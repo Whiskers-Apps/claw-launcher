@@ -137,4 +137,6 @@
     <string name="lock_receiver_name">Lock Screen</string>
     <string name="lock_receiver_description">Allow the app to lock the screen</string>
     <string name="lock_service_description">Lock Screen:\nThis enables double tap to lock</string>
+    <string name="AppsSettings_split_list">Split List</string>
+    <string name="AppsSettings_split_list_description">Splits the list in two if there\'s available space</string>
 </resources>

@@ -76,6 +76,10 @@ class AppsSettingsScreenVM @Inject constructor(
                 is AppsSettingsScreenAction.SetDisableAppsScreen -> settingsRepository.setDisableAppsScreen(
                     action.disable
                 )
+
+                is AppsSettingsScreenAction.SetSplitList -> {
+                    settingsRepository.setSplitList(action.split)
+                }
             }
         }
     }

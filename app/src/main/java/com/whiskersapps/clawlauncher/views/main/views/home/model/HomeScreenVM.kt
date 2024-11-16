@@ -1,16 +1,12 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.model
 
-import android.accessibilityservice.AccessibilityServiceInfo
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import android.util.Log
-import android.view.accessibility.AccessibilityManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.features.lock_screen.ScreenLockService
+import com.whiskersapps.clawlauncher.features.lock_screen.ScreenLock
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +29,8 @@ class HomeScreenVM @Inject constructor(
 
     private val _state = MutableStateFlow(HomeScreenState())
     val state = _state.asStateFlow()
+
+    private val screenLock = ScreenLock(app)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -214,37 +212,24 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun lockScreen() {
-        if (!isLockScreenServiceEnabled()) {
+        if (screenLock.isBatteryOptimized()){
+            screenLock.openBatteryOptimizationSettings()
+            return
+        }
+
+        if (!screenLock.isServiceEnabled()) {
             _state.update {
                 it.copy(showLockAccessibilityDialog = true)
             }
             return
         }
 
-        val intent = Intent("${app.packageName}.LOCK", null, app, ScreenLockService::class.java)
-        app.startService(intent)
+        screenLock.lockScreen()
     }
 
     private fun openAccessibilitySettings(){
-
         closeLockAccessibilityDialog()
-
-        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-
-        app.startActivity(intent)
-    }
-
-    @SuppressLint("ServiceCast")
-    private fun isLockScreenServiceEnabled(): Boolean {
-        val accessibilityManager =
-            app.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-
-        return accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
-            .any { service ->
-                service.resolveInfo.serviceInfo.packageName == app.packageName
-            }
+        screenLock.openAccessibilitySettings()
     }
 
     private fun closeLockAccessibilityDialog() {

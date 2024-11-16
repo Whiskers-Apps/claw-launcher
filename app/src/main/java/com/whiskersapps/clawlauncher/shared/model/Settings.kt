@@ -32,7 +32,8 @@ data class Settings(
     val secureApps: List<String> = emptyList(),
     val swipeUpToSearch: Boolean = DEFAULT_SWIPE_UP_TO_SEARCH,
     val disableAppsScreen: Boolean = DEFAULT_DISABLE_APPS_SCREEN,
-    val tintClock: Boolean = DEFAULT_TINT_CLOCK
+    val tintClock: Boolean = DEFAULT_TINT_CLOCK,
+    val splitListView: Boolean = DEFAULT_SPLIT_LIST_VIEW
 ) {
     companion object {
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
@@ -102,5 +103,8 @@ data class Settings(
 
         val TINT_CLOCK = booleanPreferencesKey("tint-clock")
         const val DEFAULT_TINT_CLOCK = false
+
+        val SPLIT_LIST_VIEW = booleanPreferencesKey("split-list-view")
+        const val DEFAULT_SPLIT_LIST_VIEW = true
     }
 }

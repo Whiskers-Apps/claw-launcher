@@ -55,6 +55,7 @@ fun AppsSettingsScreen(
             phoneLandscapeCols = state.settings.landscapeCols,
             unfoldedCols = state.settings.unfoldedPortraitCols,
             unfoldedLandscapeCols = state.settings.unfoldedLandscapeCols,
+            splitList = state.settings.splitListView,
             searchBarPosition = state.settings.appsSearchBarPosition,
             showSearchBar = state.settings.showAppsSearchBar,
             showSearchBarPlaceholder = state.settings.showAppsSearchBarPlaceholder,
@@ -126,6 +127,10 @@ fun AppsSettingsScreen(
                         action.disable
                     )
                 )
+
+                is AppsSettingsAction.SetSplitList -> {
+                    onAction(AppsSettingsScreenAction.SetSplitList(action.split))
+                }
             }
         }
     }

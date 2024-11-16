@@ -30,6 +30,7 @@ import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHO
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_HOME_SEARCH_BAR
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SPLIT_LIST_VIEW
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SWIPE_UP_TO_SEARCH
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_THEME
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_TINT_CLOCK
@@ -46,6 +47,7 @@ import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_APPS_S
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_HOME_SEARCH_BAR
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_HOME_SEARCH_BAR_PLACEHOLDER
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SHOW_HOME_SEARCH_BAR_SETTINGS
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SPLIT_LIST_VIEW
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.SWIPE_UP_TO_SEARCH
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.THEME
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.TINT_CLOCK
@@ -153,7 +155,9 @@ class SettingsRepository(
                 disableAppsScreen = preferences[DISABLE_APPS_SCREEN]
                     ?: DEFAULT_DISABLE_APPS_SCREEN,
 
-                tintClock = preferences[TINT_CLOCK] ?: DEFAULT_TINT_CLOCK
+                tintClock = preferences[TINT_CLOCK] ?: DEFAULT_TINT_CLOCK,
+
+                splitListView = preferences[SPLIT_LIST_VIEW] ?: DEFAULT_SPLIT_LIST_VIEW
             )
 
             _settings.update { newSettings }
@@ -320,5 +324,9 @@ class SettingsRepository(
 
     suspend fun setTintClock(tint: Boolean){
         dataStore.edit { it[TINT_CLOCK] = tint }
+    }
+
+    suspend fun setSplitList(split: Boolean){
+        dataStore.edit { it[SPLIT_LIST_VIEW] = split }
     }
 }

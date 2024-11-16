@@ -25,5 +25,6 @@ data class AppsScreenState(
     val searchText: String = "",
     val showSettingsDialog: Boolean = false,
     val showAppMenu: Boolean = false,
-    val gridColsCount: GridColsCount = GridColsCount()
+    val gridColsCount: GridColsCount = GridColsCount(),
+    val splitList: Boolean = Settings.DEFAULT_SPLIT_LIST_VIEW
 )
