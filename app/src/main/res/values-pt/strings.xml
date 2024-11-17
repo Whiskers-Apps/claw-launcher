@@ -11,10 +11,12 @@
     <string name="SwipeToDelete">Deslizar Para Eliminar</string>
     <string name="HomeScreen_open_settings">Abrir Definições</string>
     <string name="Search">Procurar</string>
+    <string name="Disable">Desativar</string>
     <string name="HomeScreen_placeholder">Deslize para pesquisar</string>
     <string name="HomeScreen_change_wallpaper">Mudar Wallpaper</string>
     <string name="HomeScreen_settings">Definições</string>
     <string name="HomeScreen_lock_screen_description">De forma a esta funcionalidade funcionar é necessário dar permissões de acessebilidade à aplicação</string>
+    <string name="HomeScreen_battery_optimization_description">Desative a optimização de batteria de forma ao serviço de bloquear ecrã não parar.</string>
     <string name="SearchScreen_apps">Aplicações</string>
     <string name="SearchScreen_web">Web</string>
     <string name="SearchScreen_bookmarks">Marcadores</string>
@@ -72,6 +74,7 @@
     <string name="AppsSettings_search_bar_settings_description">Mostrar as definições na barra de pesquisa</string>
     <string name="AppsSettings_search_bar_radius">Curvatura da Barra de Pesquisa</string>
     <string name="AppsSettings_search_bar_radius_description">A curvatura da barra de pesquisa</string>
+    <string name="AppsSettings_split_list_description">Divide a lista em dois caso tenha espaço disponivel</string>
     <string name="BookmarksScreen_bookmarks">Marcadores</string>
     <string name="BookmarksScreen_no_bookmarks">Sem marcadores. Clique em adicionar para adiconar um marcador</string>
     <string name="BookmarksScreen_groups">Grupos</string>
@@ -107,4 +110,10 @@
     <string name="HomeScreen_lock_screen">Bloquear Ecrã</string>
     <string name="HomeSettings_tint_clock">Tonalidade Do Relógio</string>
     <string name="lock_service_description">Bloquear Ecrã: Isto ativa o duplo toque para bloquear o ecrã</string>
+    <string name="HomeScreen_restricted_access">Acesso Restrito</string>
+    <string name="HomeScreen_restricted_access_description">Dependendo do dispositivo é necessário permitir acesso restrito à aplicação para poder usar o serviço de acessibilidade. Normalmente está localizada no menu com 3 pontos.</string>
+    <string name="HomeScreen_accessibility">Acessibilidade</string>
+    <string name="HomeScreen_accessibility_description">Ativar o serviço de acessibilidade para poder bloquear o ecrã</string>
+    <string name="HomeScreen_battery_optimization">Optimização de Bateria</string>
+    <string name="AppsSettings_split_list">Dividir Lista</string>
 </resources>

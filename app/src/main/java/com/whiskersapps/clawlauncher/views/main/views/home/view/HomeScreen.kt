@@ -281,13 +281,25 @@ fun HomeScreen(
                             }
                         }
 
-                        LockAccessibilityDialog(
-                            show = state.showLockAccessibilityDialog,
+                        ScreenLockDialog(
+                            show = state.showScreenLockDialog,
+                            serviceEnabled = state.accessibilityServiceEnabled,
+                            batteryOptimized = state.batteryOptimized,
                             onDismiss = {
-                                onAction(HomeScreenAction.OnCloseLockAccessibilityDialog)
+                                onAction(HomeScreenAction.OnCloseScreenLockDialog)
+                            },
+                            onOpenAppInfo = {
+                                onAction(HomeScreenAction.OnOpenAppInfo)
                             },
                             onOpenAccessibilitySettings = {
                                 onAction(HomeScreenAction.OnOpenAccessibilitySettings)
+                            },
+                            onOpenBatteryOptimizationSettings = {
+                                onAction(HomeScreenAction.OnOpenBatteryOptimizationSettings)
+                            },
+                            onOk = {
+                                onAction(HomeScreenAction.OnCloseScreenLockDialog)
+                                onAction(HomeScreenAction.OnRefreshScreenLockPermissions)
                             }
                         )
 

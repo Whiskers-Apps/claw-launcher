@@ -2,11 +2,11 @@ package com.whiskersapps.clawlauncher.views.main.views.home.model
 
 import android.app.Application
 import android.content.Intent
-import android.provider.Settings
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.features.lock_screen.ScreenLock
+import com.whiskersapps.clawlauncher.shared.data.AppsRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenVM @Inject constructor(
     val settingsRepository: SettingsRepository,
+    val appsRepository: AppsRepository,
     val app: Application
 ) : ViewModel() {
 
@@ -43,7 +44,9 @@ class HomeScreenVM @Inject constructor(
                         showSearchBarSettings = settings.showHomeSearchBarSettings,
                         searchBarRadius = settings.homeSearchBarRadius.toFloat(),
                         swipeUpToSearch = settings.swipeUpToSearch,
-                        tintClock = settings.tintClock
+                        tintClock = settings.tintClock,
+                        accessibilityServiceEnabled = screenLock.isServiceEnabled(),
+                        batteryOptimized = screenLock.isBatteryOptimized()
                     )
                 }
             }
@@ -120,9 +123,21 @@ class HomeScreenVM @Inject constructor(
 
             HomeScreenAction.OnLockScreen -> lockScreen()
 
-            HomeScreenAction.OnCloseLockAccessibilityDialog -> closeLockAccessibilityDialog()
+            HomeScreenAction.OnCloseScreenLockDialog -> closeLockAccessibilityDialog()
 
             HomeScreenAction.OnOpenAccessibilitySettings -> openAccessibilitySettings()
+
+            HomeScreenAction.OnOpenBatteryOptimizationSettings -> {
+                openBatteryOptimizationSettings()
+            }
+
+            HomeScreenAction.OnRefreshScreenLockPermissions -> {
+                refreshScreenLockPermissions()
+            }
+
+            HomeScreenAction.OnOpenAppInfo -> {
+                appsRepository.openAppInfo(app.packageName)
+            }
         }
     }
 
@@ -212,14 +227,9 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun lockScreen() {
-        if (screenLock.isBatteryOptimized()){
-            screenLock.openBatteryOptimizationSettings()
-            return
-        }
-
-        if (!screenLock.isServiceEnabled()) {
+        if (!screenLock.isServiceEnabled() || screenLock.isBatteryOptimized()) {
             _state.update {
-                it.copy(showLockAccessibilityDialog = true)
+                it.copy(showScreenLockDialog = true)
             }
             return
         }
@@ -227,14 +237,26 @@ class HomeScreenVM @Inject constructor(
         screenLock.lockScreen()
     }
 
-    private fun openAccessibilitySettings(){
-        closeLockAccessibilityDialog()
+    private fun openAccessibilitySettings() {
         screenLock.openAccessibilitySettings()
     }
 
     private fun closeLockAccessibilityDialog() {
         _state.update {
-            it.copy(showLockAccessibilityDialog = false)
+            it.copy(showScreenLockDialog = false)
+        }
+    }
+
+    private fun openBatteryOptimizationSettings() {
+        screenLock.openBatteryOptimizationSettings()
+    }
+
+    private fun refreshScreenLockPermissions() {
+        _state.update {
+            it.copy(
+                accessibilityServiceEnabled = screenLock.isServiceEnabled(),
+                batteryOptimized = screenLock.isBatteryOptimized()
+            )
         }
     }
 }
