@@ -57,6 +57,10 @@ class HomeSettingsScreenVM @Inject constructor(
                 is HomeSettingsScreenAction.SetSwipeUpToSearch -> settingsRepository.setSwipeUpToSearch(
                     action.swipeUp
                 )
+
+                is HomeSettingsScreenAction.SetTintIcon -> settingsRepository.setTintClock(action.tint)
+
+                is HomeSettingsScreenAction.SetClockPlacement -> settingsRepository.setClockPlacement(action.placement)
             }
         }
     }

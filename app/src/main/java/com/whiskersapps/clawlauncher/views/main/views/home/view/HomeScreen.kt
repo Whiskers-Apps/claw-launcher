@@ -125,23 +125,33 @@ fun HomeScreen(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
                                 onClick = { },
-                                onLongClick = { onAction(HomeScreenAction.OpenMenuDialog) },
+                                onLongClick = {
+                                    onAction(HomeScreenAction.OpenMenuDialog)
+                                },
+                                onDoubleClick = {
+                                    onAction(HomeScreenAction.OnLockScreen)
+                                }
                             )
                     ) {
-
-                        Clock(
-                            clock = state.clock,
-                            date = state.date,
-                            onClick = {
-                                onAction(HomeScreenAction.OnOpenCalendar)
-                            }
-                        )
-
-                        Spacer(
+                        Column(
                             modifier = Modifier
                                 .fillMaxHeight()
-                                .weight(1f, fill = true)
-                        )
+                                .weight(1f, fill = true),
+                            verticalArrangement = when (state.clockPlacement) {
+                                "top" -> Arrangement.Top
+                                "center" -> Arrangement.Center
+                                else -> Arrangement.Bottom
+                            }
+                        ) {
+                            Clock(
+                                clock = state.clock,
+                                date = state.date,
+                                tint = state.tintClock,
+                                onClick = {
+                                    onAction(HomeScreenAction.OnOpenCalendar)
+                                }
+                            )
+                        }
 
                         Column(
                             modifier = Modifier
@@ -150,7 +160,7 @@ fun HomeScreen(
                             if (state.showSearchBar) {
                                 SearchBar(
                                     enabled = false,
-                                    placeholder = if (state.showPlaceholder) stringResource(R.string.HomeScreen_search_placeholder) else "",
+                                    placeholder = if (state.showPlaceholder) stringResource(R.string.Search) else "",
                                     showMenu = state.showSearchBarSettings,
                                     onMenuClick = { onAction(HomeScreenAction.OpenSettingsDialog) },
                                     borderRadius = state.searchBarRadius.toInt(),
@@ -160,7 +170,9 @@ fun HomeScreen(
                                 if (state.showPlaceholder) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
-                                        text = if(state.swipeUpToSearch) stringResource(R.string.HomeScreen_placeholder) else stringResource(R.string.HomeScreen_click_here_to_search),
+                                        text = if (state.swipeUpToSearch) stringResource(R.string.HomeScreen_placeholder) else stringResource(
+                                            R.string.HomeScreen_click_here_to_search
+                                        ),
                                         color = Color.White,
                                         fontSize = 18.sp,
                                         style = TextStyle(shadow = textShadow),
@@ -272,6 +284,28 @@ fun HomeScreen(
                                 }
                             }
                         }
+
+                        ScreenLockDialog(
+                            show = state.showScreenLockDialog,
+                            serviceEnabled = state.accessibilityServiceEnabled,
+                            batteryOptimized = state.batteryOptimized,
+                            onDismiss = {
+                                onAction(HomeScreenAction.OnCloseScreenLockDialog)
+                            },
+                            onOpenAppInfo = {
+                                onAction(HomeScreenAction.OnOpenAppInfo)
+                            },
+                            onOpenAccessibilitySettings = {
+                                onAction(HomeScreenAction.OnOpenAccessibilitySettings)
+                            },
+                            onOpenBatteryOptimizationSettings = {
+                                onAction(HomeScreenAction.OnOpenBatteryOptimizationSettings)
+                            },
+                            onOk = {
+                                onAction(HomeScreenAction.OnCloseScreenLockDialog)
+                                onAction(HomeScreenAction.OnRefreshScreenLockPermissions)
+                            }
+                        )
 
                         HomeSettingsDialog(onAction = { onAction(it) }, state = state)
                     }

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.whiskersapps.clawlauncher.features.lock_screen.ScreenLock
+import com.whiskersapps.clawlauncher.shared.data.AppsRepository
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,11 +24,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenVM @Inject constructor(
     val settingsRepository: SettingsRepository,
+    val appsRepository: AppsRepository,
     val app: Application
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeScreenState())
     val state = _state.asStateFlow()
+
+    private val screenLock = ScreenLock(app)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,7 +43,10 @@ class HomeScreenVM @Inject constructor(
                         showPlaceholder = settings.showHomeSearchBarPlaceholder,
                         showSearchBarSettings = settings.showHomeSearchBarSettings,
                         searchBarRadius = settings.homeSearchBarRadius.toFloat(),
-                        swipeUpToSearch = settings.swipeUpToSearch
+                        swipeUpToSearch = settings.swipeUpToSearch,
+                        tintClock = settings.tintClock,
+                        accessibilityServiceEnabled = screenLock.isServiceEnabled(),
+                        batteryOptimized = screenLock.isBatteryOptimized()
                     )
                 }
             }
@@ -110,6 +118,30 @@ class HomeScreenVM @Inject constructor(
             is HomeScreenAction.SetSwipeUpToSearch -> setSwipeUpToSearch(action.swipeUp)
 
             HomeScreenAction.OnOpenCalendar -> onOpenCalendar()
+
+            is HomeScreenAction.SetTintIcon -> setTintIcon(action.tint)
+
+            HomeScreenAction.OnLockScreen -> lockScreen()
+
+            HomeScreenAction.OnCloseScreenLockDialog -> closeLockAccessibilityDialog()
+
+            HomeScreenAction.OnOpenAccessibilitySettings -> openAccessibilitySettings()
+
+            HomeScreenAction.OnOpenBatteryOptimizationSettings -> {
+                openBatteryOptimizationSettings()
+            }
+
+            HomeScreenAction.OnRefreshScreenLockPermissions -> {
+                refreshScreenLockPermissions()
+            }
+
+            HomeScreenAction.OnOpenAppInfo -> {
+                appsRepository.openAppInfo(app.packageName)
+            }
+
+            is HomeScreenAction.SetClockPlacement -> {
+                setClockPlacement(action.placement)
+            }
         }
     }
 
@@ -172,23 +204,73 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun setSwipeUpToSearch(swipeUp: Boolean) {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.setSwipeUpToSearch(swipeUp)
         }
     }
 
-    private fun onOpenCalendar(){
-        try{
-            viewModelScope.launch(Dispatchers.IO){
+    private fun onOpenCalendar() {
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
                 val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CALENDAR)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-                if(intent.resolveActivity(app.packageManager) != null){
+                if (intent.resolveActivity(app.packageManager) != null) {
                     app.startActivity(intent)
                 }
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             println("Error opening calendar. Exception: ${e.message}")
+        }
+    }
+
+    private fun setTintIcon(tint: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.setTintClock(tint)
+        }
+    }
+
+    private fun lockScreen() {
+        if (!screenLock.isServiceEnabled() || screenLock.isBatteryOptimized()) {
+            _state.update {
+                it.copy(showScreenLockDialog = true)
+            }
+            return
+        }
+
+        screenLock.lockScreen()
+    }
+
+    private fun openAccessibilitySettings() {
+        screenLock.openAccessibilitySettings()
+    }
+
+    private fun closeLockAccessibilityDialog() {
+        _state.update {
+            it.copy(showScreenLockDialog = false)
+        }
+    }
+
+    private fun openBatteryOptimizationSettings() {
+        screenLock.openBatteryOptimizationSettings()
+    }
+
+    private fun refreshScreenLockPermissions() {
+        _state.update {
+            it.copy(
+                accessibilityServiceEnabled = screenLock.isServiceEnabled(),
+                batteryOptimized = screenLock.isBatteryOptimized()
+            )
+        }
+    }
+
+    private fun setClockPlacement(placement: String){
+        viewModelScope.launch(Dispatchers.IO){
+            _state.update {
+                it.copy(clockPlacement = placement)
+            }
+
+            settingsRepository.setClockPlacement(placement)
         }
     }
 }

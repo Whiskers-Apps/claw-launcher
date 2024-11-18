@@ -15,10 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.window.layout.FoldingFeature
+import androidx.window.layout.WindowInfoTracker
+import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
 import com.whiskersapps.clawlauncher.views.main.view.MainScreenRoot
@@ -33,13 +39,38 @@ import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view.
 import com.whiskersapps.clawlauncher.views.setup.search_engines.view.SearchEnginesSetupScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val app = this.application
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            settingsRepository.settings.collect {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    WindowInfoTracker.getOrCreate(this@MainActivity)
+                        .windowLayoutInfo(this@MainActivity)
+                        .collect { layoutInfo ->
+                            val feature =
+                                layoutInfo.displayFeatures.filterIsInstance<FoldingFeature>()
+                                    .firstOrNull()
+
+                            settingsRepository.setGridColsCount(feature)
+                        }
+                }
+            }
+        }
 
         setContent {
 

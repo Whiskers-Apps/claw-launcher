@@ -26,7 +26,7 @@ The app also support hiding apps and secure others with fingerprint.
 
 # Install
 
-To instal the app you can use one of the following methods.
+To install the app you can use one of the following methods.
 
 <a href="https://github.com/Whiskers-Apps/claw-launcher/releases">
 <img alt="github releases download" src="./assets/github-releases.svg" width="200">

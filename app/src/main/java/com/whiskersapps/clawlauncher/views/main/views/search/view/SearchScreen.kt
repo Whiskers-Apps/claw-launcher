@@ -42,8 +42,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
-import com.whiskersapps.clawlauncher.shared.utils.getColsCount
 import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
+import com.whiskersapps.clawlauncher.shared.utils.inPortrait
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
@@ -93,12 +93,8 @@ fun SearchScreen(
     val state = vm.state.collectAsState().value
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val colsCount = getColsCount(
-        cols = state.cols,
-        landscapeCols = state.landscapeCols,
-        unfoldedCols = state.unfoldedCols,
-        unfoldedLandscapeCols = state.unfoldedLandscapeCols
-    )
+    val colsCount =
+        if (inPortrait()) state.gridColsCount.portrait else state.gridColsCount.landscape
 
 
     LaunchedEffect(sheetState.currentValue) {
@@ -124,7 +120,7 @@ fun SearchScreen(
                     onChange = { text ->
                         onAction(OnSearchInput(text))
                     },
-                    placeholder = stringResource(R.string.SearchScreen_search_placeholder),
+                    placeholder = stringResource(R.string.Search),
                     focus = state.focusSearchBar,
                     onFocused = {
                         onAction(OnSetFocusSearchBar(false))
@@ -138,7 +134,7 @@ fun SearchScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (state.appShortcuts.isNotEmpty()) {
+                if (state.appShortcuts.isNotEmpty() && state.showResults) {
 
                     Column(modifier = Modifier.sidePadding()) {
                         Text(
@@ -186,7 +182,7 @@ fun SearchScreen(
                     }
                 }
 
-                if (state.searchText.isNotEmpty()) {
+                if (state.searchText.isNotEmpty() && state.showResults) {
 
                     if (state.groups.isNotEmpty() || state.bookmarks.isNotEmpty()) {
 

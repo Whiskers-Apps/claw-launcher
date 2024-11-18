@@ -1,7 +1,6 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.view
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import com.whiskersapps.clawlauncher.shared.intent.settings.HomeSettingsAction
 import com.whiskersapps.clawlauncher.shared.view.composables.Dialog
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
@@ -25,11 +24,13 @@ fun HomeSettingsDialog(
         )
 
         HomeSettings(
+            tintClock = state.tintClock,
             swipeUpToSearch = state.swipeUpToSearch,
             showSearchBar = state.showSearchBar,
             showPlaceholder = state.showPlaceholder,
             showSettings = state.showSearchBarSettings,
             searchBarRadius = state.searchBarRadius,
+            clockPlacement = state.clockPlacement,
             onAction = { action ->
                 when (action) {
 
@@ -57,6 +58,14 @@ fun HomeSettingsDialog(
                         onAction(
                             HomeScreenAction.SetSwipeUpToSearch(action.swipeUp)
                         )
+                    }
+
+                    is HomeSettingsAction.SetTintIcon -> {
+                        onAction(HomeScreenAction.SetTintIcon(action.tint))
+                    }
+
+                    is HomeSettingsAction.SetClockPlacement -> {
+                        onAction(HomeScreenAction.SetClockPlacement(action.placement))
                     }
                 }
             }

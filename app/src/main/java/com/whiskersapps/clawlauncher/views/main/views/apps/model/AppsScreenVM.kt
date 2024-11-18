@@ -43,8 +43,15 @@ class AppsScreenVM @Inject constructor(
                         showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
                         showSearchBarSettings = settings.showAppsSearchBarSettings,
                         searchBarRadius = settings.appsSearchBarRadius,
+                        splitList = settings.splitListView
                     )
                 }
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepository.gridColsCount.collect { gridColsCount ->
+                _state.update { it.copy(gridColsCount = gridColsCount) }
             }
         }
 
@@ -106,6 +113,8 @@ class AppsScreenVM @Inject constructor(
             is AppsScreenAction.OpenShortcut -> openShortcut(action.packageName, action.shortcut)
 
             is AppsScreenAction.SetDisableAppsScreen -> setDisableAppsScreen(action.disable)
+
+            is AppsScreenAction.SetSplitList -> setSplitList(action.split)
         }
     }
 
@@ -249,10 +258,21 @@ class AppsScreenVM @Inject constructor(
         }
     }
 
-    private fun setDisableAppsScreen(disable: Boolean){
-        viewModelScope.launch(Dispatchers.IO){
+    private fun setDisableAppsScreen(disable: Boolean) {
+        setShowSettingsDialog(false)
+
+        viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(disableAppsScreen = disable) }
             settingsRepository.setDisableAppsScreen(disable)
+        }
+    }
+
+    private fun setSplitList(split: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update {
+                it.copy(splitList = split)
+            }
+            settingsRepository.setSplitList(split)
         }
     }
 }

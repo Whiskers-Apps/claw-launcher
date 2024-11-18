@@ -1,5 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.model
 
+import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.shared.data.SettingsRepository.Companion.GridColsCount
 import com.whiskersapps.clawlauncher.shared.model.AppShortcut
 import com.whiskersapps.clawlauncher.shared.model.Settings
 
@@ -22,5 +24,7 @@ data class AppsScreenState(
     val searchBarRadius: Int = Settings.DEFAULT_APPS_SEARCH_BAR_RADIUS,
     val searchText: String = "",
     val showSettingsDialog: Boolean = false,
-    val showAppMenu: Boolean = false
+    val showAppMenu: Boolean = false,
+    val gridColsCount: GridColsCount = GridColsCount(),
+    val splitList: Boolean = Settings.DEFAULT_SPLIT_LIST_VIEW
 )

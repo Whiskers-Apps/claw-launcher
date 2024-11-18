@@ -42,7 +42,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.whiskersapps.clawlauncher.shared.utils.getColsCount
+import com.whiskersapps.clawlauncher.shared.utils.inPortrait
+import com.whiskersapps.clawlauncher.shared.utils.isSplitAvailable
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
 import com.whiskersapps.clawlauncher.shared.view.composables.AppPopup
 import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
@@ -68,6 +69,7 @@ fun AppsScreenRoot(
                     keyboardController?.hide()
                     focusManager.clearFocus()
                 }
+
                 AppsScreenAction.CloseKeyboard -> {
                     keyboardController?.hide()
                     focusManager.clearFocus()
@@ -89,12 +91,10 @@ fun AppsScreen(
 
     val fragmentActivity = LocalContext.current as FragmentActivity
     val state = vm.state.collectAsState().value
-    val colsCount = getColsCount(
-        cols = state.cols,
-        landscapeCols = state.landscapeCols,
-        unfoldedCols = state.unfoldedCols,
-        unfoldedLandscapeCols = state.unfoldedLandscapeCols
-    )
+    val colsCount =
+        if (inPortrait()) state.gridColsCount.portrait else state.gridColsCount.landscape
+
+    val splitList = isSplitAvailable() && state.splitList
 
     if (!state.loading) {
         Box(contentAlignment = Alignment.Center) {
@@ -122,80 +122,164 @@ fun AppsScreen(
                 }
 
                 if (state.viewType == "list") {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(1f, fill = true)
-                    ) {
-                        itemsIndexed(
-                            items = state.appShortcuts,
-                            key = { index, app -> "${index}-${app.packageName}" }
-                        ) { index, app ->
 
-                            var showMenu by remember { mutableStateOf(false) }
+                    when(splitList){
+                        true -> {
+                            LazyVerticalGrid(
+                                modifier = Modifier.fillMaxHeight().weight(1f, fill = true),
+                                columns = GridCells.Fixed(2)
+                            ) {
+                                itemsIndexed(
+                                    items = state.appShortcuts,
+                                    key = { index, app -> "${index}-${app.packageName}" }
+                                ) { index, app ->
 
-                            Column {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(CircleShape)
-                                        .background(if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background)
-                                        .combinedClickable(
-                                            onClick = {
-                                                onAction(
-                                                    AppsScreenAction.OpenApp(
-                                                        app.packageName,
-                                                        fragmentActivity
-                                                    )
+                                    var showMenu by remember { mutableStateOf(false) }
+
+                                    Column {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clip(CircleShape)
+                                                .background(if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background)
+                                                .combinedClickable(
+                                                    onClick = {
+                                                        onAction(
+                                                            AppsScreenAction.OpenApp(
+                                                                app.packageName,
+                                                                fragmentActivity
+                                                            )
+                                                        )
+                                                        onAction(AppsScreenAction.CloseKeyboard)
+                                                        onAction(AppsScreenAction.NavigateToHome)
+                                                    },
+                                                    onLongClick = {
+                                                        showMenu = true
+                                                    }
                                                 )
-                                                onAction(AppsScreenAction.CloseKeyboard)
-                                                onAction(AppsScreenAction.NavigateToHome)
-                                            },
-                                            onLongClick = {
-                                                showMenu = true
+                                                .padding(8.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+                                            Box(modifier = Modifier.size(48.dp)) {
+                                                AppIcon(app = app)
                                             }
-                                        )
-                                        .padding(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
 
-                                    Box(modifier = Modifier.size(48.dp)) {
-                                        AppIcon(app = app)
-                                    }
+                                            Spacer(modifier = Modifier.width(16.dp))
 
-                                    Spacer(modifier = Modifier.width(16.dp))
-
-                                    Text(
-                                        text = app.label,
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
-                                }
-                                if (showMenu) {
-                                    AppPopup(
-                                        app = app,
-                                        onDismiss = {
-                                            showMenu = false
-                                        },
-                                        onInfoClick = {
-                                            onAction(AppsScreenAction.OpenAppInfo(app.packageName))
-                                            showMenu = false
-                                            onAction(AppsScreenAction.NavigateToHome)
-                                        },
-                                        onUninstallClick = {
-                                            onAction(AppsScreenAction.RequestUninstall(app.packageName))
-                                            showMenu = false
-                                        },
-                                        onOpenShortcut = { shortcut ->
-                                            onAction(
-                                                AppsScreenAction.OpenShortcut(
-                                                    app.packageName,
-                                                    shortcut
-                                                )
+                                            Text(
+                                                text = app.label,
+                                                color = MaterialTheme.colorScheme.onBackground
                                             )
-                                            showMenu = false
-                                            onAction(AppsScreenAction.NavigateToHome)
                                         }
-                                    )
+                                        if (showMenu) {
+                                            AppPopup(
+                                                app = app,
+                                                onDismiss = {
+                                                    showMenu = false
+                                                },
+                                                onInfoClick = {
+                                                    onAction(AppsScreenAction.OpenAppInfo(app.packageName))
+                                                    showMenu = false
+                                                    onAction(AppsScreenAction.NavigateToHome)
+                                                },
+                                                onUninstallClick = {
+                                                    onAction(AppsScreenAction.RequestUninstall(app.packageName))
+                                                    showMenu = false
+                                                },
+                                                onOpenShortcut = { shortcut ->
+                                                    onAction(
+                                                        AppsScreenAction.OpenShortcut(
+                                                            app.packageName,
+                                                            shortcut
+                                                        )
+                                                    )
+                                                    showMenu = false
+                                                    onAction(AppsScreenAction.NavigateToHome)
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        false -> {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .weight(1f, fill = true)
+                            ) {
+                                itemsIndexed(
+                                    items = state.appShortcuts,
+                                    key = { index, app -> "${index}-${app.packageName}" }
+                                ) { index, app ->
+
+                                    var showMenu by remember { mutableStateOf(false) }
+
+                                    Column {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clip(CircleShape)
+                                                .background(if (index == 0 && state.searchText.isNotEmpty()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.background)
+                                                .combinedClickable(
+                                                    onClick = {
+                                                        onAction(
+                                                            AppsScreenAction.OpenApp(
+                                                                app.packageName,
+                                                                fragmentActivity
+                                                            )
+                                                        )
+                                                        onAction(AppsScreenAction.CloseKeyboard)
+                                                        onAction(AppsScreenAction.NavigateToHome)
+                                                    },
+                                                    onLongClick = {
+                                                        showMenu = true
+                                                    }
+                                                )
+                                                .padding(8.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+                                            Box(modifier = Modifier.size(48.dp)) {
+                                                AppIcon(app = app)
+                                            }
+
+                                            Spacer(modifier = Modifier.width(16.dp))
+
+                                            Text(
+                                                text = app.label,
+                                                color = MaterialTheme.colorScheme.onBackground
+                                            )
+                                        }
+                                        if (showMenu) {
+                                            AppPopup(
+                                                app = app,
+                                                onDismiss = {
+                                                    showMenu = false
+                                                },
+                                                onInfoClick = {
+                                                    onAction(AppsScreenAction.OpenAppInfo(app.packageName))
+                                                    showMenu = false
+                                                    onAction(AppsScreenAction.NavigateToHome)
+                                                },
+                                                onUninstallClick = {
+                                                    onAction(AppsScreenAction.RequestUninstall(app.packageName))
+                                                    showMenu = false
+                                                },
+                                                onOpenShortcut = { shortcut ->
+                                                    onAction(
+                                                        AppsScreenAction.OpenShortcut(
+                                                            app.packageName,
+                                                            shortcut
+                                                        )
+                                                    )
+                                                    showMenu = false
+                                                    onAction(AppsScreenAction.NavigateToHome)
+                                                }
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
