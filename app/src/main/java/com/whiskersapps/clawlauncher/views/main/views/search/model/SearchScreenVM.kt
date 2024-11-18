@@ -53,7 +53,8 @@ class SearchScreenVM @Inject constructor(
             val landscapeCols: Int = 0,
             val unfoldedCols: Int = 0,
             val unfoldedLandscapeCols: Int = 0,
-            val gridColsCount: GridColsCount = GridColsCount()
+            val gridColsCount: GridColsCount = GridColsCount(),
+            val showResults: Boolean = false
         )
     }
 
@@ -147,6 +148,7 @@ class SearchScreenVM @Inject constructor(
         _state.update { it.copy(searchText = text) }
 
         viewModelScope.launch(Dispatchers.IO) {
+
             val newApps = if (text.isEmpty()) ArrayList() else appsRepository.getSearchedApps(text)
 
             val newBookmarks =
@@ -167,7 +169,9 @@ class SearchScreenVM @Inject constructor(
 
                     groups = if (newGroups.size >= 8)
                         newGroups.subList(0, 8)
-                    else newGroups
+                    else newGroups,
+
+                    showResults = text.trim().isNotEmpty()
                 )
             }
         }
@@ -225,13 +229,15 @@ class SearchScreenVM @Inject constructor(
     }
 
     private fun onRunAction(fragmentActivity: FragmentActivity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (state.value.appShortcuts.isNotEmpty()) {
-                onOpenApp(state.value.appShortcuts[0].packageName, fragmentActivity)
-            } else if (state.value.bookmarks.isNotEmpty()) {
-                onOpenUrl(state.value.bookmarks[0].url)
-            } else if (state.value.searchEngine != null) {
-                onOpenUrl(getSearchEngineUrl())
+        if(state.value.showResults){
+            viewModelScope.launch(Dispatchers.IO) {
+                if (state.value.appShortcuts.isNotEmpty()) {
+                    onOpenApp(state.value.appShortcuts[0].packageName, fragmentActivity)
+                } else if (state.value.bookmarks.isNotEmpty()) {
+                    onOpenUrl(state.value.bookmarks[0].url)
+                } else if (state.value.searchEngine != null) {
+                    onOpenUrl(getSearchEngineUrl())
+                }
             }
         }
     }

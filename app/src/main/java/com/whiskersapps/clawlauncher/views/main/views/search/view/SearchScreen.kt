@@ -134,7 +134,7 @@ fun SearchScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (state.appShortcuts.isNotEmpty()) {
+                if (state.appShortcuts.isNotEmpty() && state.showResults) {
 
                     Column(modifier = Modifier.sidePadding()) {
                         Text(
@@ -182,7 +182,7 @@ fun SearchScreen(
                     }
                 }
 
-                if (state.searchText.isNotEmpty()) {
+                if (state.searchText.isNotEmpty() && state.showResults) {
 
                     if (state.groups.isNotEmpty() || state.bookmarks.isNotEmpty()) {
 
