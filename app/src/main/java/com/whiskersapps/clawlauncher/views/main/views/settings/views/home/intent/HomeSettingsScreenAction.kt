@@ -9,4 +9,5 @@ sealed class HomeSettingsScreenAction {
     data class SaveSearchBarRadius(val radius: Float) : HomeSettingsScreenAction()
     data class SetSwipeUpToSearch(val swipeUp: Boolean) : HomeSettingsScreenAction()
     data class SetTintIcon(val tint: Boolean) : HomeSettingsScreenAction()
+    data class SetClockPlacement(val placement: String): HomeSettingsScreenAction()
 }

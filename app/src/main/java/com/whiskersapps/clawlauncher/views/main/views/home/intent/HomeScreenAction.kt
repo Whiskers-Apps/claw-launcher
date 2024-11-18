@@ -23,4 +23,5 @@ sealed class HomeScreenAction{
     data object OnOpenBatteryOptimizationSettings: HomeScreenAction()
     data object OnRefreshScreenLockPermissions: HomeScreenAction()
     data object OnOpenAppInfo: HomeScreenAction()
+    data class SetClockPlacement(val placement: String): HomeScreenAction()
 }

@@ -59,6 +59,8 @@ class HomeSettingsScreenVM @Inject constructor(
                 )
 
                 is HomeSettingsScreenAction.SetTintIcon -> settingsRepository.setTintClock(action.tint)
+
+                is HomeSettingsScreenAction.SetClockPlacement -> settingsRepository.setClockPlacement(action.placement)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.model
 
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_CLOCK_PLACEMENT
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_TINT_CLOCK
 
 data class HomeScreenState(
@@ -16,5 +17,6 @@ data class HomeScreenState(
     val tintClock: Boolean = DEFAULT_TINT_CLOCK,
     val showScreenLockDialog: Boolean = false,
     val accessibilityServiceEnabled: Boolean = false,
-    val batteryOptimized: Boolean = false
+    val batteryOptimized: Boolean = false,
+    val clockPlacement: String = DEFAULT_CLOCK_PLACEMENT
 )

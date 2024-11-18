@@ -138,6 +138,10 @@ class HomeScreenVM @Inject constructor(
             HomeScreenAction.OnOpenAppInfo -> {
                 appsRepository.openAppInfo(app.packageName)
             }
+
+            is HomeScreenAction.SetClockPlacement -> {
+                setClockPlacement(action.placement)
+            }
         }
     }
 
@@ -257,6 +261,16 @@ class HomeScreenVM @Inject constructor(
                 accessibilityServiceEnabled = screenLock.isServiceEnabled(),
                 batteryOptimized = screenLock.isBatteryOptimized()
             )
+        }
+    }
+
+    private fun setClockPlacement(placement: String){
+        viewModelScope.launch(Dispatchers.IO){
+            _state.update {
+                it.copy(clockPlacement = placement)
+            }
+
+            settingsRepository.setClockPlacement(placement)
         }
     }
 }

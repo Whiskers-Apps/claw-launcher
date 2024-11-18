@@ -133,21 +133,25 @@ fun HomeScreen(
                                 }
                             )
                     ) {
-
-                        Clock(
-                            clock = state.clock,
-                            date = state.date,
-                            tint = state.tintClock,
-                            onClick = {
-                                onAction(HomeScreenAction.OnOpenCalendar)
-                            }
-                        )
-
-                        Spacer(
+                        Column(
                             modifier = Modifier
                                 .fillMaxHeight()
-                                .weight(1f, fill = true)
-                        )
+                                .weight(1f, fill = true),
+                            verticalArrangement = when (state.clockPlacement) {
+                                "top" -> Arrangement.Top
+                                "center" -> Arrangement.Center
+                                else -> Arrangement.Bottom
+                            }
+                        ) {
+                            Clock(
+                                clock = state.clock,
+                                date = state.date,
+                                tint = state.tintClock,
+                                onClick = {
+                                    onAction(HomeScreenAction.OnOpenCalendar)
+                                }
+                            )
+                        }
 
                         Column(
                             modifier = Modifier

@@ -10,11 +10,13 @@ import com.whiskersapps.clawlauncher.shared.model.Settings
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.APPS_SEARCH_BAR_POSITION
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.APPS_SEARCH_BAR_RADIUS
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.APPS_VIEW_TYPE
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.CLOCK_PLACEMENT
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DARK_MODE
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DARK_THEME
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_APPS_SEARCH_BAR_POSITION
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_APPS_SEARCH_BAR_RADIUS
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_APPS_VIEW_TYPE
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_CLOCK_PLACEMENT
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_DARK_MODE
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_DARK_THEME
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_DEFAULT_SEARCH_ENGINE
@@ -157,7 +159,9 @@ class SettingsRepository(
 
                 tintClock = preferences[TINT_CLOCK] ?: DEFAULT_TINT_CLOCK,
 
-                splitListView = preferences[SPLIT_LIST_VIEW] ?: DEFAULT_SPLIT_LIST_VIEW
+                splitListView = preferences[SPLIT_LIST_VIEW] ?: DEFAULT_SPLIT_LIST_VIEW,
+
+                clockPlacement = preferences[CLOCK_PLACEMENT] ?: DEFAULT_CLOCK_PLACEMENT
             )
 
             _settings.update { newSettings }
@@ -328,5 +332,9 @@ class SettingsRepository(
 
     suspend fun setSplitList(split: Boolean){
         dataStore.edit { it[SPLIT_LIST_VIEW] = split }
+    }
+
+    suspend fun setClockPlacement(placement: String){
+        dataStore.edit { it[CLOCK_PLACEMENT] = placement }
     }
 }

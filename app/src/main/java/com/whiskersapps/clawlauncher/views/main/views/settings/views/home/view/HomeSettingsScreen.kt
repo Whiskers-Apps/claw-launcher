@@ -50,6 +50,7 @@ fun HomeSettingsScreen(
             showPlaceholder = state.settings.showHomeSearchBarPlaceholder,
             showSettings = state.settings.showHomeSearchBarSettings,
             searchBarRadius = state.settings.homeSearchBarRadius.toFloat(),
+            clockPlacement = state.settings.clockPlacement,
             onAction = { action ->
                 when (action) {
 
@@ -80,6 +81,10 @@ fun HomeSettingsScreen(
                     is HomeSettingsAction.SetTintIcon -> onAction(
                         HomeSettingsScreenAction.SetTintIcon(action.tint)
                     )
+
+                    is HomeSettingsAction.SetClockPlacement -> {
+                        onAction(HomeSettingsScreenAction.SetClockPlacement(action.placement))
+                    }
                 }
             }
         )
