@@ -21,6 +21,7 @@ object Routes {
             const val SEARCH_ENGINES = "settings-search-engines"
             const val SECURITY = "settings-security"
             const val ABOUT = "settings-about"
+            const val LOCK = "settings-lock"
         }
     }
 }

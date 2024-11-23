@@ -53,6 +53,7 @@ class SettingsScreenVM @Inject constructor(
             SettingsScreenAction.NavigateToStyleSettings -> {}
             SettingsScreenAction.NavigateToSecuritySettings -> {}
             SettingsScreenAction.SetDefaultLauncher -> setDefaultLauncher()
+            SettingsScreenAction.NavigateToLockScreenSettings -> {}
         }
     }
 

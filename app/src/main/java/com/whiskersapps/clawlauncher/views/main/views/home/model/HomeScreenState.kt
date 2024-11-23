@@ -15,8 +15,6 @@ data class HomeScreenState(
     val showSearchBarSettings: Boolean = true,
     val searchBarRadius: Float = 50f,
     val tintClock: Boolean = DEFAULT_TINT_CLOCK,
-    val showScreenLockDialog: Boolean = false,
-    val accessibilityServiceEnabled: Boolean = false,
-    val batteryOptimized: Boolean = false,
-    val clockPlacement: String = DEFAULT_CLOCK_PLACEMENT
+    val clockPlacement: String = DEFAULT_CLOCK_PLACEMENT,
+    val openLockSettings: Boolean = false
 )

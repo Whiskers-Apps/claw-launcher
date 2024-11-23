@@ -18,10 +18,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
@@ -35,6 +37,7 @@ import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.v
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.view.HomeSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.view.SecuritySettingsScreenRoot
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.settings.LockScreenSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view.StyleSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.search_engines.view.SearchEnginesSetupScreenRoot
 import com.whiskersapps.clawlauncher.views.setup.welcome.view.WelcomeScreenRoot
@@ -153,6 +156,18 @@ class MainActivity : FragmentActivity() {
 
                             composable(Routes.Main.Settings.SECURITY) {
                                 SecuritySettingsScreenRoot(navController = mainNavController)
+                            }
+
+                            composable(
+                                "${Routes.Main.Settings.LOCK}/{home}",
+                                arguments = listOf(navArgument("home") {
+                                    type = NavType.BoolType
+                                })
+                            ) { backstack ->
+
+                                val goHome = backstack.arguments?.getBoolean("home") ?: false
+
+                                LockScreenSettingsScreenRoot(navController = mainNavController, goHome = goHome)
                             }
 
                             composable(Routes.Main.Settings.ABOUT) {

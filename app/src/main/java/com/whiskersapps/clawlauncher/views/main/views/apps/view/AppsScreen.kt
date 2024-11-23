@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -95,6 +96,10 @@ fun AppsScreen(
         if (inPortrait()) state.gridColsCount.portrait else state.gridColsCount.landscape
 
     val splitList = isSplitAvailable() && state.splitList
+
+    LaunchedEffect(state.gridColsCount) {
+        println("Grid Cols Count: ${state.gridColsCount}")
+    }
 
     if (!state.loading) {
         Box(contentAlignment = Alignment.Center) {

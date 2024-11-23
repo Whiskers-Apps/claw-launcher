@@ -10,4 +10,5 @@ sealed class SettingsScreenAction {
     data object NavigateToSearchEnginesSettings: SettingsScreenAction()
     data object NavigateToSecuritySettings: SettingsScreenAction()
     data object NavigateToAbout: SettingsScreenAction()
+    data object NavigateToLockScreenSettings: SettingsScreenAction()
 }

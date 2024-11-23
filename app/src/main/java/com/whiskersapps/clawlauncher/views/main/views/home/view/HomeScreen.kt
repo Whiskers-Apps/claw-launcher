@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,6 +58,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreenRoot(
     navigateToSettings: () -> Unit,
+    navigateToLockSettings: () -> Unit,
     sheetState: SheetState,
     vm: HomeScreenVM = hiltViewModel()
 ) {
@@ -68,6 +70,7 @@ fun HomeScreenRoot(
             when (action) {
                 HomeScreenAction.NavigateToSettings -> navigateToSettings()
                 HomeScreenAction.OpenSearchSheet -> scope.launch { sheetState.expand() }
+                HomeScreenAction.OnOpenLockSettings -> navigateToLockSettings()
                 else -> vm.onAction(action)
             }
         },
@@ -81,13 +84,19 @@ fun HomeScreen(
     onAction: (HomeScreenAction) -> Unit,
     vm: HomeScreenVM = hiltViewModel()
 ) {
-
     val state = vm.state.collectAsState().value
+
     val scope = rememberCoroutineScope()
     val textShadow = Shadow(
         Color.Black,
         offset = Offset(2f, 2f)
     )
+
+    LaunchedEffect(state.openLockSettings) {
+        if(state.openLockSettings){
+            onAction(HomeScreenAction.OnOpenLockSettings)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -284,28 +293,6 @@ fun HomeScreen(
                                 }
                             }
                         }
-
-                        ScreenLockDialog(
-                            show = state.showScreenLockDialog,
-                            serviceEnabled = state.accessibilityServiceEnabled,
-                            batteryOptimized = state.batteryOptimized,
-                            onDismiss = {
-                                onAction(HomeScreenAction.OnCloseScreenLockDialog)
-                            },
-                            onOpenAppInfo = {
-                                onAction(HomeScreenAction.OnOpenAppInfo)
-                            },
-                            onOpenAccessibilitySettings = {
-                                onAction(HomeScreenAction.OnOpenAccessibilitySettings)
-                            },
-                            onOpenBatteryOptimizationSettings = {
-                                onAction(HomeScreenAction.OnOpenBatteryOptimizationSettings)
-                            },
-                            onOk = {
-                                onAction(HomeScreenAction.OnCloseScreenLockDialog)
-                                onAction(HomeScreenAction.OnRefreshScreenLockPermissions)
-                            }
-                        )
 
                         HomeSettingsDialog(onAction = { onAction(it) }, state = state)
                     }

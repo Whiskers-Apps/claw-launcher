@@ -92,6 +92,7 @@ class SettingsRepository(
             _settings.update { Settings() }
         }
         .map { preferences ->
+
             val newSettings = Settings(
                 setupCompleted = preferences[SETUP_COMPLETED]
                     ?: DEFAULT_SETUP_COMPLETED,
@@ -169,7 +170,6 @@ class SettingsRepository(
             newSettings
         }
 
-
     private val _gridColsCount = MutableStateFlow(GridColsCount())
     val gridColsCount = _gridColsCount.asStateFlow()
 
@@ -220,7 +220,6 @@ class SettingsRepository(
     }
 
     suspend fun setShowHomeSearchBar(show: Boolean) {
-        println("Show home search bar: $show")
         dataStore.edit { it[SHOW_HOME_SEARCH_BAR] = show }
     }
 

@@ -31,8 +31,6 @@ class HomeScreenVM @Inject constructor(
     private val _state = MutableStateFlow(HomeScreenState())
     val state = _state.asStateFlow()
 
-    private val screenLock = ScreenLock(app)
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.settings.collect { settings ->
@@ -45,8 +43,7 @@ class HomeScreenVM @Inject constructor(
                         searchBarRadius = settings.homeSearchBarRadius.toFloat(),
                         swipeUpToSearch = settings.swipeUpToSearch,
                         tintClock = settings.tintClock,
-                        accessibilityServiceEnabled = screenLock.isServiceEnabled(),
-                        batteryOptimized = screenLock.isBatteryOptimized()
+                        clockPlacement = settings.clockPlacement
                     )
                 }
             }
@@ -123,24 +120,14 @@ class HomeScreenVM @Inject constructor(
 
             HomeScreenAction.OnLockScreen -> lockScreen()
 
-            HomeScreenAction.OnCloseScreenLockDialog -> closeLockAccessibilityDialog()
-
-            HomeScreenAction.OnOpenAccessibilitySettings -> openAccessibilitySettings()
-
-            HomeScreenAction.OnOpenBatteryOptimizationSettings -> {
-                openBatteryOptimizationSettings()
-            }
-
-            HomeScreenAction.OnRefreshScreenLockPermissions -> {
-                refreshScreenLockPermissions()
-            }
-
-            HomeScreenAction.OnOpenAppInfo -> {
-                appsRepository.openAppInfo(app.packageName)
-            }
-
             is HomeScreenAction.SetClockPlacement -> {
                 setClockPlacement(action.placement)
+            }
+
+            HomeScreenAction.OnOpenLockSettings -> {}
+
+            HomeScreenAction.ResetOpenLockSettings -> {
+                setOpenLockSettings(false)
             }
         }
     }
@@ -231,41 +218,24 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun lockScreen() {
-        if (!screenLock.isServiceEnabled() || screenLock.isBatteryOptimized()) {
-            _state.update {
-                it.copy(showScreenLockDialog = true)
-            }
+        val screenLock = ScreenLock(app)
+
+        if (!screenLock.isServiceEnabled()) {
+            setOpenLockSettings(true)
             return
         }
 
         screenLock.lockScreen()
     }
 
-    private fun openAccessibilitySettings() {
-        screenLock.openAccessibilitySettings()
-    }
-
-    private fun closeLockAccessibilityDialog() {
+    private fun setOpenLockSettings(open: Boolean) {
         _state.update {
-            it.copy(showScreenLockDialog = false)
+            it.copy(openLockSettings = open)
         }
     }
 
-    private fun openBatteryOptimizationSettings() {
-        screenLock.openBatteryOptimizationSettings()
-    }
-
-    private fun refreshScreenLockPermissions() {
-        _state.update {
-            it.copy(
-                accessibilityServiceEnabled = screenLock.isServiceEnabled(),
-                batteryOptimized = screenLock.isBatteryOptimized()
-            )
-        }
-    }
-
-    private fun setClockPlacement(placement: String){
-        viewModelScope.launch(Dispatchers.IO){
+    private fun setClockPlacement(placement: String) {
+        viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(clockPlacement = placement)
             }

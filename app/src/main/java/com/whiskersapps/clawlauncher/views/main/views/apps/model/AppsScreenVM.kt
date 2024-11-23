@@ -43,7 +43,7 @@ class AppsScreenVM @Inject constructor(
                         showSearchBarPlaceholder = settings.showAppsSearchBarPlaceholder,
                         showSearchBarSettings = settings.showAppsSearchBarSettings,
                         searchBarRadius = settings.appsSearchBarRadius,
-                        splitList = settings.splitListView
+                        splitList = settings.splitListView,
                     )
                 }
             }

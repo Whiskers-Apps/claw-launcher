@@ -53,6 +53,7 @@ fun SettingsScreenRoot(
                 SettingsScreenAction.NavigateToStyleSettings -> navController.navigate(Routes.Main.Settings.STYLE)
                 SettingsScreenAction.NavigateToAbout -> navController.navigate(Routes.Main.Settings.ABOUT)
                 SettingsScreenAction.NavigateToSecuritySettings -> navController.navigate(Routes.Main.Settings.SECURITY)
+                SettingsScreenAction.NavigateToLockScreenSettings -> navController.navigate("${Routes.Main.Settings.LOCK}/false")
                 else -> vm.onAction(action)
             }
         },
@@ -123,49 +124,72 @@ fun SettingsScreen(
             icon = R.drawable.palette,
             title = stringResource(R.string.SettingsScreen_style),
             description = stringResource(R.string.SettingsScreen_style_description),
-            onClick = { onAction(SettingsScreenAction.NavigateToStyleSettings) }
+            onClick = {
+                onAction(SettingsScreenAction.NavigateToStyleSettings)
+            }
         )
 
         MainSetting(
             icon = R.drawable.home,
             title = stringResource(R.string.SettingsScreen_home),
             description = stringResource(R.string.SettingsScreen_home_description),
-            onClick = { onAction(SettingsScreenAction.NavigateToHomeSettings) }
+            onClick = {
+                onAction(SettingsScreenAction.NavigateToHomeSettings)
+            }
         )
 
         MainSetting(
             icon = R.drawable.apps,
             title = stringResource(R.string.SettingsScreen_apps),
             description = stringResource(R.string.SettingsScreen_apps_description),
-            onClick = { onAction(SettingsScreenAction.NavigateToAppsSettings) }
+            onClick = {
+                onAction(SettingsScreenAction.NavigateToAppsSettings)
+            }
         )
 
         MainSetting(
             icon = R.drawable.bookmark,
             title = stringResource(R.string.SettingsScreen_bookmarks),
             description = stringResource(R.string.SettingsScreen_bookmarks_description),
-            onClick = { onAction(SettingsScreenAction.NavigateToBookmarksSettings) }
+            onClick = {
+                onAction(SettingsScreenAction.NavigateToBookmarksSettings)
+            }
         )
 
         MainSetting(
             icon = R.drawable.loupe,
             title = stringResource(R.string.SettingsScreen_search_engines),
             description = stringResource(R.string.SettingsScreen_search_engines_description),
-            onClick = { onAction(SettingsScreenAction.NavigateToSearchEnginesSettings) }
+            onClick = {
+                onAction(SettingsScreenAction.NavigateToSearchEnginesSettings)
+            }
+        )
+
+        MainSetting(
+            icon = R.drawable.fingerprint,
+            title = stringResource(R.string.SettingsScreen_security),
+            description = stringResource(R.string.SettingsScreen_security_description),
+            onClick = {
+                onAction(SettingsScreenAction.NavigateToSecuritySettings)
+            }
         )
 
         MainSetting(
             icon = R.drawable.lock,
-            title = stringResource(R.string.SettingsScreen_security),
-            description = stringResource(R.string.SettingsScreen_security_description),
-            onClick = { onAction(SettingsScreenAction.NavigateToSecuritySettings) }
+            title = stringResource(R.string.SettingsScreen_lock_screen),
+            description = stringResource(R.string.SettingsScreen_lock_screen_description),
+            onClick = {
+                onAction(SettingsScreenAction.NavigateToLockScreenSettings)
+            }
         )
 
         MainSetting(
             icon = R.drawable.info,
             title = stringResource(R.string.SettingsScreen_about),
             description = stringResource(R.string.SettingsScreen_about_description),
-            onClick = { onAction(SettingsScreenAction.NavigateToAbout) }
+            onClick = {
+                onAction(SettingsScreenAction.NavigateToAbout)
+            }
         )
     }
 }

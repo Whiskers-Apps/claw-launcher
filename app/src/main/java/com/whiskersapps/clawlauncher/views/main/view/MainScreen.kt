@@ -44,6 +44,7 @@ fun MainScreenRoot(
         onAction = { action ->
             when (action) {
                 MainScreenAction.OnNavigateToSettings -> navController.navigate(Routes.Main.Settings.MAIN)
+                MainScreenAction.OnNavigateToLockSettings -> navController.navigate("${Routes.Main.Settings.LOCK}/true")
             }
         }
     )
@@ -119,7 +120,12 @@ fun MainScreen(
                         if (page == 0) {
 
                             HomeScreenRoot(
-                                navigateToSettings = { onAction(MainScreenAction.OnNavigateToSettings) },
+                                navigateToSettings = {
+                                    onAction(MainScreenAction.OnNavigateToSettings)
+                                                     },
+                                navigateToLockSettings = {
+                                    onAction(MainScreenAction.OnNavigateToLockSettings)
+                                },
                                 sheetState = sheetState
                             )
                         }

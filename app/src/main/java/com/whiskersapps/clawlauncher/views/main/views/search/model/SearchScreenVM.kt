@@ -147,7 +147,7 @@ class SearchScreenVM @Inject constructor(
     private fun onSearchInput(text: String) {
         _state.update { it.copy(searchText = text) }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
 
             val newApps = if (text.isEmpty()) ArrayList() else appsRepository.getSearchedApps(text)
 
@@ -178,7 +178,7 @@ class SearchScreenVM @Inject constructor(
     }
 
     private fun onOpenApp(packageName: String, fragmentActivity: FragmentActivity) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             if (state.value.securedApps.contains(packageName)) {
                 requestFingerprint(
                     fragmentActivity = fragmentActivity,
@@ -197,14 +197,14 @@ class SearchScreenVM @Inject constructor(
     }
 
     private fun onOpenShortcut(packageName: String, shortcut: Shortcut) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch{
             appsRepository.openShortcut(packageName, shortcut)
             clearSearch()
         }
     }
 
     private fun onOpenUrl(url: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
@@ -230,7 +230,7 @@ class SearchScreenVM @Inject constructor(
 
     private fun onRunAction(fragmentActivity: FragmentActivity) {
         if(state.value.showResults){
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 if (state.value.appShortcuts.isNotEmpty()) {
                     onOpenApp(state.value.appShortcuts[0].packageName, fragmentActivity)
                 } else if (state.value.bookmarks.isNotEmpty()) {
@@ -247,21 +247,21 @@ class SearchScreenVM @Inject constructor(
     }
 
     private fun onOpenAppInfo(packageName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             appsRepository.openAppInfo(packageName)
             clearSearch()
         }
     }
 
     private fun onRequestUninstall(packageName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             appsRepository.requestUninstall(packageName)
             clearSearch()
         }
     }
 
     private fun onOpenGroup(group: BookmarkGroup) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val urls = bookmarksRepository.data.value.bookmarks
                 .filter { group.bookmarks.contains(it._id) }
                 .map { it.url }

@@ -22,9 +22,6 @@
         android:name="android.software.device_admin"
         android:required="true" />
 
-    <!-- To Prevent Lock Screen service from being killed -->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-
     <application
         android:name=".shared.app.App"
         android:allowBackup="false"
