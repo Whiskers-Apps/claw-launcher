@@ -129,6 +129,14 @@ class HomeScreenVM @Inject constructor(
             HomeScreenAction.ResetOpenLockSettings -> {
                 setOpenLockSettings(false)
             }
+
+            HomeScreenAction.ShowLockScreenDialog ->{
+                setShowLockScreenDialog(true)
+            }
+
+            HomeScreenAction.CloseLockScreenDialog ->{
+                setShowLockScreenDialog(false)
+            }
         }
     }
 
@@ -221,7 +229,7 @@ class HomeScreenVM @Inject constructor(
         val screenLock = ScreenLock(app)
 
         if (!screenLock.isServiceEnabled()) {
-            setOpenLockSettings(true)
+            setShowLockScreenDialog(true)
             return
         }
 
@@ -241,6 +249,14 @@ class HomeScreenVM @Inject constructor(
             }
 
             settingsRepository.setClockPlacement(placement)
+        }
+    }
+
+    private fun setShowLockScreenDialog(show: Boolean){
+        viewModelScope.launch {
+            _state.update {
+                it.copy(showLockScreenDialog = show)
+            }
         }
     }
 }

@@ -295,6 +295,17 @@ fun HomeScreen(
                         }
 
                         HomeSettingsDialog(onAction = { onAction(it) }, state = state)
+
+                        LockScreenDialog(
+                            show = state.showLockScreenDialog,
+                            onClose = {
+                                onAction(HomeScreenAction.CloseLockScreenDialog)
+                            },
+                            onOpenSettings = {
+                                onAction(HomeScreenAction.CloseLockScreenDialog)
+                                onAction(HomeScreenAction.OnOpenLockSettings)
+                            }
+                        )
                     }
                 }
             }

@@ -21,4 +21,6 @@ sealed class HomeScreenAction{
     data class SetClockPlacement(val placement: String): HomeScreenAction()
     data object OnOpenLockSettings: HomeScreenAction()
     data object ResetOpenLockSettings: HomeScreenAction()
+    data object ShowLockScreenDialog: HomeScreenAction()
+    data object CloseLockScreenDialog: HomeScreenAction()
 }

@@ -25,7 +25,7 @@
     <string name="HomeScreen_settings">Settings</string>
     <string name="HomeScreen_click_here_to_search">Click here to search</string>
     <string name="HomeScreen_lock_screen">Lock Screen</string>
-    <string name="HomeScreen_lock_screen_description">"In order for the lock screen feature to work you need to grant accessibility to the app "</string>
+    <string name="HomeScreen_lock_screen_description">"To enable the lock screen feature go to settings and enable the accessibility service"</string>
     <string name="HomeScreen_restricted_access">Restricted Access</string>
     <string name="HomeScreen_restricted_access_description">Depending on your device you might need to enable restricted permissions because of the accessibility part. It\'s usually in the 3 dots menu. Click to open app info.</string>
     <string name="HomeScreen_accessibility">Accessibility (Required)</string>
