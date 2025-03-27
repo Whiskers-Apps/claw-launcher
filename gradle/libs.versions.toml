@@ -23,6 +23,8 @@ snifferKt = "1.1.0"
 whiskersPaletteKt = "1.0.1"
 adaptiveAndroid = "1.0.0-beta04"
 appcompat = "1.7.0"
+material = "1.12.0"
+activity = "1.10.0"
 
 [libraries]
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
@@ -55,8 +57,11 @@ sniffer-kt = { module = "com.github.Whiskers-Apps:sniffer-kt", version.ref = "sn
 whiskers-palette-kt = { module = "com.github.Whiskers-Color-Scheme:whiskers-palette-kt", version.ref = "whiskersPaletteKt" }
 androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 

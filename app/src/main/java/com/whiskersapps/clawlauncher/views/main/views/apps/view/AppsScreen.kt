@@ -43,7 +43,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.whiskersapps.clawlauncher.shared.utils.inPortrait
 import com.whiskersapps.clawlauncher.shared.utils.isSplitAvailable
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
 import com.whiskersapps.clawlauncher.shared.view.composables.AppPopup
@@ -90,11 +89,9 @@ fun AppsScreen(
     vm: AppsScreenVM,
 ) {
 
-    val fragmentActivity = LocalContext.current as FragmentActivity
+    val context = LocalContext.current
     val state = vm.state.collectAsState().value
-    val colsCount =
-        if (inPortrait()) state.gridColsCount.portrait else state.gridColsCount.landscape
-
+    val colsCount = 5
     val splitList = isSplitAvailable() && state.splitList
 
     LaunchedEffect(state.gridColsCount) {
@@ -128,14 +125,16 @@ fun AppsScreen(
 
                 if (state.viewType == "list") {
 
-                    when(splitList){
+                    when (splitList) {
                         true -> {
                             LazyVerticalGrid(
-                                modifier = Modifier.fillMaxHeight().weight(1f, fill = true),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .weight(1f, fill = true),
                                 columns = GridCells.Fixed(2)
                             ) {
                                 itemsIndexed(
-                                    items = state.appShortcuts,
+                                    items = state.apps,
                                     key = { index, app -> "${index}-${app.packageName}" }
                                 ) { index, app ->
 
@@ -152,7 +151,7 @@ fun AppsScreen(
                                                         onAction(
                                                             AppsScreenAction.OpenApp(
                                                                 app.packageName,
-                                                                fragmentActivity
+                                                                context as FragmentActivity
                                                             )
                                                         )
                                                         onAction(AppsScreenAction.CloseKeyboard)
@@ -208,6 +207,7 @@ fun AppsScreen(
                                 }
                             }
                         }
+
                         false -> {
                             LazyColumn(
                                 modifier = Modifier
@@ -215,7 +215,7 @@ fun AppsScreen(
                                     .weight(1f, fill = true)
                             ) {
                                 itemsIndexed(
-                                    items = state.appShortcuts,
+                                    items = state.apps,
                                     key = { index, app -> "${index}-${app.packageName}" }
                                 ) { index, app ->
 
@@ -232,7 +232,7 @@ fun AppsScreen(
                                                         onAction(
                                                             AppsScreenAction.OpenApp(
                                                                 app.packageName,
-                                                                fragmentActivity
+                                                                context as FragmentActivity
                                                             )
                                                         )
                                                         onAction(AppsScreenAction.CloseKeyboard)
@@ -300,7 +300,7 @@ fun AppsScreen(
                     ) {
                         LazyVerticalGrid(columns = GridCells.Fixed(colsCount)) {
                             itemsIndexed(
-                                items = state.appShortcuts,
+                                items = state.apps,
                                 key = { index, app -> "$index - ${app.packageName}" }
                             ) { index, app ->
                                 GridAppShortcut(
@@ -309,7 +309,7 @@ fun AppsScreen(
                                         onAction(
                                             AppsScreenAction.OpenApp(
                                                 app.packageName,
-                                                fragmentActivity
+                                                context as FragmentActivity
                                             )
                                         )
                                         onAction(AppsScreenAction.CloseKeyboard)

@@ -74,6 +74,7 @@ fun SearchScreenRoot(
             OnCloseSheet -> {
                 onCloseSheet()
             }
+
             else -> {
                 vm.onAction(action)
             }
@@ -134,7 +135,7 @@ fun SearchScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (state.appShortcuts.isNotEmpty() && state.showResults) {
+                if (state.apps.isNotEmpty() && state.showResults) {
 
                     Column(modifier = Modifier.sidePadding()) {
                         Text(
@@ -151,7 +152,7 @@ fun SearchScreen(
                             columns = GridCells.Fixed(colsCount),
                         ) {
                             itemsIndexed(
-                                state.appShortcuts,
+                                state.apps,
                                 key = { index, app -> "${index}-${app.packageName}" }
                             ) { index, app ->
                                 GridAppShortcut(

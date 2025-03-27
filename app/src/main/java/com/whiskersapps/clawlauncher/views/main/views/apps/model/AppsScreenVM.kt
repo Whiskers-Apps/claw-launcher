@@ -3,9 +3,9 @@ package com.whiskersapps.clawlauncher.views.main.views.apps.model
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.shared.data.AppsRepository
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
+import com.whiskersapps.clawlauncher.settings.SettingsRepo
+import com.whiskersapps.clawlauncher.shared.model.App
 import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppsScreenVM @Inject constructor(
-    private val settingsRepository: SettingsRepository,
-    private val appsRepository: AppsRepository
+    private val settingsRepo: SettingsRepo,
+    private val appsRepo: AppsRepo
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AppsScreenState())
@@ -27,7 +27,7 @@ class AppsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings ->
+            settingsRepo.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loadingSettings = false,
@@ -50,18 +50,18 @@ class AppsScreenVM @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.gridColsCount.collect { gridColsCount ->
-                _state.update { it.copy(gridColsCount = gridColsCount) }
-            }
+//            settingsRepo.gridColsCount.collect { gridColsCount ->
+//                _state.update { it.copy(gridColsCount = gridColsCount) }
+//            }
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            appsRepository.apps.collect {
+            appsRepo.apps.collect {
                 _state.update {
                     it.copy(
                         loading = it.loadingSettings,
                         loadingApps = false,
-                        appShortcuts = appsRepository.getSearchedApps(state.value.searchText)
+                        apps = appsRepo.getSearchedApps(state.value.searchText)
                     )
                 }
             }
@@ -125,7 +125,7 @@ class AppsScreenVM @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
-                it.copy(appShortcuts = appsRepository.getSearchedApps(state.value.searchText))
+                it.copy(apps = appsRepo.getSearchedApps(state.value.searchText))
             }
         }
     }
@@ -138,26 +138,26 @@ class AppsScreenVM @Inject constructor(
                 title = "Open App",
                 message = "Unlock to open the app",
                 onSuccess = {
-                    appsRepository.openApp(packageName)
+                    appsRepo.openApp(packageName)
                 }
             )
         } else {
-            appsRepository.openApp(packageName)
+            appsRepo.openApp(packageName)
         }
 
         clearSearch()
     }
 
-    private fun openShortcut(packageName: String, shortcut: AppShortcut.Shortcut) {
+    private fun openShortcut(packageName: String, shortcut: App.Shortcut) {
         viewModelScope.launch(Dispatchers.IO) {
-            appsRepository.openShortcut(packageName, shortcut)
+            appsRepo.openShortcut(packageName, shortcut)
             clearSearch()
         }
     }
 
     private fun openFirstApp(fragmentActivity: FragmentActivity) {
-        if (state.value.appShortcuts.isNotEmpty()) {
-            openApp(state.value.appShortcuts[0].packageName, fragmentActivity)
+        if (state.value.apps.isNotEmpty()) {
+            openApp(state.value.apps[0].packageName, fragmentActivity)
         }
     }
 
@@ -167,14 +167,14 @@ class AppsScreenVM @Inject constructor(
 
     private fun openAppInfo(packageName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            appsRepository.openAppInfo(packageName)
+            appsRepo.openAppInfo(packageName)
             clearSearch()
         }
     }
 
     private fun requestUninstall(packageName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            appsRepository.requestUninstall(packageName)
+            appsRepo.requestUninstall(packageName)
             clearSearch()
         }
     }
@@ -182,70 +182,70 @@ class AppsScreenVM @Inject constructor(
     private fun setViewType(type: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(viewType = type) }
-            settingsRepository.setAppsViewType(type)
+            settingsRepo.setAppsViewType(type)
         }
     }
 
     private fun setCols(cols: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(cols = cols) }
-            settingsRepository.setPortraitCols(cols)
+            settingsRepo.setPortraitCols(cols)
         }
     }
 
     private fun setLandscapeCols(cols: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(landscapeCols = cols) }
-            settingsRepository.setLandscapeCols(cols)
+            settingsRepo.setLandscapeCols(cols)
         }
     }
 
     private fun setUnfoldedCols(cols: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(unfoldedCols = cols) }
-            settingsRepository.setUnfoldedCols(cols)
+            settingsRepo.setUnfoldedCols(cols)
         }
     }
 
     private fun setUnfoldedLandscapeCols(cols: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(unfoldedLandscapeCols = cols) }
-            settingsRepository.setUnfoldedLandscapeCols(cols)
+            settingsRepo.setUnfoldedLandscapeCols(cols)
         }
     }
 
     private fun setSearchBarPosition(position: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(searchBarPosition = position) }
-            settingsRepository.setAppsSearchBarPosition(position)
+            settingsRepo.setAppsSearchBarPosition(position)
         }
     }
 
     private fun setShowSearchBar(show: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(showSearchBar = show) }
-            settingsRepository.setShowAppsSearchBar(show)
+            settingsRepo.setShowAppsSearchBar(show)
         }
     }
 
     private fun setShowSearchBarPlaceholder(show: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(showSearchBarPlaceholder = show) }
-            settingsRepository.setShowAppsSearchBarPlaceholder(show)
+            settingsRepo.setShowAppsSearchBarPlaceholder(show)
         }
     }
 
     private fun setShowSearchBarSettings(show: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(showSearchBarSettings = show) }
-            settingsRepository.setShowAppsSearchBarSettings(show)
+            settingsRepo.setShowAppsSearchBarSettings(show)
         }
     }
 
     private fun setSearchBarRadius(radius: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(searchBarRadius = radius) }
-            settingsRepository.setAppsSearchBarRadius(radius)
+            settingsRepo.setAppsSearchBarRadius(radius)
         }
     }
 
@@ -253,7 +253,7 @@ class AppsScreenVM @Inject constructor(
         _state.update {
             it.copy(
                 searchText = "",
-                appShortcuts = appsRepository.apps.value
+                apps = appsRepo.apps.value
             )
         }
     }
@@ -263,7 +263,7 @@ class AppsScreenVM @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(disableAppsScreen = disable) }
-            settingsRepository.setDisableAppsScreen(disable)
+            settingsRepo.setDisableAppsScreen(disable)
         }
     }
 
@@ -272,7 +272,7 @@ class AppsScreenVM @Inject constructor(
             _state.update {
                 it.copy(splitList = split)
             }
-            settingsRepository.setSplitList(split)
+            settingsRepo.setSplitList(split)
         }
     }
 }

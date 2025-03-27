@@ -1,7 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.search.model
 
 import androidx.fragment.app.FragmentActivity
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut.Shortcut
+import com.whiskersapps.clawlauncher.shared.model.App.Shortcut
 import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
 
 /** Possible user actions in the search screen.*/
@@ -18,15 +18,15 @@ sealed class SearchScreenAction {
 
     data class OnRunAction(val fragmentActivity: FragmentActivity) : SearchScreenAction()
 
-    data class OnSetFocusSearchBar(val focus: Boolean): SearchScreenAction()
+    data class OnSetFocusSearchBar(val focus: Boolean) : SearchScreenAction()
 
-    data class OnOpenAppInfo(val packageName: String): SearchScreenAction()
+    data class OnOpenAppInfo(val packageName: String) : SearchScreenAction()
 
-    data class OnRequestUninstall(val packageName: String): SearchScreenAction()
+    data class OnRequestUninstall(val packageName: String) : SearchScreenAction()
 
-    data class OnOpenGroup(val group: BookmarkGroup): SearchScreenAction()
+    data class OnOpenGroup(val group: BookmarkGroup) : SearchScreenAction()
 
-    data object OnClearSearch: SearchScreenAction()
+    data object OnClearSearch : SearchScreenAction()
 
-    data object OnCloseSheet: SearchScreenAction()
+    data object OnCloseSheet : SearchScreenAction()
 }

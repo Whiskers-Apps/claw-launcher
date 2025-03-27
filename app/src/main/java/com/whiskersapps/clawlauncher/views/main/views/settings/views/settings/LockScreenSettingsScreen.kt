@@ -3,12 +3,10 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.settings
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,11 +29,8 @@ import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
-import com.whiskersapps.clawlauncher.shared.view.composables.DialogFooter
-import com.whiskersapps.clawlauncher.shared.view.composables.DialogHeader
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.intent.HomeSettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.settings.LockScreenSettingsScreenVM.Companion.Action
 
 @Composable
@@ -50,7 +45,7 @@ fun LockScreenSettingsScreenRoot(
             when (action) {
                 Action.OnNavigateBack -> {
                     if (goHome) {
-                        navController.navigate(Routes.Main.HOME)
+                        navController.navigate(Routes.Launcher.HOME)
                     } else {
                         navController.navigateUp()
                     }

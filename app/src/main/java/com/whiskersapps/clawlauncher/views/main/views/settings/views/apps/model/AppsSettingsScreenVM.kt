@@ -2,7 +2,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.intent.AppsSettingsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppsSettingsScreenVM @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepo: SettingsRepo
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AppsSettingsScreenState())
@@ -22,7 +22,7 @@ class AppsSettingsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings ->
+            settingsRepo.settings.collect { settings ->
                 _state.update { it.copy(loading = false, settings = settings) }
             }
         }
@@ -33,52 +33,52 @@ class AppsSettingsScreenVM @Inject constructor(
             when (action) {
                 AppsSettingsScreenAction.NavigateBack -> {}
 
-                is AppsSettingsScreenAction.SetPhoneCols -> settingsRepository.setPortraitCols(
+                is AppsSettingsScreenAction.SetPhoneCols -> settingsRepo.setPortraitCols(
                     action.cols.toInt()
                 )
 
-                is AppsSettingsScreenAction.SetPhoneLandscapeCols -> settingsRepository.setLandscapeCols(
+                is AppsSettingsScreenAction.SetPhoneLandscapeCols -> settingsRepo.setLandscapeCols(
                     action.cols.toInt()
                 )
 
-                is AppsSettingsScreenAction.SetSearchBarPosition -> settingsRepository.setAppsSearchBarPosition(
+                is AppsSettingsScreenAction.SetSearchBarPosition -> settingsRepo.setAppsSearchBarPosition(
                     action.position
                 )
 
-                is AppsSettingsScreenAction.SetSearchBarRadius -> settingsRepository.setAppsSearchBarRadius(
+                is AppsSettingsScreenAction.SetSearchBarRadius -> settingsRepo.setAppsSearchBarRadius(
                     action.radius.toInt()
                 )
 
-                is AppsSettingsScreenAction.SetShowSearchBar -> settingsRepository.setShowAppsSearchBar(
+                is AppsSettingsScreenAction.SetShowSearchBar -> settingsRepo.setShowAppsSearchBar(
                     action.show
                 )
 
-                is AppsSettingsScreenAction.SetShowSearchBarPlaceholder -> settingsRepository.setShowAppsSearchBarPlaceholder(
+                is AppsSettingsScreenAction.SetShowSearchBarPlaceholder -> settingsRepo.setShowAppsSearchBarPlaceholder(
                     action.show
                 )
 
-                is AppsSettingsScreenAction.SetShowSearchBarSettings -> settingsRepository.setShowAppsSearchBarSettings(
+                is AppsSettingsScreenAction.SetShowSearchBarSettings -> settingsRepo.setShowAppsSearchBarSettings(
                     action.show
                 )
 
-                is AppsSettingsScreenAction.SetTabletCols -> settingsRepository.setUnfoldedCols(
+                is AppsSettingsScreenAction.SetTabletCols -> settingsRepo.setUnfoldedCols(
                     action.cols.toInt()
                 )
 
-                is AppsSettingsScreenAction.SetTabletLandscapeCols -> settingsRepository.setUnfoldedLandscapeCols(
+                is AppsSettingsScreenAction.SetTabletLandscapeCols -> settingsRepo.setUnfoldedLandscapeCols(
                     action.cols.toInt()
                 )
 
-                is AppsSettingsScreenAction.SetViewType -> settingsRepository.setAppsViewType(
+                is AppsSettingsScreenAction.SetViewType -> settingsRepo.setAppsViewType(
                     action.type
                 )
 
-                is AppsSettingsScreenAction.SetDisableAppsScreen -> settingsRepository.setDisableAppsScreen(
+                is AppsSettingsScreenAction.SetDisableAppsScreen -> settingsRepo.setDisableAppsScreen(
                     action.disable
                 )
 
                 is AppsSettingsScreenAction.SetSplitList -> {
-                    settingsRepository.setSplitList(action.split)
+                    settingsRepo.setSplitList(action.split)
                 }
             }
         }

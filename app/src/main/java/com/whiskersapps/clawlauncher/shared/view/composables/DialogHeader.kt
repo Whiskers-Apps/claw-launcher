@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 
 @Composable
@@ -25,7 +24,7 @@ fun DialogHeader(
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Icon(
             modifier = Modifier.size(32.dp),
             painter = painterResource(id = icon),

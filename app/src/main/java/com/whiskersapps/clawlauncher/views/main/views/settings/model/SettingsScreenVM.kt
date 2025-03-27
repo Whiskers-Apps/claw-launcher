@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.views.main.views.settings.intent.SettingsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,14 +14,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 @HiltViewModel
 class SettingsScreenVM @Inject constructor(
     private val app: Application,
-    private val settingsRepository: SettingsRepository,
+    private val settingsRepo: SettingsRepo,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingsScreenState())
@@ -30,7 +29,7 @@ class SettingsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings ->
+            settingsRepo.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loading = false,

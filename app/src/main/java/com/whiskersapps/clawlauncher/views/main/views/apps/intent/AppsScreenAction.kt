@@ -1,7 +1,7 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.intent
 
 import androidx.fragment.app.FragmentActivity
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import com.whiskersapps.clawlauncher.shared.model.App
 
 sealed class AppsScreenAction {
     data object NavigateToHome : AppsScreenAction()
@@ -12,7 +12,7 @@ sealed class AppsScreenAction {
 
     data class OpenAppInfo(val packageName: String) : AppsScreenAction()
     data class RequestUninstall(val packageName: String) : AppsScreenAction()
-    data class OpenShortcut(val packageName: String, val shortcut: AppShortcut.Shortcut) :
+    data class OpenShortcut(val packageName: String, val shortcut: App.Shortcut) :
         AppsScreenAction()
 
     data object OpenSettingsDialog : AppsScreenAction()

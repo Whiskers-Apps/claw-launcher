@@ -15,7 +15,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.window.DialogProperties
 import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
@@ -25,6 +27,7 @@ fun Dialog(
     onDismiss: () -> Unit,
     fullScreen: Boolean = false,
     scrollable: Boolean = true,
+    maxWidth: Dp = 900.dp,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     if (show) {
@@ -38,7 +41,7 @@ fun Dialog(
                         this.fillMaxSize()
                     }
                     .modifyWhen(!fullScreen) {
-                        this.widthIn(max = 900.dp)
+                        this.widthIn(max = maxWidth)
                     }
                     .systemBarsPadding()
                     .padding(16.dp)

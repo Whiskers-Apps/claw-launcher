@@ -3,7 +3,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.settings
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.features.lock_screen.ScreenLock
+import com.whiskersapps.clawlauncher.launcher.lock.ScreenLock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

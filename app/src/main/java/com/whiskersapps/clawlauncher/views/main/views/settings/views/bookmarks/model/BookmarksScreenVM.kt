@@ -2,7 +2,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.shared.data.BookmarksRepository
+import com.whiskersapps.clawlauncher.launcher.bookmarks.BookmarksRepository
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
 import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.intent.BookmarksScreenAction
@@ -252,7 +252,7 @@ class BookmarksScreenVM @Inject constructor(
         closeAddBookmarkDialog()
     }
 
-    private fun deleteGroup(){
+    private fun deleteGroup() {
         bookmarksRepository.deleteBookmarkGroup(state.value.editGroupDialog.id)
         closeEditGroupDialog()
     }

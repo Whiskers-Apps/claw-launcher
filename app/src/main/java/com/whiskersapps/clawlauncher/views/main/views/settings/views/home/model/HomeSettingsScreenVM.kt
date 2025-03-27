@@ -2,7 +2,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.home.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.intent.HomeSettingsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeSettingsScreenVM @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepo: SettingsRepo
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeSettingsScreenState())
@@ -22,7 +22,7 @@ class HomeSettingsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings ->
+            settingsRepo.settings.collect { settings ->
                 _state.update { it.copy(loading = false, settings = settings) }
             }
         }
@@ -32,35 +32,37 @@ class HomeSettingsScreenVM @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (action) {
 
-                is HomeSettingsScreenAction.SetSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(
+                is HomeSettingsScreenAction.SetSearchBarRadius -> settingsRepo.setHomeSearchBarRadius(
                     action.radius.toInt()
                 )
 
-                is HomeSettingsScreenAction.SetShowSearchBar -> settingsRepository.setShowHomeSearchBar(
+                is HomeSettingsScreenAction.SetShowSearchBar -> settingsRepo.setShowHomeSearchBar(
                     action.show
                 )
 
-                is HomeSettingsScreenAction.SetShowSearchBarPlaceholder -> settingsRepository.setShowHomeSearchBarPlaceholder(
+                is HomeSettingsScreenAction.SetShowSearchBarPlaceholder -> settingsRepo.setShowHomeSearchBarPlaceholder(
                     action.show
                 )
 
-                is HomeSettingsScreenAction.SetShowSettings -> settingsRepository.setShowHomeSearchBarSettings(
+                is HomeSettingsScreenAction.SetShowSettings -> settingsRepo.setShowHomeSearchBarSettings(
                     action.show
                 )
 
                 HomeSettingsScreenAction.NavigateBack -> {}
 
-                is HomeSettingsScreenAction.SaveSearchBarRadius -> settingsRepository.setHomeSearchBarRadius(
+                is HomeSettingsScreenAction.SaveSearchBarRadius -> settingsRepo.setHomeSearchBarRadius(
                     action.radius.toInt()
                 )
 
-                is HomeSettingsScreenAction.SetSwipeUpToSearch -> settingsRepository.setSwipeUpToSearch(
+                is HomeSettingsScreenAction.SetSwipeUpToSearch -> settingsRepo.setSwipeUpToSearch(
                     action.swipeUp
                 )
 
-                is HomeSettingsScreenAction.SetTintIcon -> settingsRepository.setTintClock(action.tint)
+                is HomeSettingsScreenAction.SetTintIcon -> settingsRepo.setTintClock(action.tint)
 
-                is HomeSettingsScreenAction.SetClockPlacement -> settingsRepository.setClockPlacement(action.placement)
+                is HomeSettingsScreenAction.SetClockPlacement -> settingsRepo.setClockPlacement(
+                    action.placement
+                )
             }
         }
     }

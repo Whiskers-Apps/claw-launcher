@@ -1,15 +1,14 @@
 package com.whiskersapps.clawlauncher.views.main.views.apps.model
 
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository.Companion.GridColsCount
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import com.whiskersapps.clawlauncher.foldable.FoldableRepo
+import com.whiskersapps.clawlauncher.shared.model.App
 import com.whiskersapps.clawlauncher.shared.model.Settings
 
 data class AppsScreenState(
     val loading: Boolean = true,
     val loadingApps: Boolean = true,
     val loadingSettings: Boolean = true,
-    val appShortcuts: List<AppShortcut> = emptyList(),
+    val apps: List<App> = emptyList(),
     val securedApps: List<String> = emptyList(),
     val disableAppsScreen: Boolean = Settings.DEFAULT_DISABLE_APPS_SCREEN,
     val viewType: String = Settings.DEFAULT_APPS_VIEW_TYPE,
@@ -25,6 +24,6 @@ data class AppsScreenState(
     val searchText: String = "",
     val showSettingsDialog: Boolean = false,
     val showAppMenu: Boolean = false,
-    val gridColsCount: GridColsCount = GridColsCount(),
+    val gridColsCount: FoldableRepo.Companion.Grid = FoldableRepo.Companion.Grid(),
     val splitList: Boolean = Settings.DEFAULT_SPLIT_LIST_VIEW
 )

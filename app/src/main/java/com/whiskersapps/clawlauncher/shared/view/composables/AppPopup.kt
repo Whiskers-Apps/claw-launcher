@@ -28,15 +28,15 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.R
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import com.whiskersapps.clawlauncher.shared.model.App
 
 @Composable
 fun AppPopup(
-    app: AppShortcut,
+    app: App,
     onDismiss: () -> Unit,
     onInfoClick: () -> Unit,
     onUninstallClick: () -> Unit,
-    onOpenShortcut: (AppShortcut.Shortcut) -> Unit
+    onOpenShortcut: (App.Shortcut) -> Unit
 ) {
     androidx.compose.ui.window.Dialog(onDismissRequest = { onDismiss() }) {
         Column {
@@ -94,7 +94,7 @@ fun AppPopup(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)){
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(items = app.shortcuts, key = { it.id }) { shortcut ->
                         Row(
                             modifier = Modifier

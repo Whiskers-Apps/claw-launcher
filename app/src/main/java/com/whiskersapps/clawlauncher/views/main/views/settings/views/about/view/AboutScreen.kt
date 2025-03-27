@@ -106,7 +106,7 @@ fun AboutScreen(
             )
 
             Text(
-                text = versionName,
+                text = versionName!!,
                 color = MaterialTheme.colorScheme.onBackground
             )
 

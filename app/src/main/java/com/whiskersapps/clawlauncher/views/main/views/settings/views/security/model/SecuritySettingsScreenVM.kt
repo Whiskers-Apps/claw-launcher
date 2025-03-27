@@ -3,8 +3,8 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.security.m
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.shared.data.AppsRepository
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
+import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.intent.SecuritySettingsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SecuritySettingsScreenVM @Inject constructor(
-    private val settingsRepository: SettingsRepository,
-    private val appsRepository: AppsRepository
+    private val settingsRepo: SettingsRepo,
+    private val appsRepo: AppsRepo
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SecuritySettingsScreenState())
@@ -26,12 +26,12 @@ class SecuritySettingsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings ->
+            settingsRepo.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loading = false,
                         settings = settings,
-                        apps = appsRepository.allApps,
+                        apps = appsRepo.allApps,
                         hiddenAppsDialog = it.hiddenAppsDialog.copy(selectedApps = settings.hiddenApps),
                         secureAppsDialog = it.secureAppsDialog.copy(selectedApps = settings.secureApps)
                     )
@@ -72,7 +72,7 @@ class SecuritySettingsScreenVM @Inject constructor(
 
     private fun saveHiddenApps() {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setHiddenApps(state.value.hiddenAppsDialog.selectedApps)
+            settingsRepo.setHiddenApps(state.value.hiddenAppsDialog.selectedApps)
             closeHiddenAppsDialog()
         }
     }
@@ -113,7 +113,7 @@ class SecuritySettingsScreenVM @Inject constructor(
 
     private fun saveSecureApps() {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setSecureApps(state.value.secureAppsDialog.selectedApps)
+            settingsRepo.setSecureApps(state.value.secureAppsDialog.selectedApps)
             closeSecureAppsDialog()
         }
     }

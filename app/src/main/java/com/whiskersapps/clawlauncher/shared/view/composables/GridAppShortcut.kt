@@ -23,20 +23,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import com.whiskersapps.clawlauncher.shared.model.App
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GridAppShortcut(
-    app: AppShortcut,
+    app: App,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
     radius: Dp = 8.dp,
     openApp: () -> Unit,
     openInfo: () -> Unit,
     requestUninstall: () -> Unit,
-    openShortcut: (AppShortcut.Shortcut) -> Unit
+    openShortcut: (App.Shortcut) -> Unit
 ) {
 
     var showPopup by remember { mutableStateOf(false) }

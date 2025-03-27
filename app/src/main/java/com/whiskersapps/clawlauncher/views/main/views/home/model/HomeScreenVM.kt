@@ -5,10 +5,11 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.features.lock_screen.ScreenLock
-import com.whiskersapps.clawlauncher.shared.data.AppsRepository
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
-import com.whiskersapps.clawlauncher.views.main.views.home.intent.HomeScreenAction
+import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
+import com.whiskersapps.clawlauncher.launcher.lock.ScreenLock
+import com.whiskersapps.clawlauncher.settings.SettingsActivity
+import com.whiskersapps.clawlauncher.settings.SettingsRepo
+import com.whiskersapps.clawlauncher.views.main.views.home.intent.Action
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -23,8 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenVM @Inject constructor(
-    val settingsRepository: SettingsRepository,
-    val appsRepository: AppsRepository,
+    val settingsRepo: SettingsRepo,
+    val appsRepo: AppsRepo,
     val app: Application
 ) : ViewModel() {
 
@@ -32,36 +33,36 @@ class HomeScreenVM @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings ->
+        viewModelScope.launch(Dispatchers.Main) {
+            settingsRepo.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loading = false,
+                        clockPlacement = settings.clockPlacement,
+                        enableSwipeUp = settings.swipeUpToSearch,
                         showSearchBar = settings.showHomeSearchBar,
                         showPlaceholder = settings.showHomeSearchBarPlaceholder,
-                        showSearchBarSettings = settings.showHomeSearchBarSettings,
-                        searchBarRadius = settings.homeSearchBarRadius.toFloat(),
-                        swipeUpToSearch = settings.swipeUpToSearch,
-                        tintClock = settings.tintClock,
-                        clockPlacement = settings.clockPlacement
+                        searchBarRadius = settings.appsSearchBarRadius.toFloat(),
+                        tintClock = settings.tintClock
                     )
                 }
             }
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             while (true) {
-
                 val calendar = Calendar.getInstance()
                 val locale = Locale.getDefault()
                 val formatter = SimpleDateFormat("EEEE - dd/MM/yyyy", locale)
                 val hours = String.format(locale, "%02d", calendar.get(Calendar.HOUR_OF_DAY))
                 val minutes = String.format(locale, "%02d", calendar.get(Calendar.MINUTE))
+                val clockText = "$hours:$minutes"
+                val dateText = formatter.format(calendar.time)
 
                 _state.update {
                     it.copy(
-                        clock = "$hours:$minutes",
-                        date = formatter.format(calendar.time)
+                        clock = clockText,
+                        date = dateText
                     )
                 }
 
@@ -70,77 +71,54 @@ class HomeScreenVM @Inject constructor(
         }
     }
 
-    fun onAction(action: HomeScreenAction) {
+    fun onAction(action: Action) {
         when (action) {
-            HomeScreenAction.ChangeWallpaper -> {
+            Action.OnChangeWallpaper -> {
                 openWallpaperSetter()
             }
 
-            HomeScreenAction.NavigateToSettings -> {}
+            Action.OnOpenSettings -> {
+                openSettings()
+            }
 
-            HomeScreenAction.OpenSearchSheet -> {}
+            Action.OpenSearchSheet -> {}
 
-            HomeScreenAction.OpenNotificationPanel -> {
+            Action.OpenNotificationPanel -> {
                 openNotificationPanel()
             }
 
-            HomeScreenAction.OpenMenuDialog -> {
+            Action.OpenMenuDialog -> {
                 setShowMenuDialog(true)
             }
 
-            HomeScreenAction.CloseMenuDialog -> {
+            Action.CloseMenuDialog -> {
                 setShowMenuDialog(false)
             }
 
-            HomeScreenAction.OpenSettingsDialog -> {
-                setShowSettingsDialog(true)
+
+            Action.OnOpenCalendar -> onOpenCalendar()
+
+            Action.OnLockScreen -> lockScreen()
+
+
+            Action.OnOpenLockSettings -> {}
+
+            Action.ResetOpenLockSettings -> {
             }
 
-            HomeScreenAction.CloseSettingsDialog -> {
-                setShowSettingsDialog(false)
-            }
-
-            is HomeScreenAction.SetSearchBarRadius -> setSearchBarRadius(
-                action.radius.toInt().toFloat()
-            )
-
-            is HomeScreenAction.SaveSearchBarRadius -> saveSearchBarRadius(action.radius.toInt())
-
-            is HomeScreenAction.SetShowSearchBar -> setShowSearchBar(action.show)
-
-            is HomeScreenAction.SetShowSearchBarPlaceholder -> setShowPlaceholder(action.show)
-
-            is HomeScreenAction.SetShowSettings -> setShowSearchBarSettings(action.show)
-
-            is HomeScreenAction.SetSwipeUpToSearch -> setSwipeUpToSearch(action.swipeUp)
-
-            HomeScreenAction.OnOpenCalendar -> onOpenCalendar()
-
-            is HomeScreenAction.SetTintIcon -> setTintIcon(action.tint)
-
-            HomeScreenAction.OnLockScreen -> lockScreen()
-
-            is HomeScreenAction.SetClockPlacement -> {
-                setClockPlacement(action.placement)
-            }
-
-            HomeScreenAction.OnOpenLockSettings -> {}
-
-            HomeScreenAction.ResetOpenLockSettings -> {
-                setOpenLockSettings(false)
-            }
-
-            HomeScreenAction.ShowLockScreenDialog ->{
+            Action.ShowLockScreenDialog -> {
                 setShowLockScreenDialog(true)
             }
 
-            HomeScreenAction.CloseLockScreenDialog ->{
+            Action.CloseLockScreenDialog -> {
                 setShowLockScreenDialog(false)
             }
         }
     }
 
     private fun openWallpaperSetter() {
+        setShowMenuDialog(false)
+
         try {
             val intent = Intent(Intent.ACTION_SET_WALLPAPER)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -160,49 +138,10 @@ class HomeScreenVM @Inject constructor(
         }
     }
 
-    private fun setShowSettingsDialog(show: Boolean) {
-        _state.update { it.copy(showSettingsDialog = show) }
-    }
-
     private fun setShowMenuDialog(show: Boolean) {
         _state.update { it.copy(showMenuDialog = show) }
     }
 
-    private fun setShowSearchBar(show: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setShowHomeSearchBar(show)
-        }
-    }
-
-    private fun setSearchBarRadius(radius: Float) {
-        viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setHomeSearchBarRadius(radius.toInt())
-        }
-    }
-
-    private fun setShowSearchBarSettings(show: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setShowHomeSearchBarSettings(show)
-        }
-    }
-
-    private fun saveSearchBarRadius(radius: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setHomeSearchBarRadius(radius)
-        }
-    }
-
-    private fun setShowPlaceholder(show: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setShowHomeSearchBarPlaceholder(show)
-        }
-    }
-
-    private fun setSwipeUpToSearch(swipeUp: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setSwipeUpToSearch(swipeUp)
-        }
-    }
 
     private fun onOpenCalendar() {
         try {
@@ -219,11 +158,6 @@ class HomeScreenVM @Inject constructor(
         }
     }
 
-    private fun setTintIcon(tint: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setTintClock(tint)
-        }
-    }
 
     private fun lockScreen() {
         val screenLock = ScreenLock(app)
@@ -236,27 +170,20 @@ class HomeScreenVM @Inject constructor(
         screenLock.lockScreen()
     }
 
-    private fun setOpenLockSettings(open: Boolean) {
-        _state.update {
-            it.copy(openLockSettings = open)
-        }
-    }
 
-    private fun setClockPlacement(placement: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _state.update {
-                it.copy(clockPlacement = placement)
-            }
-
-            settingsRepository.setClockPlacement(placement)
-        }
-    }
-
-    private fun setShowLockScreenDialog(show: Boolean){
+    private fun setShowLockScreenDialog(show: Boolean) {
         viewModelScope.launch {
             _state.update {
                 it.copy(showLockScreenDialog = show)
             }
         }
+    }
+
+    private fun openSettings() {
+        setShowMenuDialog(false)
+
+        val intent = Intent(app, SettingsActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        app.startActivity(intent)
     }
 }

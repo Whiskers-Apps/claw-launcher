@@ -36,10 +36,11 @@ fun SearchEngineCard(
     padding: Dp = 16.dp,
     url: String = searchEngine.query,
     backgroundColor: Color = MaterialTheme.colorScheme.background
-){
+) {
 
     Row(modifier = Modifier
         .fillMaxWidth()
+        .clip(CircleShape)
         .background(backgroundColor)
         .clickable { onClick() }
         .padding(padding),

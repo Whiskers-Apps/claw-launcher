@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <!--To get the apps-->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
-
-    <!--To expand the status bar on a swipe-->
-    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
-
-    <!--To uninstall apps-->
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-
-    <!--To fetch search engines icons-->
+    <!-- To get the apps -->
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" /> <!-- To expand the status bar on a swipe -->
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" /> <!-- To uninstall apps -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" /> <!-- To fetch search engines icons -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-
-    <!-- For Screen Locking -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- For Screen Locking -->
     <uses-feature
         android:name="android.software.device_admin"
         android:required="true" />
@@ -26,47 +17,68 @@
         android:name=".shared.app.App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:enableOnBackInvokedCallback="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClawLauncher"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".launcher.LauncherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnBoardingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_on_boarding"
+            android:theme="@style/Theme.ClawLauncher" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:exported="false"
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".shared.app.MainActivity"
-            android:windowSoftInputMode="adjustResize"
             android:exported="true"
-            android:theme="@style/Theme.ClawLauncher">
+            android:theme="@style/Theme.ClawLauncher"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.HOME"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <receiver
-            android:name=".features.lock_screen.ScreenLockReceiver"
+            android:name=".launcher.lock.ScreenLockReceiver"
+            android:description="@string/lock_receiver_description"
             android:exported="true"
             android:label="@string/lock_receiver_name"
-            android:description="@string/lock_receiver_description"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/force_lock_policy" />
+
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".features.lock_screen.ScreenLockService"
+            android:name=".launcher.lock.ScreenLockService"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/lock_accessibility_service_config" />

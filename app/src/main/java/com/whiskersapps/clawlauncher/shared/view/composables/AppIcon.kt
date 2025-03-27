@@ -18,19 +18,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut
+import com.whiskersapps.clawlauncher.shared.model.App
 import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
 @Composable
 fun AppIcon(
-    app: AppShortcut,
+    app: App,
     size: Dp? = null
 ) {
     val icon by remember { derivedStateOf { app.icon.asImageBitmap() } }
 
     Box(
         modifier = Modifier
-            .modifyWhen(size != null){
+            .modifyWhen(size != null) {
                 this.size(size!!)
             }
             .fillMaxHeight()

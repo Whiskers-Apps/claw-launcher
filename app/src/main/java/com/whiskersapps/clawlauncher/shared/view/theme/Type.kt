@@ -5,30 +5,60 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+val TITLE_ONE_STYLE = TextStyle(
+    fontWeight = FontWeight.Medium,
+    fontSize = 20.sp,
+)
+
+val TITLE_TWO_STYLE = TextStyle(
+    fontWeight = FontWeight.Medium,
+    fontSize = 18.sp
+)
+
+val TITLE_THREE_STYLE = TextStyle(
+    fontWeight = FontWeight.Medium,
+    fontSize = 16.sp
+)
+
+val REGULAR_LABEL_STYLE = TextStyle(
+    fontWeight = FontWeight.Normal,
+    fontSize = 14.sp
+)
+
+val SMALL_LABEL_STYLE = TextStyle(
+    fontWeight = FontWeight.Normal,
+    fontSize = 12.sp
+)
+
+val TINY_LABEL_STYLE = TextStyle(
+    fontWeight = FontWeight.Normal,
+    fontSize = 10.sp
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     titleLarge = TextStyle(
-        fontSize = 32.sp,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.Medium,
+        fontSize = 20.sp,
     ),
     titleMedium = TextStyle(
-        fontSize = 24.sp,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp
     ),
     titleSmall = TextStyle(
-        fontSize = 18.sp,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp
+    ),
+    bodyLarge = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
     ),
     bodyMedium = TextStyle(
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
     ),
-    labelMedium = TextStyle(
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Normal
-    ),
-    labelSmall = TextStyle(
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Normal
+    bodySmall = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp
     )
 )

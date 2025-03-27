@@ -6,13 +6,13 @@ import android.net.Uri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.shared.data.AppsRepository
-import com.whiskersapps.clawlauncher.shared.data.BookmarksRepository
-import com.whiskersapps.clawlauncher.shared.data.SearchEnginesRepository
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository.Companion.GridColsCount
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut
-import com.whiskersapps.clawlauncher.shared.model.AppShortcut.*
+import com.whiskersapps.clawlauncher.foldable.FoldableRepo
+import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
+import com.whiskersapps.clawlauncher.launcher.bookmarks.BookmarksRepository
+import com.whiskersapps.clawlauncher.launcher.search_engines.SearchEnginesRepo
+import com.whiskersapps.clawlauncher.settings.SettingsRepo
+import com.whiskersapps.clawlauncher.shared.model.App
+import com.whiskersapps.clawlauncher.shared.model.App.*
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
 import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
@@ -28,10 +28,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchScreenVM @Inject constructor(
-    private val settingsRepository: SettingsRepository,
-    private val appsRepository: AppsRepository,
+    private val settingsRepo: SettingsRepo,
+    private val appsRepo: AppsRepo,
     private val bookmarksRepository: BookmarksRepository,
-    private val searchEnginesRepository: SearchEnginesRepository,
+    private val searchEnginesRepo: SearchEnginesRepo,
     private val app: Application
 ) : ViewModel() {
 
@@ -44,7 +44,7 @@ class SearchScreenVM @Inject constructor(
             val securedApps: List<String> = emptyList(),
             val layout: String = "",
             val searchText: String = "",
-            val appShortcuts: List<AppShortcut> = emptyList(),
+            val apps: List<App> = emptyList(),
             val bookmarks: List<Bookmark> = emptyList(),
             val groups: List<BookmarkGroup> = emptyList(),
             val focusSearchBar: Boolean = false,
@@ -53,7 +53,7 @@ class SearchScreenVM @Inject constructor(
             val landscapeCols: Int = 0,
             val unfoldedCols: Int = 0,
             val unfoldedLandscapeCols: Int = 0,
-            val gridColsCount: GridColsCount = GridColsCount(),
+            val gridColsCount: FoldableRepo.Companion.Grid = FoldableRepo.Companion.Grid(),
             val showResults: Boolean = false
         )
     }
@@ -64,7 +64,7 @@ class SearchScreenVM @Inject constructor(
     init {
 
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings ->
+            settingsRepo.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loading = it.loadingSearchEngines || it.loadingBookmarks,
@@ -74,20 +74,20 @@ class SearchScreenVM @Inject constructor(
                         landscapeCols = settings.landscapeCols,
                         unfoldedCols = settings.unfoldedPortraitCols,
                         unfoldedLandscapeCols = settings.unfoldedLandscapeCols,
-                        gridColsCount = settingsRepository.gridColsCount.value
+                        gridColsCount = FoldableRepo.Companion.Grid()
                     )
                 }
             }
         }
 
-        viewModelScope.launch(Dispatchers.IO){
-            settingsRepository.gridColsCount.collect{ gridColsCount ->
-                _state.update { it.copy(gridColsCount = gridColsCount) }
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+//            settingsRepo.gridColsCount.collect { gridColsCount ->
+//                _state.update { it.copy(gridColsCount = gridColsCount) }
+//            }
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            searchEnginesRepository.data.collect { data ->
+            searchEnginesRepo.data.collect { data ->
                 _state.update {
                     it.copy(
                         loading = it.loadingSettings || it.loadingBookmarks,
@@ -149,7 +149,7 @@ class SearchScreenVM @Inject constructor(
 
         viewModelScope.launch {
 
-            val newApps = if (text.isEmpty()) ArrayList() else appsRepository.getSearchedApps(text)
+            val newApps = if (text.isEmpty()) ArrayList() else appsRepo.getSearchedApps(text)
 
             val newBookmarks =
                 if (text.isEmpty()) emptyList() else bookmarksRepository.getSearchedBookmarks(text)
@@ -159,7 +159,7 @@ class SearchScreenVM @Inject constructor(
 
             _state.update {
                 it.copy(
-                    appShortcuts = if (newApps.size >= 8)
+                    apps = if (newApps.size >= 8)
                         newApps.subList(0, 8)
                     else newApps,
 
@@ -185,20 +185,20 @@ class SearchScreenVM @Inject constructor(
                     title = "Open App",
                     message = "Unlock to open the app",
                     onSuccess = {
-                        appsRepository.openApp(packageName)
+                        appsRepo.openApp(packageName)
                         clearSearch()
                     }
                 )
             } else {
-                appsRepository.openApp(packageName)
+                appsRepo.openApp(packageName)
                 clearSearch()
             }
         }
     }
 
     private fun onOpenShortcut(packageName: String, shortcut: Shortcut) {
-        viewModelScope.launch{
-            appsRepository.openShortcut(packageName, shortcut)
+        viewModelScope.launch {
+            appsRepo.openShortcut(packageName, shortcut)
             clearSearch()
         }
     }
@@ -229,10 +229,10 @@ class SearchScreenVM @Inject constructor(
     }
 
     private fun onRunAction(fragmentActivity: FragmentActivity) {
-        if(state.value.showResults){
+        if (state.value.showResults) {
             viewModelScope.launch {
-                if (state.value.appShortcuts.isNotEmpty()) {
-                    onOpenApp(state.value.appShortcuts[0].packageName, fragmentActivity)
+                if (state.value.apps.isNotEmpty()) {
+                    onOpenApp(state.value.apps[0].packageName, fragmentActivity)
                 } else if (state.value.bookmarks.isNotEmpty()) {
                     onOpenUrl(state.value.bookmarks[0].url)
                 } else if (state.value.searchEngine != null) {
@@ -248,14 +248,14 @@ class SearchScreenVM @Inject constructor(
 
     private fun onOpenAppInfo(packageName: String) {
         viewModelScope.launch {
-            appsRepository.openAppInfo(packageName)
+            appsRepo.openAppInfo(packageName)
             clearSearch()
         }
     }
 
     private fun onRequestUninstall(packageName: String) {
         viewModelScope.launch {
-            appsRepository.requestUninstall(packageName)
+            appsRepo.requestUninstall(packageName)
             clearSearch()
         }
     }
@@ -280,7 +280,7 @@ class SearchScreenVM @Inject constructor(
             _state.update {
                 it.copy(
                     searchText = "",
-                    appShortcuts = emptyList(),
+                    apps = emptyList(),
                     bookmarks = emptyList(),
                     groups = emptyList()
                 )

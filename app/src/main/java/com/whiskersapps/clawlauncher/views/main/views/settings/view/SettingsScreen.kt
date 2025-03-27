@@ -1,11 +1,14 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.view
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,21 +43,26 @@ fun SettingsScreenRoot(
     vm: SettingsScreenVM = hiltViewModel()
 ) {
 
+    val context = LocalContext.current
+
     SettingsScreen(
         onAction = { action ->
             when (action) {
-                SettingsScreenAction.NavigateBack -> navController.navigateUp()
-                SettingsScreenAction.NavigateToAppsSettings -> navController.navigate(Routes.Main.Settings.APPS)
-                SettingsScreenAction.NavigateToBookmarksSettings -> navController.navigate(Routes.Main.Settings.BOOKMARKS)
-                SettingsScreenAction.NavigateToHomeSettings -> navController.navigate(Routes.Main.Settings.HOME)
+                SettingsScreenAction.NavigateBack -> {
+                    (context as Activity).finish()
+                }
+
+                SettingsScreenAction.NavigateToAppsSettings -> navController.navigate(Routes.Settings.APPS)
+                SettingsScreenAction.NavigateToBookmarksSettings -> navController.navigate(Routes.Settings.BOOKMARKS)
+                SettingsScreenAction.NavigateToHomeSettings -> navController.navigate(Routes.Settings.HOME)
                 SettingsScreenAction.NavigateToSearchEnginesSettings -> navController.navigate(
-                    Routes.Main.Settings.SEARCH_ENGINES
+                    Routes.Settings.SEARCH_ENGINES
                 )
 
-                SettingsScreenAction.NavigateToStyleSettings -> navController.navigate(Routes.Main.Settings.STYLE)
-                SettingsScreenAction.NavigateToAbout -> navController.navigate(Routes.Main.Settings.ABOUT)
-                SettingsScreenAction.NavigateToSecuritySettings -> navController.navigate(Routes.Main.Settings.SECURITY)
-                SettingsScreenAction.NavigateToLockScreenSettings -> navController.navigate("${Routes.Main.Settings.LOCK}/false")
+                SettingsScreenAction.NavigateToStyleSettings -> navController.navigate(Routes.Settings.STYLE)
+                SettingsScreenAction.NavigateToAbout -> navController.navigate(Routes.Settings.ABOUT)
+                SettingsScreenAction.NavigateToSecuritySettings -> navController.navigate(Routes.Settings.SECURITY)
+                SettingsScreenAction.NavigateToLockScreenSettings -> navController.navigate("${Routes.Settings.LOCK}/false")
                 else -> vm.onAction(action)
             }
         },
@@ -76,121 +85,140 @@ fun SettingsScreen(
         },
         loading = state.loading
     ) {
-        if (!state.isDefaultLauncher) {
-            Row(
-                modifier = Modifier
-                    .sidePadding()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .clickable { onAction(SettingsScreenAction.SetDefaultLauncher) }
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Icon(
-                    modifier = Modifier.size(32.dp),
-                    painter = painterResource(id = R.drawable.warning),
-                    contentDescription = "warning icon",
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column(
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            if (!state.isDefaultLauncher) {
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = true)
+                        .sidePadding()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .clickable { onAction(SettingsScreenAction.SetDefaultLauncher) }
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = stringResource(R.string.SettingsScreen_default_launcher),
-                        style = Typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
+
+                    Icon(
+                        modifier = Modifier.size(32.dp),
+                        painter = painterResource(id = R.drawable.warning),
+                        contentDescription = "warning icon",
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
 
-                    Text(
-                        text = stringResource(R.string.SettingsScreen_default_launcher_description),
-                        style = Typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f, fill = true)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.SettingsScreen_default_launcher),
+                            style = Typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Text(
+                            text = stringResource(R.string.SettingsScreen_default_launcher_description),
+                            style = Typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
+
+            SettingsSection(
+                icon = R.drawable.palette,
+                title = stringResource(R.string.SettingsScreen_style),
+                description = stringResource(R.string.SettingsScreen_style_description),
+                position = SectionPosition.TOP,
+                onClick = {
+                    onAction(SettingsScreenAction.NavigateToStyleSettings)
+                }
+            )
+
+            SettingsSection(
+                icon = R.drawable.home,
+                title = stringResource(R.string.SettingsScreen_home),
+                description = stringResource(R.string.SettingsScreen_home_description),
+                onClick = {
+                    onAction(SettingsScreenAction.NavigateToHomeSettings)
+                }
+            )
+
+            SettingsSection(
+                icon = R.drawable.apps,
+                title = stringResource(R.string.SettingsScreen_apps),
+                description = stringResource(R.string.SettingsScreen_apps_description),
+                position = SectionPosition.BOTTOM,
+                onClick = {
+                    onAction(SettingsScreenAction.NavigateToAppsSettings)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(22.dp))
+
+            SettingsSection(
+                icon = R.drawable.bookmark,
+                title = stringResource(R.string.SettingsScreen_bookmarks),
+                description = stringResource(R.string.SettingsScreen_bookmarks_description),
+                position = SectionPosition.TOP,
+                onClick = {
+                    onAction(SettingsScreenAction.NavigateToBookmarksSettings)
+                }
+            )
+
+            SettingsSection(
+                icon = R.drawable.loupe,
+                title = stringResource(R.string.SettingsScreen_search_engines),
+                description = stringResource(R.string.SettingsScreen_search_engines_description),
+                position = SectionPosition.BOTTOM,
+                onClick = {
+                    onAction(SettingsScreenAction.NavigateToSearchEnginesSettings)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(22.dp))
+
+            SettingsSection(
+                icon = R.drawable.fingerprint,
+                title = stringResource(R.string.SettingsScreen_security),
+                description = stringResource(R.string.SettingsScreen_security_description),
+                position = SectionPosition.TOP,
+                onClick = {
+                    onAction(SettingsScreenAction.NavigateToSecuritySettings)
+                }
+            )
+
+            SettingsSection(
+                icon = R.drawable.lock,
+                title = stringResource(R.string.SettingsScreen_lock_screen),
+                description = stringResource(R.string.SettingsScreen_lock_screen_description),
+                position = SectionPosition.BOTTOM,
+                onClick = {
+                    onAction(SettingsScreenAction.NavigateToLockScreenSettings)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(22.dp))
+
+            SettingsSection(
+                icon = R.drawable.info,
+                title = stringResource(R.string.SettingsScreen_about),
+                description = stringResource(R.string.SettingsScreen_about_description),
+                position = SectionPosition.SINGLE,
+                onClick = {
+                    onAction(SettingsScreenAction.NavigateToAbout)
+                }
+            )
         }
-
-        MainSetting(
-            icon = R.drawable.palette,
-            title = stringResource(R.string.SettingsScreen_style),
-            description = stringResource(R.string.SettingsScreen_style_description),
-            onClick = {
-                onAction(SettingsScreenAction.NavigateToStyleSettings)
-            }
-        )
-
-        MainSetting(
-            icon = R.drawable.home,
-            title = stringResource(R.string.SettingsScreen_home),
-            description = stringResource(R.string.SettingsScreen_home_description),
-            onClick = {
-                onAction(SettingsScreenAction.NavigateToHomeSettings)
-            }
-        )
-
-        MainSetting(
-            icon = R.drawable.apps,
-            title = stringResource(R.string.SettingsScreen_apps),
-            description = stringResource(R.string.SettingsScreen_apps_description),
-            onClick = {
-                onAction(SettingsScreenAction.NavigateToAppsSettings)
-            }
-        )
-
-        MainSetting(
-            icon = R.drawable.bookmark,
-            title = stringResource(R.string.SettingsScreen_bookmarks),
-            description = stringResource(R.string.SettingsScreen_bookmarks_description),
-            onClick = {
-                onAction(SettingsScreenAction.NavigateToBookmarksSettings)
-            }
-        )
-
-        MainSetting(
-            icon = R.drawable.loupe,
-            title = stringResource(R.string.SettingsScreen_search_engines),
-            description = stringResource(R.string.SettingsScreen_search_engines_description),
-            onClick = {
-                onAction(SettingsScreenAction.NavigateToSearchEnginesSettings)
-            }
-        )
-
-        MainSetting(
-            icon = R.drawable.fingerprint,
-            title = stringResource(R.string.SettingsScreen_security),
-            description = stringResource(R.string.SettingsScreen_security_description),
-            onClick = {
-                onAction(SettingsScreenAction.NavigateToSecuritySettings)
-            }
-        )
-
-        MainSetting(
-            icon = R.drawable.lock,
-            title = stringResource(R.string.SettingsScreen_lock_screen),
-            description = stringResource(R.string.SettingsScreen_lock_screen_description),
-            onClick = {
-                onAction(SettingsScreenAction.NavigateToLockScreenSettings)
-            }
-        )
-
-        MainSetting(
-            icon = R.drawable.info,
-            title = stringResource(R.string.SettingsScreen_about),
-            description = stringResource(R.string.SettingsScreen_about_description),
-            onClick = {
-                onAction(SettingsScreenAction.NavigateToAbout)
-            }
-        )
     }
 }
 

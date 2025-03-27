@@ -2,7 +2,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.style.mode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.shared.data.SettingsRepository
+import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.intent.StyleSettingsScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StyleSettingsScreenVM @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepo: SettingsRepo
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(StyleSettingsScreenState())
@@ -22,7 +22,7 @@ class StyleSettingsScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.settings.collect { settings ->
+            settingsRepo.settings.collect { settings ->
                 _state.update {
                     it.copy(
                         loading = false,
@@ -52,7 +52,7 @@ class StyleSettingsScreenVM @Inject constructor(
 
     private fun setDarkMode(darkMode: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setDarkMode(darkMode)
+            settingsRepo.setDarkMode(darkMode)
             setShowDarkModeDialog(false)
         }
     }
@@ -83,13 +83,13 @@ class StyleSettingsScreenVM @Inject constructor(
 
     private fun setTheme(theme: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setTheme(theme)
+            settingsRepo.setTheme(theme)
         }
     }
 
     private fun setDarkTheme(theme: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsRepository.setDarkTheme(theme)
+            settingsRepo.setDarkTheme(theme)
         }
     }
 }

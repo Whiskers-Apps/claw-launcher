@@ -1,21 +1,28 @@
 package com.whiskersapps.clawlauncher.views.main.views.home.model
 
+import com.whiskersapps.clawlauncher.shared.model.Settings
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_CLOCK_PLACEMENT
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SHOW_HOME_SEARCH_BAR
+import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_SWIPE_UP_TO_SEARCH
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_TINT_CLOCK
 
 data class HomeScreenState(
+    // Loading
     val loading: Boolean = true,
+
+    // Widgets
     val clock: String = "",
     val date: String = "",
-    val showSettingsDialog: Boolean = false,
-    val showMenuDialog: Boolean = false,
-    val swipeUpToSearch: Boolean = false,
-    val showSearchBar: Boolean = true,
-    val showPlaceholder: Boolean = true,
-    val showSearchBarSettings: Boolean = true,
-    val searchBarRadius: Float = 50f,
-    val tintClock: Boolean = DEFAULT_TINT_CLOCK,
+
+    // Settings
     val clockPlacement: String = DEFAULT_CLOCK_PLACEMENT,
-    val openLockSettings: Boolean = false,
+    val enableSwipeUp: Boolean = DEFAULT_SWIPE_UP_TO_SEARCH,
+    val showSearchBar: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR,
+    val showPlaceholder: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR,
+    val searchBarRadius: Float = Settings.DEFAULT_HOME_SEARCH_BAR_RADIUS.toFloat(),
+    val tintClock: Boolean = DEFAULT_TINT_CLOCK,
+
+    // Dialogs
+    val showMenuDialog: Boolean = false,
     val showLockScreenDialog: Boolean = false
 )
