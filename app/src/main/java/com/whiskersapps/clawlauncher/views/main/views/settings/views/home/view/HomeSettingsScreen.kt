@@ -2,7 +2,6 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.home.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.intent.settings.HomeSettingsAction
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
@@ -10,11 +9,12 @@ import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.settings.HomeSettings
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.intent.HomeSettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.model.HomeSettingsScreenVM
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeSettingsScreenRoot(
     navController: NavController,
-    vm: HomeSettingsScreenVM = hiltViewModel(),
+    vm: HomeSettingsScreenVM = koinViewModel(),
 ) {
 
     HomeSettingsScreen(

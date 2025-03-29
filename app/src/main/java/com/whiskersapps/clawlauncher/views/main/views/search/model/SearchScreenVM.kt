@@ -2,35 +2,31 @@ package com.whiskersapps.clawlauncher.views.main.views.search.model
 
 import android.app.Application
 import android.content.Intent
-import android.net.Uri
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.foldable.FoldableRepo
 import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
-import com.whiskersapps.clawlauncher.launcher.bookmarks.BookmarksRepository
+import com.whiskersapps.clawlauncher.launcher.bookmarks.BookmarksRepo
 import com.whiskersapps.clawlauncher.launcher.search_engines.SearchEnginesRepo
 import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.model.App
-import com.whiskersapps.clawlauncher.shared.model.App.*
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
 import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
 import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SearchScreenVM @Inject constructor(
+class SearchScreenVM(
     private val settingsRepo: SettingsRepo,
     private val appsRepo: AppsRepo,
-    private val bookmarksRepository: BookmarksRepository,
+    private val bookmarksRepository: BookmarksRepo,
     private val searchEnginesRepo: SearchEnginesRepo,
     private val app: Application
 ) : ViewModel() {
@@ -196,7 +192,7 @@ class SearchScreenVM @Inject constructor(
         }
     }
 
-    private fun onOpenShortcut(packageName: String, shortcut: Shortcut) {
+    private fun onOpenShortcut(packageName: String, shortcut: App.Shortcut) {
         viewModelScope.launch {
             appsRepo.openShortcut(packageName, shortcut)
             clearSearch()
@@ -205,7 +201,7 @@ class SearchScreenVM @Inject constructor(
 
     private fun onOpenUrl(url: String) {
         viewModelScope.launch {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+            val intent = Intent(Intent.ACTION_VIEW, url.toUri()).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
 

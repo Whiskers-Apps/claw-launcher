@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.ClawLauncher" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.ClawLauncher" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowShowWallpaper">true</item>
-        <item name="android:statusBarColor">
-            @android:color/transparent
-        </item>
     </style>
 </resources>

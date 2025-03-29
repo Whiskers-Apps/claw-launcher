@@ -2,11 +2,10 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.launcher.bookmarks.BookmarksRepository
+import com.whiskersapps.clawlauncher.launcher.bookmarks.BookmarksRepo
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
 import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.intent.BookmarksScreenAction
-import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,11 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
-import javax.inject.Inject
 
-@HiltViewModel
-class BookmarksScreenVM @Inject constructor(
-    private val bookmarksRepository: BookmarksRepository
+class BookmarksScreenVM(
+    private val bookmarksRepository: BookmarksRepo
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BookmarksScreenState())

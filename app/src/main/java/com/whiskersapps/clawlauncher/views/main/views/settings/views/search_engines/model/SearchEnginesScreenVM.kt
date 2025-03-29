@@ -5,16 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.launcher.search_engines.SearchEnginesRepo
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.intent.SearchEnginesScreenAction
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SearchEnginesScreenVM @Inject constructor(
+
+class SearchEnginesScreenVM(
     private val searchEnginesRepo: SearchEnginesRepo
 ) : ViewModel() {
 

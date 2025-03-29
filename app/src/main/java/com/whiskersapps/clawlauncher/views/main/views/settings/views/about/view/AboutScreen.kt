@@ -30,10 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.lighttigerxiv.whiskers_palette_kt.WhiskersColor
-import com.lighttigerxiv.whiskers_palette_kt.getColor
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
@@ -41,11 +38,12 @@ import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.intent.AboutScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.model.AboutScreenVM
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AboutScreenRoot(
     navController: NavController,
-    vm: AboutScreenVM = hiltViewModel()
+    vm: AboutScreenVM = koinViewModel()
 ) {
 
     AboutScreen(

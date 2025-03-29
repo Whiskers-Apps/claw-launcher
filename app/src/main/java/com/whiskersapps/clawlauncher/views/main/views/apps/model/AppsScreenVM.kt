@@ -8,16 +8,13 @@ import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.model.App
 import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AppsScreenVM @Inject constructor(
+class AppsScreenVM(
     private val settingsRepo: SettingsRepo,
     private val appsRepo: AppsRepo
 ) : ViewModel() {

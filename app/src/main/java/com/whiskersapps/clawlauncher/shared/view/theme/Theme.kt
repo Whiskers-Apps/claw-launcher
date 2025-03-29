@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -37,10 +38,14 @@ fun ClawLauncherTheme(
     val useDarkTheme = useDarkTheme(darkMode = settings.darkMode)
     val view = LocalView.current
 
-    SideEffect {
-        val window = (view.context as Activity).window
-        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !useDarkTheme
+    val window = (view.context as Activity).window
+    LaunchedEffect(Unit) {
+
     }
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
+//        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !useDarkTheme
+//        WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars =
+//            !useDarkTheme
 
     MaterialTheme(
         colorScheme = if (useMonet && isAtLeastAndroid12() && !useDarkTheme) {
@@ -93,16 +98,17 @@ fun getDarkColorScheme(id: String): ColorScheme {
     return if (id == "monet" && isAtLeastAndroid12()) {
         dynamicDarkColorScheme(context)
     } else {
-        val theme = CUSTOM_THEMES.find { it.id == id }!!
+//        val theme = CUSTOM_THEMES.find { it.id == id }!!
 
-        darkColorScheme(
-            background = theme.background,
-            surfaceVariant = theme.secondaryBackground,
-            onBackground = theme.text,
-            onSurfaceVariant = theme.text,
-            primary = theme.accent,
-            onPrimary = theme.onAccent
-        )
+//        darkColorScheme(
+//            background = theme.background,
+//            surfaceVariant = theme.secondaryBackground,
+//            onBackground = theme.text,
+//            onSurfaceVariant = theme.text,
+//            primary = theme.accent,
+//            onPrimary = theme.onAccent
+//        )
+        darkColorScheme()
     }
 }
 
@@ -113,21 +119,22 @@ fun getLightColorScheme(id: String): ColorScheme {
     return if (id == "monet" && isAtLeastAndroid12()) {
         dynamicLightColorScheme(context)
     } else {
-        val theme = CUSTOM_THEMES.find { it.id == id }!!
-
-        lightColorScheme(
-            background = theme.background,
-            surfaceVariant = theme.secondaryBackground,
-            onBackground = theme.text,
-            onSurfaceVariant = theme.text,
-            primary = theme.accent,
-            onPrimary = theme.onAccent
-        )
+//        val theme = CUSTOM_THEMES.find { it.id == id }!!
+//
+//        lightColorScheme(
+//            background = theme.background,
+//            surfaceVariant = theme.secondaryBackground,
+//            onBackground = theme.text,
+//            onSurfaceVariant = theme.text,
+//            primary = theme.accent,
+//            onPrimary = theme.onAccent
+//        )
+        lightColorScheme()
     }
 }
 
-fun getThemeDisplayName(id: String): String{
-    return when(id){
+fun getThemeDisplayName(id: String): String {
+    return when (id) {
         "tiger-banana" -> "Tiger Banana"
         "tiger-blueberry" -> "Tiger Blueberry"
         "tiger-cherry" -> "Tiger Cherry"

@@ -1,7 +1,6 @@
 package com.whiskersapps.clawlauncher.onboarding.select_engine_screen
 
 import android.app.Activity
-import android.app.LauncherActivity
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -20,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.launcher.LauncherActivity
 import com.whiskersapps.clawlauncher.onboarding.composables.OnBoardingButton
 import com.whiskersapps.clawlauncher.onboarding.composables.OnBoardingScaffold
 import com.whiskersapps.clawlauncher.onboarding.select_engine_screen.SelectEngineScreenAction.Finish
@@ -30,11 +29,12 @@ import com.whiskersapps.clawlauncher.onboarding.select_engine_screen.SelectEngin
 import com.whiskersapps.clawlauncher.onboarding.select_engine_screen.SelectEngineScreenAction.SetDefaultEngine
 import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEngineCard
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SelectEngineScreenRoot(
     navController: NavController,
-    vm: SelectEngineScreenVM = hiltViewModel()
+    vm: SelectEngineScreenVM = koinViewModel()
 ) {
     val context = LocalContext.current
     val activity = context as? Activity

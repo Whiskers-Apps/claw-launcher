@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
@@ -36,11 +35,12 @@ import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.intent.SettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.model.SettingsScreenVM
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreenRoot(
     navController: NavController,
-    vm: SettingsScreenVM = hiltViewModel()
+    vm: SettingsScreenVM = koinViewModel()
 ) {
 
     val context = LocalContext.current

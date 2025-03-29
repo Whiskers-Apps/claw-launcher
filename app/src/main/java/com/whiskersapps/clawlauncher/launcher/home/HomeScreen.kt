@@ -34,7 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.launcher.home.composables.Clock
 import com.whiskersapps.clawlauncher.launcher.home.composables.LockScreenDialog
@@ -44,13 +43,14 @@ import com.whiskersapps.clawlauncher.views.main.views.home.intent.Action.*
 import com.whiskersapps.clawlauncher.views.main.views.home.model.HomeScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchBar
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenRoot(
     sheetState: SheetState,
-    vm: HomeScreenVM = hiltViewModel()
+    vm: HomeScreenVM = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
 
@@ -69,7 +69,7 @@ fun HomeScreenRoot(
 @Composable
 fun HomeScreen(
     onAction: (Action) -> Unit,
-    vm: HomeScreenVM = hiltViewModel()
+    vm: HomeScreenVM
 ) {
     val state = vm.state.collectAsState().value
 
@@ -97,7 +97,7 @@ fun HomeScreen(
             .fillMaxSize()
             .background(Color.Transparent)
             .systemBarsPadding()
-            .padding(16.dp)
+            .padding(32.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),

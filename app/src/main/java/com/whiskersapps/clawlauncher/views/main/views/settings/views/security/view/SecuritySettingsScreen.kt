@@ -1,24 +1,24 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.security.view
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.composables.SimpleSetting
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.intent.SecuritySettingsScreenAction
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.model.SecuritySettingsScreenVM
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.model.SecuritySettingsScreenState
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.model.SecuritySettingsScreenVM
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SecuritySettingsScreenRoot(
     navController: NavController,
-    vm: SecuritySettingsScreenVM = hiltViewModel()
+    vm: SecuritySettingsScreenVM = koinViewModel()
 ) {
     SecuritySettingsScreen(
         onAction = { action ->
@@ -37,7 +37,7 @@ fun SecuritySettingsScreen(
     state: SecuritySettingsScreenState
 ) {
 
-    val fragmentActivity = LocalContext.current as FragmentActivity
+    val fragmentActivity = LocalActivity.current as FragmentActivity
 
     ContentColumn(useSystemBarsPadding = true) {
         NavBar(navigateBack = { onAction(SecuritySettingsScreenAction.NavigateBack) })
@@ -54,8 +54,8 @@ fun SecuritySettingsScreen(
             onClick = { onAction(SecuritySettingsScreenAction.OpenSecureAppsDialog(fragmentActivity)) }
         )
 
-        HiddenAppsDialog(onAction = {onAction(it)}, state = state)
+        HiddenAppsDialog(onAction = { onAction(it) }, state = state)
 
-        SecureAppsDialog(onAction = {onAction(it)}, state = state)
+        SecureAppsDialog(onAction = { onAction(it) }, state = state)
     }
 }

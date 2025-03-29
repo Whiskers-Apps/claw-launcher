@@ -1,7 +1,6 @@
 package com.whiskersapps.clawlauncher.launcher
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,31 +20,30 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.whiskersapps.clawlauncher.launcher.LauncherScreenState.Loaded
+import com.whiskersapps.clawlauncher.launcher.LauncherScreenState.Loading
 import com.whiskersapps.clawlauncher.launcher.composables.LoadingCat
-import com.whiskersapps.clawlauncher.shared.utils.OnActivityPaused
-import com.whiskersapps.clawlauncher.launcher.LauncherScreenState.*
-import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreenRoot
 import com.whiskersapps.clawlauncher.launcher.home.HomeScreenRoot
+import com.whiskersapps.clawlauncher.shared.utils.OnActivityPaused
+import com.whiskersapps.clawlauncher.views.main.views.apps.view.AppsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.search.view.SearchScreenRoot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LauncherScreenRoot(
-    vm: LauncherScreenVM = hiltViewModel()
+    vm: LauncherScreenVM = koinViewModel()
 ) {
     LauncherScreen(vm)
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LauncherScreen(
     vm: LauncherScreenVM,
 ) {
-    val state = vm.state.collectAsState().value
-
-    when (state) {
+    when (val state = vm.state.collectAsState().value) {
         Loading -> {
             LoadingCat()
         }

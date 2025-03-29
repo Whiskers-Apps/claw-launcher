@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 
-class BookmarksRepository(
+class BookmarksRepo(
     private val realm: Realm
 ) {
 

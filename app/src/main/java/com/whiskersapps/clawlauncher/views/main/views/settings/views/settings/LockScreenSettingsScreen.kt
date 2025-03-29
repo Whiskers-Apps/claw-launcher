@@ -24,26 +24,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
 import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.settings.LockScreenSettingsScreenVM.Companion.Action
+import com.whiskersapps.clawlauncher.views.main.views.settings.views.settings.LockScreenSettingsScreenVM.Companion.Action.*
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LockScreenSettingsScreenRoot(
     navController: NavController,
     goHome: Boolean,
-    vm: LockScreenSettingsScreenVM = hiltViewModel()
+    vm: LockScreenSettingsScreenVM = koinViewModel()
 ) {
     LockScreenSettingsScreen(
         vm = vm,
         onAction = { action ->
             when (action) {
-                Action.OnNavigateBack -> {
+                OnNavigateBack -> {
                     if (goHome) {
                         navController.navigate(Routes.Launcher.HOME)
                     } else {
@@ -62,13 +62,13 @@ fun LockScreenSettingsScreenRoot(
 @Composable
 fun LockScreenSettingsScreen(
     vm: LockScreenSettingsScreenVM,
-    onAction: (Action) -> Unit
+    onAction: (LockScreenSettingsScreenVM.Companion.Action) -> Unit
 ) {
     val state = vm.state.collectAsState().value
 
-    // Required so when going back from the home screen it actually goes to the home screen
+//     Required so when going back from the home screen it actually goes to the home screen
     BackHandler {
-        onAction(Action.OnNavigateBack)
+        onAction(OnNavigateBack)
     }
 
     ContentColumn(
@@ -76,13 +76,13 @@ fun LockScreenSettingsScreen(
         navigationBar = {
             NavBar(
                 navigateBack = {
-                    onAction(Action.OnNavigateBack)
+                    onAction(OnNavigateBack)
                 },
                 endContent = {
                     Button(
                         enabled = state.accessibilityServiceEnabled,
                         onClick = {
-                            onAction(Action.OnLockScreen)
+                            onAction(OnLockScreen)
                         }
                     ) {
                         Text("Lock")
@@ -102,7 +102,7 @@ fun LockScreenSettingsScreen(
                     .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .clickable {
-                        onAction(Action.OnOpenAccessibilitySettings)
+                        onAction(OnOpenAccessibilitySettings)
                     }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically

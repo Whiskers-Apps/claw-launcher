@@ -5,12 +5,10 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
 import com.whiskersapps.clawlauncher.launcher.lock.ScreenLock
 import com.whiskersapps.clawlauncher.settings.SettingsActivity
 import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.views.main.views.home.intent.Action
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +18,10 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeScreenVM @Inject constructor(
-    val settingsRepo: SettingsRepo,
-    val appsRepo: AppsRepo,
-    val app: Application
+class HomeScreenVM(
+    private val settingsRepo: SettingsRepo,
+    private val app: Application
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeScreenState())

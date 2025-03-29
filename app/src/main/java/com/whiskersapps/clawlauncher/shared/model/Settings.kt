@@ -4,8 +4,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.lighttigerxiv.whiskers_palette_kt.WhiskersColor
-import com.lighttigerxiv.whiskers_palette_kt.getColor
 import com.whiskersapps.clawlauncher.shared.utils.isAtLeastAndroid12
 
 data class Settings(

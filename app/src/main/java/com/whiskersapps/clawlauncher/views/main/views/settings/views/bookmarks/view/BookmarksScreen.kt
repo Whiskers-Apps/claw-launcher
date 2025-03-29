@@ -33,7 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
@@ -46,12 +45,13 @@ import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.i
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.model.BookmarksScreenState
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.model.BookmarksScreenVM
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun BookmarksScreenRoot(
     navController: NavController,
-    vm: BookmarksScreenVM = hiltViewModel()
+    vm: BookmarksScreenVM = koinViewModel()
 ) {
 
     BookmarksScreen(
@@ -65,7 +65,6 @@ fun BookmarksScreenRoot(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BookmarksScreen(
     state: BookmarksScreenState,
@@ -151,16 +150,17 @@ fun BookmarksScreen(
                     } else {
                         LazyColumn(Modifier.fillMaxSize()) {
                             items(state.bookmarks, key = { it.url }) { bookmark ->
-                                Row(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onAction(
-                                            BookmarksScreenAction.OpenEditBookmarkDialog(
-                                                bookmark
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            onAction(
+                                                BookmarksScreenAction.OpenEditBookmarkDialog(
+                                                    bookmark
+                                                )
                                             )
-                                        )
-                                    }
-                                    .padding(16.dp),
+                                        }
+                                        .padding(16.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     AsyncImage(
@@ -214,16 +214,17 @@ fun BookmarksScreen(
                     } else {
                         LazyColumn(Modifier.fillMaxSize()) {
                             items(state.groups, key = { it._id.toHexString() }) { group ->
-                                Row(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onAction(
-                                            BookmarksScreenAction.OpenEditGroupDialog(
-                                                group
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            onAction(
+                                                BookmarksScreenAction.OpenEditGroupDialog(
+                                                    group
+                                                )
                                             )
-                                        )
-                                    }
-                                    .padding(16.dp),
+                                        }
+                                        .padding(16.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(

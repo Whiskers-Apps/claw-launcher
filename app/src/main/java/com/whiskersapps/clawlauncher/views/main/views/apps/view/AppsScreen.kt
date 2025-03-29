@@ -42,7 +42,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.whiskersapps.clawlauncher.shared.utils.isSplitAvailable
 import com.whiskersapps.clawlauncher.shared.view.composables.AppIcon
 import com.whiskersapps.clawlauncher.shared.view.composables.AppPopup
@@ -50,12 +49,12 @@ import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
 import com.whiskersapps.clawlauncher.views.main.views.apps.intent.AppsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.apps.model.AppsScreenVM
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppsScreenRoot(
     pagerState: PagerState,
-    vm: AppsScreenVM = hiltViewModel()
+    vm: AppsScreenVM = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current

@@ -4,16 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.intent.AppsSettingsScreenAction
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AppsSettingsScreenVM @Inject constructor(
+class AppsSettingsScreenVM constructor(
     private val settingsRepo: SettingsRepo
 ) : ViewModel() {
 

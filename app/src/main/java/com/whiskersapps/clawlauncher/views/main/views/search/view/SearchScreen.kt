@@ -1,5 +1,6 @@
 package com.whiskersapps.clawlauncher.views.main.views.search.view
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,14 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
@@ -57,16 +56,16 @@ import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenA
 import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnOpenShortcut
 import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnOpenUrl
 import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnRequestUninstall
-import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnRunAction
 import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnSearchInput
 import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenAction.OnSetFocusSearchBar
 import com.whiskersapps.clawlauncher.views.main.views.search.model.SearchScreenVM
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreenRoot(
     sheetState: SheetState,
-    vm: SearchScreenVM = hiltViewModel(),
+    vm: SearchScreenVM = koinViewModel(),
     onCloseSheet: () -> Unit
 ) {
     SearchScreen(vm, sheetState) { action ->
@@ -90,7 +89,7 @@ fun SearchScreen(
     onAction: (SearchScreenAction) -> Unit
 ) {
 
-    val fragmentActivity = LocalContext.current as FragmentActivity
+    val activity = LocalActivity.current as FragmentActivity
     val state = vm.state.collectAsState().value
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -128,8 +127,8 @@ fun SearchScreen(
                     },
                     backgroundColor = Color.Transparent,
                     onDone = {
-                        onAction(OnRunAction(fragmentActivity))
-                        onAction(OnCloseSheet)
+//                        onAction(OnRunAction(activity!!))
+//                        onAction(OnCloseSheet)
                     }
                 )
 
@@ -158,7 +157,7 @@ fun SearchScreen(
                                 GridAppShortcut(
                                     app = app,
                                     openApp = {
-                                        onAction(OnOpenApp(app.packageName, fragmentActivity))
+                                        onAction(OnOpenApp(app.packageName, activity))
                                         onAction(OnCloseSheet)
                                     },
                                     openInfo = {

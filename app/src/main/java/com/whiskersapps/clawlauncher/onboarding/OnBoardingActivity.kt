@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,15 +18,15 @@ import com.whiskersapps.clawlauncher.onboarding.select_engine_screen.SelectEngin
 import com.whiskersapps.clawlauncher.onboarding.welcome_screen.WelcomeScreenRoot
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 
-@AndroidEntryPoint
 class OnBoardingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
-            val vm = hiltViewModel<OnBoardingVM>()
+            val vm = getViewModel<OnBoardingActivityVM>()
             val settings = vm.settings.collectAsState().value
 
             if (settings != null) {

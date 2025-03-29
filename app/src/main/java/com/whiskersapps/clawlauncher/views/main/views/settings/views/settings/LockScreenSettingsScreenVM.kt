@@ -4,17 +4,14 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whiskersapps.clawlauncher.launcher.lock.ScreenLock
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
-import javax.inject.Inject
 
-@HiltViewModel
-class LockScreenSettingsScreenVM @Inject constructor(
+class LockScreenSettingsScreenVM constructor(
     app: Application
 ) : ViewModel() {
     companion object {

@@ -11,13 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.whiskersapps.clawlauncher.shared.app.MainVM
+import com.whiskersapps.clawlauncher.shared.app.SettingsActivityVM
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
 import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreenRoot
@@ -29,9 +28,8 @@ import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engi
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.view.SecuritySettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.settings.LockScreenSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view.StyleSettingsScreenRoot
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 
-@AndroidEntryPoint
 class SettingsActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +37,8 @@ class SettingsActivity : FragmentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val mainVM: MainVM = hiltViewModel()
-            val settings = mainVM.settings.collectAsState().value
+            val settingsActivityVM = getViewModel<SettingsActivityVM>()
+            val settings = settingsActivityVM.settings.collectAsState().value
 
             if (settings != null) {
                 ClawLauncherTheme(

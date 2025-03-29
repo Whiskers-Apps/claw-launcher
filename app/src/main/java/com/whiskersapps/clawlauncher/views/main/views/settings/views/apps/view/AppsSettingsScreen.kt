@@ -3,7 +3,6 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.shared.intent.settings.AppsSettingsAction
 import com.whiskersapps.clawlauncher.shared.utils.isFoldable
@@ -12,17 +11,18 @@ import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.settings.AppsSettings
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.intent.AppsSettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.model.AppsSettingsScreenVM
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AppsSettingsScreenRoot(
     navController: NavController,
-    vm: AppsSettingsScreenVM = hiltViewModel()
+    vm: AppsSettingsScreenVM = koinViewModel()
 ) {
 
     AppsSettingsScreen(
         onAction = { action ->
-            when(action){
-               AppsSettingsScreenAction.NavigateBack -> navController.navigateUp()
+            when (action) {
+                AppsSettingsScreenAction.NavigateBack -> navController.navigateUp()
                 else -> vm.onAction(action)
             }
         },

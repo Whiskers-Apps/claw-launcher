@@ -1,6 +1,5 @@
 plugins {
-    id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.kapt")
+    id("com.google.devtools.ksp")
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("io.realm.kotlin")
@@ -78,17 +77,8 @@ dependencies {
     // Data Store
     implementation(libs.androidx.datastore.preferences)
 
-    // Whiskers Palette
-    implementation(libs.whiskers.palette.kt)
-
-    // Compose Hilt
+    // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    // Dagger Hilt
-    implementation(libs.hilt.android.v248)
-    kapt(libs.hilt.android.compiler.v248)
-    kapt(libs.androidx.hilt.compiler)
 
     // Mongo Realm
     implementation(libs.kotlinx.coroutines.core)
@@ -105,8 +95,12 @@ dependencies {
 
     // Fingerprint
     implementation(libs.androidx.biometric)
-}
 
-kapt {
-    correctErrorTypes = true
+    // Koin
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.navigation)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
 }

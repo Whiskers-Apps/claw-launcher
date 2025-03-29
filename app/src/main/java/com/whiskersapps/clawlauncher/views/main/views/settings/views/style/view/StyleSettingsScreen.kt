@@ -1,10 +1,8 @@
 package com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
@@ -13,11 +11,12 @@ import com.whiskersapps.clawlauncher.shared.view.composables.SimpleSetting
 import com.whiskersapps.clawlauncher.shared.view.theme.getThemeDisplayName
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.intent.StyleSettingsScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.model.StyleSettingsScreenVM
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun StyleSettingsScreenRoot(
     navController: NavController,
-    vm: StyleSettingsScreenVM = hiltViewModel()
+    vm: StyleSettingsScreenVM = koinViewModel()
 ) {
     StyleSettingsScreen(
         onAction = { action ->
@@ -89,8 +88,8 @@ fun StyleSettingsScreen(
 }
 
 @Composable
-fun getDarkModeDisplayName(theme: String): String{
-    return when(theme){
+fun getDarkModeDisplayName(theme: String): String {
+    return when (theme) {
         "system" -> stringResource(R.string.StyleSettings_system)
         "light" -> stringResource(R.string.StyleSettings_light)
         else -> stringResource(R.string.StyleSettings_dark)

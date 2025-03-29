@@ -7,16 +7,13 @@ import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
 import com.whiskersapps.clawlauncher.settings.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.intent.SecuritySettingsScreenAction
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SecuritySettingsScreenVM @Inject constructor(
+class SecuritySettingsScreenVM(
     private val settingsRepo: SettingsRepo,
     private val appsRepo: AppsRepo
 ) : ViewModel() {

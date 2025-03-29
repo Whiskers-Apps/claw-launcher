@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whiskersapps.clawlauncher.R
 import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
@@ -36,12 +35,13 @@ import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.intent.SearchEnginesScreenAction
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.model.SearchEnginesScreenVM
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun SearchEnginesScreenRoot(
     navController: NavController,
-    vm: SearchEnginesScreenVM = hiltViewModel()
+    vm: SearchEnginesScreenVM = koinViewModel()
 ) {
 
     SearchEnginesScreen(
@@ -198,7 +198,6 @@ fun SearchEnginesScreen(
             )
         }
     }
-
 }
 
 

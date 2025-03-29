@@ -26,16 +26,19 @@
         tools:targetApi="tiramisu">
         <activity
             android:name=".launcher.LauncherActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".onboarding.OnBoardingActivity"
             android:exported="false"
             android:label="@string/title_activity_on_boarding"
-            android:theme="@style/Theme.ClawLauncher" />
+            android:theme="@style/Theme.ClawLauncher"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".settings.SettingsActivity"
             android:exported="false"
-            android:launchMode="singleInstance">
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
 
