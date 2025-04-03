@@ -150,4 +150,8 @@
     <string name="SettingsScreen_lock_screen_description">Screen lock settings</string>
     <string name="title_activity_on_boarding">OnBoardingActivity</string>
     <string name="LauncherScreen_Loading">Loading</string>
+    <string name="AppsSettings_view_description">Select the view type for the apps</string>
+    <string name="AppsSettings_search_bar_position_description">The search bar position</string>
+    <string name="HomeSettings_pill_shape">Pill Shape</string>
+    <string name="HomeSettings_pill_shape_description">Show the clock inside a card</string>
 </resources>

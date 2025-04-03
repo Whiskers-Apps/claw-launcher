@@ -1,25 +1,25 @@
 [versions]
-agp = "8.7.3"
+agp = "8.9.1"
 biometric = "1.1.0"
 coilCompose = "2.6.0"
-datastorePreferences = "1.1.1"
+datastorePreferences = "1.1.4"
 kotlin = "1.9.0"
-coreKtx = "1.10.1"
+coreKtx = "1.15.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-kotlinxCoroutinesCore = "1.7.3"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+kotlinxCoroutinesCore = "1.8.0"
 libraryBase = "1.11.0"
-lifecycleRuntimeKtx = "2.6.1"
+lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.03.01"
-lifecycleViewmodelKtx = "2.8.3"
-navigationComposeVersion = "2.7.7"
+lifecycleViewmodelKtx = "2.8.7"
+navigationComposeVersion = "2.8.9"
 snifferKt = "1.1.0"
-adaptiveAndroid = "1.0.0-beta04"
+adaptiveAndroid = "1.1.0"
 appcompat = "1.7.0"
 material = "1.12.0"
-activity = "1.10.0"
+activity = "1.10.1"
 koin-bom = "4.0.3"
 
 [libraries]
@@ -46,7 +46,6 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-bom
 koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version.ref = "koin-bom" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin-bom" }
 koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koin-bom" }
-koin-compose = { module = "io.insert-koin:koin-compose" , version.ref = "koin-bom"}
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 library-base = { module = "io.realm.kotlin:library-base", version.ref = "libraryBase" }
 sniffer-kt = { module = "com.github.Whiskers-Apps:sniffer-kt", version.ref = "snifferKt" }
@@ -61,5 +60,4 @@ koin-core = { module = "io.insert-koin:koin-core" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 

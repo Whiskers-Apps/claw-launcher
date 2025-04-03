@@ -3,8 +3,8 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.security.m
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
-import com.whiskersapps.clawlauncher.settings.SettingsRepo
+import com.whiskersapps.clawlauncher.launcher.apps.di.AppsRepo
+import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.intent.SecuritySettingsScreenAction
 import kotlinx.coroutines.Dispatchers

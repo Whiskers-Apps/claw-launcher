@@ -2,8 +2,8 @@ package com.whiskersapps.clawlauncher.launcher
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.launcher.apps.AppsRepo
-import com.whiskersapps.clawlauncher.settings.SettingsRepo
+import com.whiskersapps.clawlauncher.launcher.apps.di.AppsRepo
+import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.model.App
 import com.whiskersapps.clawlauncher.shared.model.Settings
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class LauncherScreenVM (
+class LauncherScreenVM(
     private val settingsRepo: SettingsRepo,
     private val appsRepo: AppsRepo
 ) : ViewModel() {

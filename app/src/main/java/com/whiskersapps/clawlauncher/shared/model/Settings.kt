@@ -2,7 +2,6 @@ package com.whiskersapps.clawlauncher.shared.model
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.whiskersapps.clawlauncher.shared.utils.isAtLeastAndroid12
 
@@ -50,11 +49,6 @@ data class Settings(
     val showHomeSearchBarPlaceholder: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER,
 
     /**
-     * Show the settings icon on the home search bar
-     */
-    val showHomeSearchBarSettings: Boolean = DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS,
-
-    /**
      * The search bar radius on the home screen
      */
     val homeSearchBarRadius: Int = DEFAULT_HOME_SEARCH_BAR_RADIUS,
@@ -68,11 +62,6 @@ data class Settings(
      * Show the search placeholder on the apps search bar
      */
     val showAppsSearchBarPlaceholder: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER,
-
-    /**
-     * Show the settings icon on the search bar in the apps screen
-     */
-    val showAppsSearchBarSettings: Boolean = DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS,
 
     /**
      * The search bar position in the apps screen
@@ -147,7 +136,17 @@ data class Settings(
      *
      * Possible values: "top", "center", "bottom"
      */
-    val clockPlacement: String = DEFAULT_CLOCK_PLACEMENT
+    val clockPlacement: String = DEFAULT_CLOCK_PLACEMENT,
+
+    /**
+     * Show the clock as a card in the home screen
+     */
+    val pillShapeClock: Boolean = DEFAULT_PILL_SHAPE_CLOCK,
+
+    /**
+     * Hide app labels on the apps screen
+     */
+    val hideAppLabels: Boolean = DEFAULT_HIDE_APP_LABELS
 ) {
     companion object {
         val SETUP_COMPLETED = booleanPreferencesKey("setup-completed")
@@ -175,9 +174,6 @@ data class Settings(
             booleanPreferencesKey("show-home-search-bar-placeholder")
         const val DEFAULT_SHOW_HOME_SEARCH_BAR_PLACEHOLDER = true
 
-        val SHOW_HOME_SEARCH_BAR_SETTINGS = booleanPreferencesKey("show-home-search-bar-settings")
-        const val DEFAULT_SHOW_HOME_SEARCH_BAR_SETTINGS = true
-
         val HOME_SEARCH_BAR_RADIUS = intPreferencesKey("home-search-bar-radius")
         const val DEFAULT_HOME_SEARCH_BAR_RADIUS = 50
 
@@ -187,9 +183,6 @@ data class Settings(
         val SHOW_APPS_SEARCH_BAR_PLACEHOLDER =
             booleanPreferencesKey("show-apps-search-bar-placeholder")
         const val DEFAULT_SHOW_APPS_SEARCH_BAR_PLACEHOLDER = true
-
-        val SHOW_APPS_SEARCH_BAR_SETTINGS = booleanPreferencesKey("show-apps-search-bar-settings")
-        const val DEFAULT_SHOW_APPS_SEARCH_BAR_SETTINGS = true
 
         val APPS_SEARCH_BAR_POSITION = stringPreferencesKey("apps-search-bar-position")
         const val DEFAULT_APPS_SEARCH_BAR_POSITION = "bottom"
@@ -207,7 +200,7 @@ data class Settings(
         val DEFAULT_THEME = if (isAtLeastAndroid12()) "monet" else "tiger-banana"
 
         val DARK_THEME = stringPreferencesKey("dark-theme")
-        val DEFAULT_DARK_THEME = if(isAtLeastAndroid12()) "monet" else "panther-banana"
+        val DEFAULT_DARK_THEME = if (isAtLeastAndroid12()) "monet" else "panther-banana"
 
         val SWIPE_UP_TO_SEARCH = booleanPreferencesKey("swipe-up-to-search")
         const val DEFAULT_SWIPE_UP_TO_SEARCH = true
@@ -223,5 +216,11 @@ data class Settings(
 
         val CLOCK_PLACEMENT = stringPreferencesKey("clock-placement")
         const val DEFAULT_CLOCK_PLACEMENT = "top"
+
+        val PILL_SHAPE_CLOCK = booleanPreferencesKey("pill-shape-clock")
+        const val DEFAULT_PILL_SHAPE_CLOCK = true
+
+        val HIDE_APP_LABELS = booleanPreferencesKey("hide-app-labels")
+        const val DEFAULT_HIDE_APP_LABELS = false
     }
 }

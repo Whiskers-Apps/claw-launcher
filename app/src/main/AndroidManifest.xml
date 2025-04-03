@@ -14,7 +14,7 @@
         android:required="true" />
 
     <application
-        android:name=".shared.app.App"
+        android:name=".core.di.App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -27,6 +27,7 @@
         <activity
             android:name=".launcher.LauncherActivity"
             android:exported="false"
+            android:theme="@style/Theme.ClawLauncher"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".onboarding.OnBoardingActivity"
@@ -46,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".shared.app.MainActivity"
+            android:name=".core.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ClawLauncher"
             android:windowSoftInputMode="adjustResize">

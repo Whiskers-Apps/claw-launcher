@@ -1,7 +1,7 @@
 package com.whiskersapps.clawlauncher.foldable
 
 import androidx.window.layout.FoldingFeature
-import com.whiskersapps.clawlauncher.settings.SettingsRepo
+import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_LANDSCAPE_COLS
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_PORTRAIT_COLS
 import kotlinx.coroutines.CoroutineScope

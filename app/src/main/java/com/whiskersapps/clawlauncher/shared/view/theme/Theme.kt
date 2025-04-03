@@ -1,6 +1,8 @@
 package com.whiskersapps.clawlauncher.shared.view.theme
 
 import android.app.Activity
+import android.view.Window
+import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -12,11 +14,17 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.whiskersapps.clawlauncher.shared.model.Settings
 import com.whiskersapps.clawlauncher.shared.utils.isAtLeastAndroid12
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ClawLauncherTheme(
@@ -37,15 +45,16 @@ fun ClawLauncherTheme(
     val useDarkMonet = settings.darkTheme == "monet"
     val useDarkTheme = useDarkTheme(darkMode = settings.darkMode)
     val view = LocalView.current
-
     val window = (view.context as Activity).window
-    LaunchedEffect(Unit) {
+    val scope = rememberCoroutineScope()
 
+    SideEffect {
+        scope.launch(Dispatchers.Main) {
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                !useDarkTheme
+        }
     }
-//        WindowCompat.setDecorFitsSystemWindows(window, false)
-//        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !useDarkTheme
-//        WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars =
-//            !useDarkTheme
+
 
     MaterialTheme(
         colorScheme = if (useMonet && isAtLeastAndroid12() && !useDarkTheme) {
@@ -85,7 +94,6 @@ fun PreviewTheme(
         content = content
     )
 }
-
 
 @Composable
 fun useDarkTheme(darkMode: String) =

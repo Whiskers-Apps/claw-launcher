@@ -2,7 +2,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.search_eng
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.launcher.search_engines.SearchEnginesRepo
+import com.whiskersapps.clawlauncher.search_engines.SearchEnginesRepo
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.intent.SearchEnginesScreenAction
 import kotlinx.coroutines.Dispatchers

@@ -30,15 +30,17 @@ fun NavBar(
     endContent: @Composable RowScope.() -> Unit = {}
 ) {
     Column(
-        Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
-    ){
+        Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape)
                     .clickable { navigateBack() },
-                painter = if(useCloseIcon) painterResource(id = R.drawable.close) else painterResource(id = R.drawable.chevron_left),
+                painter = if (useCloseIcon) painterResource(id = R.drawable.close) else painterResource(
+                    id = R.drawable.back_arrow
+                ),
                 contentDescription = "back icon",
                 tint = MaterialTheme.colorScheme.onBackground
             )

@@ -7,5 +7,5 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Modifier.sidePadding(): Modifier {
-    return this.padding(start = 16.dp, end = 16.dp)
+    return this.padding(start = 24.dp, end = 24.dp)
 }

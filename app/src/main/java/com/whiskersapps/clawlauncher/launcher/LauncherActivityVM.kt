@@ -2,11 +2,11 @@ package com.whiskersapps.clawlauncher.launcher
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.settings.SettingsRepo
+import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
-class LauncherActivityVM (
+class LauncherActivityVM(
     settingsRepo: SettingsRepo,
 ) : ViewModel() {
     val settings = settingsRepo.settingsFlow.stateIn(

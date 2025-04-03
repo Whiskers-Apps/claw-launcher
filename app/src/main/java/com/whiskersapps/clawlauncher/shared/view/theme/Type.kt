@@ -5,29 +5,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val TITLE_ONE_STYLE = TextStyle(
-    fontWeight = FontWeight.Medium,
-    fontSize = 20.sp,
-)
-
-val TITLE_TWO_STYLE = TextStyle(
-    fontWeight = FontWeight.Medium,
-    fontSize = 18.sp
-)
-
-val TITLE_THREE_STYLE = TextStyle(
-    fontWeight = FontWeight.Medium,
-    fontSize = 16.sp
-)
 
 val REGULAR_LABEL_STYLE = TextStyle(
     fontWeight = FontWeight.Normal,
-    fontSize = 14.sp
+    fontSize = 16.sp
 )
 
 val SMALL_LABEL_STYLE = TextStyle(
     fontWeight = FontWeight.Normal,
-    fontSize = 12.sp
+    fontSize = 14.sp
 )
 
 val TINY_LABEL_STYLE = TextStyle(

@@ -2,7 +2,7 @@ package com.whiskersapps.clawlauncher.views.main.views.settings.views.home.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.settings.SettingsRepo
+import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.intent.HomeSettingsScreenAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,18 @@ class HomeSettingsScreenVM(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepo.settings.collect { settings ->
-                _state.update { it.copy(loading = false, settings = settings) }
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        tintClock = settings.tintClock,
+                        clockPlacement = settings.clockPlacement,
+                        swipeUpToSearch = settings.swipeUpToSearch,
+                        showSearchBar = settings.showHomeSearchBar,
+                        showPlaceholder = settings.showHomeSearchBarPlaceholder,
+                        searchBarRadius = settings.homeSearchBarRadius.toFloat(),
+                        pillShapeClock = settings.pillShapeClock
+                    )
+                }
             }
         }
     }
@@ -41,10 +52,6 @@ class HomeSettingsScreenVM(
                     action.show
                 )
 
-                is HomeSettingsScreenAction.SetShowSettings -> settingsRepo.setShowHomeSearchBarSettings(
-                    action.show
-                )
-
                 HomeSettingsScreenAction.NavigateBack -> {}
 
                 is HomeSettingsScreenAction.SaveSearchBarRadius -> settingsRepo.setHomeSearchBarRadius(
@@ -59,6 +66,10 @@ class HomeSettingsScreenVM(
 
                 is HomeSettingsScreenAction.SetClockPlacement -> settingsRepo.setClockPlacement(
                     action.placement
+                )
+
+                is HomeSettingsScreenAction.SetPillShapeClock -> settingsRepo.setPillShapeClock(
+                    action.pill
                 )
             }
         }

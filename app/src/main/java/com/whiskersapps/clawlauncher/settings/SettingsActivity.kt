@@ -16,18 +16,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.whiskersapps.clawlauncher.shared.app.SettingsActivityVM
 import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
-import com.whiskersapps.clawlauncher.views.main.views.settings.view.SettingsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.about.view.AboutScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.apps.view.AppsSettingsScreenRoot
+import com.whiskersapps.clawlauncher.settings.about.AboutScreenRoot
+import com.whiskersapps.clawlauncher.settings.apps.AppsSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view.BookmarksScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.view.HomeSettingsScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreenRoot
 import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.view.SecuritySettingsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.settings.LockScreenSettingsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.style.view.StyleSettingsScreenRoot
+import com.whiskersapps.clawlauncher.settings.lock.LockScreenSettingsScreenRoot
+import com.whiskersapps.clawlauncher.settings.style.StyleSettingsScreenRoot
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class SettingsActivity : FragmentActivity() {

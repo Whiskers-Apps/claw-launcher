@@ -23,6 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
+import com.whiskersapps.clawlauncher.shared.view.theme.REGULAR_LABEL_STYLE
+import com.whiskersapps.clawlauncher.shared.view.theme.SMALL_LABEL_STYLE
 import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import java.text.DecimalFormat
 
@@ -41,16 +43,17 @@ fun SliderSetting(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(16.dp)) {
+            .settingPadding()
+    ) {
         Text(
             text = title,
-            style = Typography.bodyMedium,
+            style = REGULAR_LABEL_STYLE,
             color = MaterialTheme.colorScheme.onBackground
         )
 
         Text(
             text = description,
-            style = Typography.labelMedium,
+            style = SMALL_LABEL_STYLE,
             color = MaterialTheme.colorScheme.onBackground
         )
 
@@ -103,7 +106,7 @@ fun SwitchSetting(
             .modifyWhen(enabled) {
                 this.clickable { onValueChange(!value) }
             }
-            .padding(16.dp),
+            .settingPadding(),
         verticalAlignment = Alignment.Top
     ) {
         Column(
@@ -113,13 +116,13 @@ fun SwitchSetting(
         ) {
             Text(
                 text = title,
-                style = Typography.bodyMedium,
+                style = REGULAR_LABEL_STYLE,
                 color = MaterialTheme.colorScheme.onBackground
             )
 
             Text(
                 text = description,
-                style = Typography.labelMedium,
+                style = SMALL_LABEL_STYLE,
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -140,18 +143,23 @@ fun SimpleSetting(
         Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(16.dp)
+            .settingPadding()
     ) {
         Text(
             text = title,
-            style = Typography.bodyMedium,
+            style = REGULAR_LABEL_STYLE,
             color = MaterialTheme.colorScheme.onBackground
         )
 
         Text(
             text = value,
-            style = Typography.labelMedium,
+            style = SMALL_LABEL_STYLE,
             color = MaterialTheme.colorScheme.onBackground
         )
     }
+}
+
+@Composable
+fun Modifier.settingPadding(): Modifier {
+    return this.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 16.dp)
 }
