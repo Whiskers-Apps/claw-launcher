@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
 
@@ -35,7 +36,7 @@ fun ContentColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
-            .modifyWhen(useSystemBarsPadding){
+            .modifyWhen(useSystemBarsPadding) {
                 this.systemBarsPadding()
             }
     ) {

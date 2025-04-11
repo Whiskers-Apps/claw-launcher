@@ -162,13 +162,13 @@ fun AppsScreen(
                                         ) {
 
                                             Box(modifier = Modifier.size(48.dp)) {
-                                                AppIcon(app = app)
+                                                AppIcon(app = app, useThemed = state)
                                             }
 
                                             Spacer(modifier = Modifier.width(16.dp))
 
                                             Text(
-                                                text = app.label,
+                                                text = app.name,
                                                 color = MaterialTheme.colorScheme.onBackground
                                             )
                                         }
@@ -249,7 +249,7 @@ fun AppsScreen(
                                             Spacer(modifier = Modifier.width(16.dp))
 
                                             Text(
-                                                text = app.label,
+                                                text = app.name,
                                                 color = MaterialTheme.colorScheme.onBackground
                                             )
                                         }

@@ -84,9 +84,10 @@ fun SettingsScreen(
                         onAction(SettingsScreenAction.SetDefaultLauncher)
                     }
                 )
+
+                Spacer(modifier = Modifier.height(22.dp))
             }
 
-            Spacer(modifier = Modifier.height(22.dp))
 
             SettingsSection(
                 icon = R.drawable.palette,

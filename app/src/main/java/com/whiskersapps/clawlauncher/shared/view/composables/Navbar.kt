@@ -30,7 +30,7 @@ fun NavBar(
     endContent: @Composable RowScope.() -> Unit = {}
 ) {
     Column(
-        Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)
+        Modifier.padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(

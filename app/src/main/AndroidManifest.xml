@@ -25,6 +25,19 @@
         android:theme="@style/Theme.ClawLauncher"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".bookmarks.BookmarksShareActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+            <intent-filter android:label="Add Bookmark">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".launcher.LauncherActivity"
             android:exported="false"
             android:theme="@style/Theme.ClawLauncher"

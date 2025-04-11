@@ -28,7 +28,7 @@ import com.whiskersapps.clawlauncher.onboarding.select_engine_screen.SelectEngin
 import com.whiskersapps.clawlauncher.onboarding.select_engine_screen.SelectEngineScreenAction.NavigateBack
 import com.whiskersapps.clawlauncher.onboarding.select_engine_screen.SelectEngineScreenAction.SetDefaultEngine
 import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEngineCard
+import com.whiskersapps.clawlauncher.settings.search_engines.SearchEngineCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

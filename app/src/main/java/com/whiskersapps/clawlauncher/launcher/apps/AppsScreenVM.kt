@@ -3,7 +3,7 @@ package com.whiskersapps.clawlauncher.launcher.apps
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.foldable.FoldableRepo
+import com.whiskersapps.clawlauncher.launcher.foldable.FoldableRepo
 import com.whiskersapps.clawlauncher.launcher.apps.di.AppsRepo
 import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.model.App
@@ -51,12 +51,6 @@ class AppsScreenVM(
                     )
                 }
             }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-//            settingsRepo.gridColsCount.collect { gridColsCount ->
-//                _state.update { it.copy(gridColsCount = gridColsCount) }
-//            }
         }
 
         viewModelScope.launch(Dispatchers.IO) {

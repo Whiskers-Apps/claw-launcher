@@ -1,7 +1,7 @@
 package com.whiskersapps.clawlauncher.settings.style.composables
 
 import androidx.compose.runtime.Composable
-import com.whiskersapps.clawlauncher.settings.style.StyleSettingsScreenAction
+import com.whiskersapps.clawlauncher.settings.style.StyleSettingsScreenIntent
 import com.whiskersapps.clawlauncher.settings.style.StyleSettingsScreenState
 
 @Composable
@@ -10,7 +10,7 @@ fun ThemeDialog(
     onDismiss: () -> Unit,
     showDarkThemes: Boolean = false,
     state: StyleSettingsScreenState,
-    onAction: (StyleSettingsScreenAction) -> Unit
+    onAction: (StyleSettingsScreenIntent) -> Unit
 ) {
 //    PreviewTheme(
 //        useMonet = state.settings.theme == "monet" && !showDarkThemes,

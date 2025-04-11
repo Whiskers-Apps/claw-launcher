@@ -1,7 +1,11 @@
 package com.whiskersapps.clawlauncher.settings.style
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.whiskersapps.clawlauncher.R
+import com.whiskersapps.clawlauncher.icon_packs.IconPacksRepo
+import com.whiskersapps.clawlauncher.launcher.apps.di.AppsRepo
 import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +14,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class StyleSettingsScreenVM(
-    private val settingsRepo: SettingsRepo
+    private val app: Application,
+    private val settingsRepo: SettingsRepo,
+    private val appsRepo: AppsRepo,
+    private val iconPacksRepo: IconPacksRepo
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(StyleSettingsScreenState())
@@ -20,29 +27,65 @@ class StyleSettingsScreenVM(
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepo.settings.collect { settings ->
                 _state.update {
+                    val iconPacks = iconPacksRepo.getIconPacks()
+
+                    val iconPack = if (settings.iconPack.isNotEmpty()) {
+                        iconPacks.firstOrNull { pack -> pack.packageName == settings.iconPack }?.name
+                            ?: app.getString(R.string.StyleSettings_system)
+                    } else {
+                        app.getString(R.string.StyleSettings_system)
+                    }
+
                     it.copy(
                         loading = false,
                         loadingSettings = false,
-                        settings = settings
+                        darkMode = settings.darkMode,
+                        theme = settings.theme,
+                        darkTheme = settings.darkTheme,
+                        iconPack = iconPack,
+                        iconPacks = iconPacks
                     )
                 }
             }
         }
     }
 
-    fun onAction(action: StyleSettingsScreenAction) {
-        when (action) {
-            StyleSettingsScreenAction.NavigateBack -> {}
-            StyleSettingsScreenAction.OpenDarkModeDialog -> setShowDarkModeDialog(true)
-            StyleSettingsScreenAction.CloseDarkModeDialog -> setShowDarkModeDialog(false)
-            is StyleSettingsScreenAction.SetDarkMode -> setDarkMode(action.darkMode)
-            StyleSettingsScreenAction.CloseThemeDialog -> closeThemeDialog()
-            StyleSettingsScreenAction.OpenThemeDialog -> openThemeDialog()
-            StyleSettingsScreenAction.CloseDarkThemeDialog -> closeDarkThemeDialog()
-            StyleSettingsScreenAction.OpenDarkThemeDialog -> openDarkThemeDialog()
-            is StyleSettingsScreenAction.SelectThemeDialogTab -> selectThemeDialogTab(action.index)
-            is StyleSettingsScreenAction.SetTheme -> setTheme(action.themeId)
-            is StyleSettingsScreenAction.SetDarkTheme -> setDarkTheme(action.themeId)
+    fun onAction(intent: StyleSettingsScreenIntent) {
+        when (intent) {
+            StyleSettingsScreenIntent.BackClicked -> {}
+
+            StyleSettingsScreenIntent.OpenDarkModeDialog -> setShowDarkModeDialog(true)
+
+            StyleSettingsScreenIntent.CloseDarkModeDialog -> setShowDarkModeDialog(false)
+
+            is StyleSettingsScreenIntent.SetDarkMode -> setDarkMode(intent.darkMode)
+
+            StyleSettingsScreenIntent.CloseThemeDialog -> closeThemeDialog()
+
+            StyleSettingsScreenIntent.OpenThemeDialog -> openThemeDialog()
+
+            StyleSettingsScreenIntent.CloseDarkThemeDialog -> closeDarkThemeDialog()
+
+            StyleSettingsScreenIntent.OpenDarkThemeDialog -> openDarkThemeDialog()
+
+            is StyleSettingsScreenIntent.SelectThemeDialogTab -> selectThemeDialogTab(intent.index)
+
+            is StyleSettingsScreenIntent.SetTheme -> setTheme(intent.themeId)
+
+            is StyleSettingsScreenIntent.SetDarkTheme -> setDarkTheme(intent.themeId)
+
+            StyleSettingsScreenIntent.IconPackClicked -> {
+                openIconPackDialog()
+            }
+
+            StyleSettingsScreenIntent.IconPackDialogClosed -> {
+                closeIconPackDialog()
+            }
+
+            is StyleSettingsScreenIntent.IconPackSelected -> {
+                closeIconPackDialog()
+                selectIconPack(intent.iconPack)
+            }
         }
     }
 
@@ -86,6 +129,26 @@ class StyleSettingsScreenVM(
     private fun setDarkTheme(theme: String) {
         viewModelScope.launch(Dispatchers.IO) {
             settingsRepo.setDarkTheme(theme)
+        }
+    }
+
+    private fun openIconPackDialog() {
+        _state.update {
+            it.copy(showIconPackDialog = true)
+        }
+    }
+
+    private fun closeIconPackDialog() {
+        _state.update {
+            it.copy(showIconPackDialog = false)
+        }
+    }
+
+    private fun selectIconPack(iconPack: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsRepo.setIconPack(iconPack)
+
+            appsRepo.fetchApps()
         }
     }
 }

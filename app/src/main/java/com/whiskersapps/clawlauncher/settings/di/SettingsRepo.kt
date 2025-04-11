@@ -106,7 +106,9 @@ class SettingsRepo(
                     ?: Settings.DEFAULT_PILL_SHAPE_CLOCK,
 
                 hideAppLabels = preferences[Settings.HIDE_APP_LABELS]
-                    ?: Settings.DEFAULT_HIDE_APP_LABELS
+                    ?: Settings.DEFAULT_HIDE_APP_LABELS,
+
+                iconPack = preferences[Settings.ICON_PACK] ?: Settings.DEFAULT_ICON_PACK
             )
 
             _settings.update { newSettings }
@@ -254,5 +256,9 @@ class SettingsRepo(
 
     suspend fun setHideAppLabels(hide: Boolean) {
         dataStore.edit { it[Settings.HIDE_APP_LABELS] = hide }
+    }
+
+    suspend fun setIconPack(packageName: String) {
+        dataStore.edit { it[Settings.ICON_PACK] = packageName }
     }
 }

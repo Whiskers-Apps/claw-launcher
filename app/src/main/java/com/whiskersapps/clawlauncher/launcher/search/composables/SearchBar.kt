@@ -33,8 +33,8 @@ import com.whiskersapps.clawlauncher.R
 
 @Composable
 fun SearchBar(
-    text: String = "",
-    onChange: (text: String) -> Unit = {},
+    text: String,
+    onChange: (text: String) -> Unit,
     onDone: () -> Unit = {},
     enabled: Boolean = true,
     placeholder: String = stringResource(id = R.string.Search),

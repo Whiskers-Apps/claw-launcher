@@ -6,16 +6,15 @@ import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.foldable.FoldableRepo
+import com.whiskersapps.clawlauncher.launcher.foldable.FoldableRepo
 import com.whiskersapps.clawlauncher.launcher.apps.di.AppsRepo
-import com.whiskersapps.clawlauncher.launcher.bookmarks.BookmarksRepo
-import com.whiskersapps.clawlauncher.search_engines.SearchEnginesRepo
+import com.whiskersapps.clawlauncher.bookmarks.di.BookmarksRepo
+import com.whiskersapps.clawlauncher.launcher.search_engines.SearchEnginesRepo
 import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.model.App
 import com.whiskersapps.clawlauncher.shared.model.Bookmark
 import com.whiskersapps.clawlauncher.shared.model.BookmarkGroup
 import com.whiskersapps.clawlauncher.shared.model.SearchEngine
-import com.whiskersapps.clawlauncher.shared.model.Settings
 import com.whiskersapps.clawlauncher.shared.model.Settings.Companion.DEFAULT_DARK_MODE
 import com.whiskersapps.clawlauncher.shared.utils.requestFingerprint
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +38,7 @@ class SearchScreenVM(
             val loading: Boolean = true,
             val loadingSettings: Boolean = true,
             val loadingBookmarks: Boolean = true,
-            
+
             val loadingSearchEngines: Boolean = true,
             val securedApps: List<String> = emptyList(),
             val layout: String = "",

@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
-import com.whiskersapps.clawlauncher.foldable.FoldableRepo
+import com.whiskersapps.clawlauncher.launcher.foldable.FoldableRepo
 import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
 import kotlinx.coroutines.Dispatchers

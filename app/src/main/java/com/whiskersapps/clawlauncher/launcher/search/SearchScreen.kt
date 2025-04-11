@@ -3,6 +3,7 @@ package com.whiskersapps.clawlauncher.launcher.search
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,16 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
-import coil.compose.AsyncImage
 import com.whiskersapps.clawlauncher.R
-import com.whiskersapps.clawlauncher.launcher.search.composables.SearchBar
-import com.whiskersapps.clawlauncher.shared.utils.getCachedImageRequest
-import com.whiskersapps.clawlauncher.shared.utils.getFaviconUrl
-import com.whiskersapps.clawlauncher.shared.utils.inPortrait
-import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
-import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
-import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
-import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import com.whiskersapps.clawlauncher.launcher.search.SearchScreenAction.OnClearSearch
 import com.whiskersapps.clawlauncher.launcher.search.SearchScreenAction.OnCloseSheet
 import com.whiskersapps.clawlauncher.launcher.search.SearchScreenAction.OnOpenApp
@@ -60,6 +52,14 @@ import com.whiskersapps.clawlauncher.launcher.search.SearchScreenAction.OnReques
 import com.whiskersapps.clawlauncher.launcher.search.SearchScreenAction.OnRunAction
 import com.whiskersapps.clawlauncher.launcher.search.SearchScreenAction.OnSearchInput
 import com.whiskersapps.clawlauncher.launcher.search.SearchScreenAction.OnSetFocusSearchBar
+import com.whiskersapps.clawlauncher.launcher.search.composables.BookmarkResult
+import com.whiskersapps.clawlauncher.launcher.search.composables.SearchBar
+import com.whiskersapps.clawlauncher.launcher.search.composables.SearchEngineResult
+import com.whiskersapps.clawlauncher.shared.utils.inPortrait
+import com.whiskersapps.clawlauncher.shared.view.composables.ContentColumn
+import com.whiskersapps.clawlauncher.shared.view.composables.GridAppShortcut
+import com.whiskersapps.clawlauncher.shared.view.composables.sidePadding
+import com.whiskersapps.clawlauncher.shared.view.theme.Typography
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -199,7 +199,9 @@ fun SearchScreen(
                                 style = Typography.titleSmall
                             )
 
-                            LazyColumn {
+                            LazyColumn(
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
                                 items(
                                     items = state.groups,
                                     key = { "group - ${it._id.toHexString()}" }
@@ -235,43 +237,15 @@ fun SearchScreen(
                                 }
                                 items(
                                     items = state.bookmarks,
-                                    key = { it._id.toHexString() }) { bookmark ->
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(CircleShape)
-                                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                                            .clickable {
-                                                onAction(OnOpenUrl(bookmark.url))
-                                                onAction(OnCloseSheet)
-                                            }
-                                            .padding(16.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        AsyncImage(
-                                            modifier = Modifier
-                                                .clip(CircleShape)
-                                                .size(42.dp)
-                                                .background(MaterialTheme.colorScheme.surfaceVariant),
-                                            model = getCachedImageRequest(getFaviconUrl(bookmark.url)),
-                                            contentDescription = "${bookmark.name} icon"
-                                        )
-
-                                        Spacer(modifier = Modifier.width(8.dp))
-
-                                        Column {
-                                            Text(
-                                                text = bookmark.name,
-                                                color = MaterialTheme.colorScheme.onBackground
-                                            )
-
-                                            Text(
-                                                text = bookmark.url,
-                                                color = MaterialTheme.colorScheme.onBackground,
-                                                style = Typography.labelSmall
-                                            )
+                                    key = { it._id.toHexString() }
+                                ) { bookmark ->
+                                    BookmarkResult(
+                                        bookmark = bookmark,
+                                        onClick = {
+                                            onAction(OnOpenUrl(bookmark.url))
+                                            onAction(OnCloseSheet)
                                         }
-                                    }
+                                    )
                                 }
                             }
 
@@ -280,45 +254,14 @@ fun SearchScreen(
                     }
 
                     state.searchEngine?.let {
-                        Column(modifier = Modifier.sidePadding()) {
-                            Text(
-                                text = stringResource(R.string.SearchScreen_web),
-                                color = MaterialTheme.colorScheme.onBackground,
-                                style = Typography.titleSmall
-                            )
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                                    .clickable {
-                                        onAction(OnOpenUrl(vm.getSearchEngineUrl()))
-                                        onAction(OnCloseSheet)
-                                    }
-                                    .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                AsyncImage(
-                                    modifier = Modifier
-                                        .clip(CircleShape)
-                                        .size(42.dp),
-                                    model = getCachedImageRequest(getFaviconUrl(state.searchEngine.query)),
-                                    contentDescription = "${state.searchEngine.name} icon"
-                                )
-
-                                Spacer(modifier = Modifier.width(16.dp))
-
-                                Text(
-                                    text = stringResource(R.string.SearchScreen_search_on_for).replace(
-                                        "{engine}",
-                                        state.searchEngine.name
-                                    ).replace("{search}", state.searchText),
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    maxLines = 2
-                                )
+                        SearchEngineResult(
+                            searchEngine = state.searchEngine,
+                            searchText = state.searchText,
+                            onClick = {
+                                onAction(OnOpenUrl(vm.getSearchEngineUrl()))
+                                onAction(OnCloseSheet)
                             }
-                        }
+                        )
                     }
                 }
             }

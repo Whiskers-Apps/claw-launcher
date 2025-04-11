@@ -10,79 +10,99 @@ import com.whiskersapps.clawlauncher.shared.view.composables.NavBar
 import com.whiskersapps.clawlauncher.shared.view.composables.SimpleSetting
 import com.whiskersapps.clawlauncher.shared.view.theme.getThemeDisplayName
 import com.whiskersapps.clawlauncher.settings.style.composables.DarkModeDialog
+import com.whiskersapps.clawlauncher.settings.style.composables.IconPackDialog
 import com.whiskersapps.clawlauncher.settings.style.composables.ThemeDialog
 import org.koin.androidx.compose.koinViewModel
+import com.whiskersapps.clawlauncher.settings.style.StyleSettingsScreenIntent as Intent
+import com.whiskersapps.clawlauncher.settings.style.StyleSettingsScreenState as State
+import com.whiskersapps.clawlauncher.settings.style.StyleSettingsScreenVM as ViewModel
 
 @Composable
 fun StyleSettingsScreenRoot(
     navController: NavController,
-    vm: StyleSettingsScreenVM = koinViewModel()
+    vm: ViewModel = koinViewModel()
 ) {
     StyleSettingsScreen(
-        onAction = { action ->
-            when (action) {
-                StyleSettingsScreenAction.NavigateBack -> navController.navigateUp()
-                else -> vm.onAction(action)
-            }
-        },
-        vm = vm
-    )
+        state = vm.state.collectAsState().value
+    ) { intent ->
+        when (intent) {
+            Intent.BackClicked -> navController.navigateUp()
+            else -> vm.onAction(intent)
+        }
+    }
 }
 
 @Composable
 fun StyleSettingsScreen(
-    onAction: (StyleSettingsScreenAction) -> Unit,
-    vm: StyleSettingsScreenVM
+    state: State,
+    onIntent: (Intent) -> Unit,
 ) {
-
-    val state = vm.state.collectAsState().value
+    if (state.showIconPackDialog) {
+        IconPackDialog(
+            onDismiss = {
+                onIntent(Intent.IconPackDialogClosed)
+            },
+            iconPacks = state.iconPacks,
+            onIconPackSelected = { iconPack ->
+                onIntent(Intent.IconPackSelected(iconPack))
+            }
+        )
+    }
 
     ContentColumn(
         useSystemBarsPadding = true,
         loading = state.loading,
         navigationBar = {
-            NavBar(navigateBack = { onAction(StyleSettingsScreenAction.NavigateBack) })
+            NavBar(navigateBack = { onIntent(Intent.BackClicked) })
         }
     ) {
 
         SimpleSetting(
             title = stringResource(R.string.StyleSettings_dark_mode),
-            value = getDarkModeDisplayName(state.settings.darkMode),
-            onClick = { onAction(StyleSettingsScreenAction.OpenDarkModeDialog) }
+            value = getDarkModeDisplayName(state.darkMode),
+            onClick = { onIntent(Intent.OpenDarkModeDialog) }
         )
 
         SimpleSetting(
             title = stringResource(R.string.StyleSettings_light_theme),
-            value = getThemeDisplayName(state.settings.theme),
-            onClick = { onAction(StyleSettingsScreenAction.OpenThemeDialog) }
+            value = getThemeDisplayName(state.theme),
+            onClick = { onIntent(Intent.OpenThemeDialog) }
         )
 
         SimpleSetting(
             title = stringResource(R.string.StyleSettings_dark_theme),
-            value = getThemeDisplayName(state.settings.darkTheme),
-            onClick = { onAction(StyleSettingsScreenAction.OpenDarkThemeDialog) }
+            value = getThemeDisplayName(state.darkTheme),
+            onClick = { onIntent(Intent.OpenDarkThemeDialog) }
+        )
+
+        SimpleSetting(
+            title = "Icon Pack",
+            value = state.iconPack,
+            onClick = {
+                onIntent(Intent.IconPackClicked)
+            }
         )
 
         DarkModeDialog(
             show = state.showDarkModeDialog,
-            onDismiss = { onAction(StyleSettingsScreenAction.CloseDarkModeDialog) },
-            save = { darkMode -> onAction(StyleSettingsScreenAction.SetDarkMode(darkMode)) },
-            defaultValue = state.settings.darkMode
+            onDismiss = { onIntent(Intent.CloseDarkModeDialog) },
+            save = { darkMode -> onIntent(Intent.SetDarkMode(darkMode)) },
+            defaultValue = state.darkMode
         )
 
         ThemeDialog(
             show = state.showThemeDialog,
-            onDismiss = { onAction(StyleSettingsScreenAction.CloseThemeDialog) },
+            onDismiss = { onIntent(Intent.CloseThemeDialog) },
             state = state,
-            onAction = { onAction(it) }
+            onAction = { onIntent(it) }
         )
 
         ThemeDialog(
             showDarkThemes = true,
             show = state.showDarkThemeDialog,
-            onDismiss = { onAction(StyleSettingsScreenAction.CloseDarkThemeDialog) },
+            onDismiss = { onIntent(Intent.CloseDarkThemeDialog) },
             state = state,
-            onAction = { onAction(it) }
+            onAction = { onIntent(it) }
         )
     }
 }

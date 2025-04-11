@@ -141,7 +141,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
-                .padding(24.dp),
+                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Column(
@@ -183,8 +183,7 @@ fun HomeScreen(
                                 .weight(1f, fill = true),
                             verticalArrangement = when (state.clockPlacement) {
                                 "top" -> Arrangement.Top
-                                "center" -> Arrangement.Center
-                                else -> Arrangement.Bottom
+                                else -> Arrangement.Center
                             }
                         ) {
                             Clock(
@@ -207,7 +206,9 @@ fun HomeScreen(
                                     enabled = false,
                                     placeholder = if (state.showPlaceholder) stringResource(R.string.Search) else "",
                                     borderRadius = state.searchBarRadius.toInt(),
-                                    backgroundColor = MaterialTheme.colorScheme.background
+                                    backgroundColor = MaterialTheme.colorScheme.background,
+                                    onChange = {},
+                                    text = "",
                                 )
                             } else {
                                 if (state.showPlaceholder) {

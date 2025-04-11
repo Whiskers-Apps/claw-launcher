@@ -2,7 +2,7 @@ package com.whiskersapps.clawlauncher.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whiskersapps.clawlauncher.search_engines.SearchEnginesRepo
+import com.whiskersapps.clawlauncher.launcher.search_engines.SearchEnginesRepo
 import com.whiskersapps.clawlauncher.settings.di.SettingsRepo
 import com.whiskersapps.clawlauncher.shared.model.Settings
 import kotlinx.coroutines.flow.MutableStateFlow

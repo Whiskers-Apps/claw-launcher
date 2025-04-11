@@ -3,6 +3,7 @@ package com.whiskersapps.clawlauncher.launcher.home.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.whiskersapps.clawlauncher.shared.utils.modifyWhen
@@ -68,14 +70,15 @@ fun Clock(
                     onClick()
                 }
                 .padding(start = 48.dp, end = 48.dp, top = 16.dp, bottom = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = clock,
                 color = textColor,
                 fontSize = if (pillShape) 48.sp else 64.sp,
                 fontWeight = FontWeight.SemiBold,
-                style = if (pillShape) TextStyle() else TextStyle(shadow = textShadow)
+                style = if (pillShape) TextStyle() else TextStyle(shadow = textShadow),
+                textAlign = TextAlign.Center
             )
 
             Text(
@@ -83,7 +86,8 @@ fun Clock(
                 color = textColor,
                 fontSize = if (pillShape) 14.sp else 24.sp,
                 fontWeight = FontWeight.SemiBold,
-                style = if (pillShape) TextStyle() else TextStyle(shadow = textShadow)
+                style = if (pillShape) TextStyle() else TextStyle(shadow = textShadow),
+                textAlign = TextAlign.Center
             )
         }
     }

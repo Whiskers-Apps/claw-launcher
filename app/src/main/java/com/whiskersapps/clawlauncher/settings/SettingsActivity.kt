@@ -20,10 +20,10 @@ import com.whiskersapps.clawlauncher.shared.model.Routes
 import com.whiskersapps.clawlauncher.shared.view.theme.ClawLauncherTheme
 import com.whiskersapps.clawlauncher.settings.about.AboutScreenRoot
 import com.whiskersapps.clawlauncher.settings.apps.AppsSettingsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.bookmarks.view.BookmarksScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.home.view.HomeSettingsScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.search_engines.view.SearchEnginesScreenRoot
-import com.whiskersapps.clawlauncher.views.main.views.settings.views.security.view.SecuritySettingsScreenRoot
+import com.whiskersapps.clawlauncher.settings.bookmarks.BookmarksScreenRoot
+import com.whiskersapps.clawlauncher.settings.home.HomeSettingsScreenRoot
+import com.whiskersapps.clawlauncher.settings.search_engines.SearchEnginesScreenRoot
+import com.whiskersapps.clawlauncher.settings.security.SecuritySettingsScreenRoot
 import com.whiskersapps.clawlauncher.settings.lock.LockScreenSettingsScreenRoot
 import com.whiskersapps.clawlauncher.settings.style.StyleSettingsScreenRoot
 import org.koin.androidx.viewmodel.ext.android.getViewModel

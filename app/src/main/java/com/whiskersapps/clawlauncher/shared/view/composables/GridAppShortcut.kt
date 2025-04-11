@@ -59,7 +59,7 @@ fun GridAppShortcut(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = remember { app.label },
+            text = remember { app.name },
             color = MaterialTheme.colorScheme.onBackground,
             style = Typography.labelSmall,
             maxLines = 1,

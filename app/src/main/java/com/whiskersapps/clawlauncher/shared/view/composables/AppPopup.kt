@@ -57,7 +57,7 @@ fun AppPopup(
                     Spacer(Modifier.height(16.dp))
 
                     Text(
-                        text = app.label,
+                        text = app.name,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
